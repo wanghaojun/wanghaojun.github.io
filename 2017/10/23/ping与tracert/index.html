@@ -6,14 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2017/10 | Hexo</title>
+  <title>ping与tracert | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/2017/10/index.html">
+  <meta name="description" content="关于ping与tracert的小探究标签： 网络原理    今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。">
+<meta name="keywords" content="网络原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ping与tracert">
+<meta property="og:url" content="http://yoursite.com/2017/10/23/ping与tracert/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="关于ping与tracert的小探究标签： 网络原理    今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。">
+<meta property="og:updated_time" content="2017-10-23T09:22:49.096Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="ping与tracert">
+<meta name="twitter:description" content="关于ping与tracert的小探究标签： 网络原理    今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -135,36 +140,73 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-ping与tracert" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/10/23/ping与tracert/" class="archive-article-date">
-  	<time datetime="2017-10-23T09:16:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-23</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/10/23/ping与tracert/">ping与tracert</a>
+    <h1 class="article-title" itemprop="name">
+      ping与tracert
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2017/10/23/ping与tracert/" class="archive-article-date">
+  	<time datetime="2017-10-23T09:16:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="关于ping与tracert的小探究"><a href="#关于ping与tracert的小探究" class="headerlink" title="关于ping与tracert的小探究"></a>关于ping与tracert的小探究</h1><p>标签： 网络原理</p>
+<hr>
+<p>  今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。</p>
+   <a id="more"></a>
+<p>  ping的作用：简单来说，就是判断网站的延迟或是连通率。</p>
+<pre><code>ping www.baidu.com
+</code></pre><p><em>正在 Ping www.a.shifen.com [115.239.210.27] 具有 32 字节的数据:<br>来自 115.239.210.27 的回复: 字节=32 时间=17ms TTL=51<br>来自 115.239.210.27 的回复: 字节=32 时间=21ms TTL=51<br>来自 115.239.210.27 的回复: 字节=32 时间=18ms TTL=51<br>来自 115.239.210.27 的回复: 字节=32 时间=19ms TTL=51<br>115.239.210.27 的 Ping 统计信息:<br>    数据包: 已发送 = 4，已接收 = 4，丢失 = 0 (0% 丢失)，<br>往返行程的估计时间(以毫秒为单位):<br>    最短 = 17ms，最长 = 21ms，平均 = 18ms</em></p>
+<p>这就是ping百度的结果，时间就是网络延迟，TTL该字段指定IP包被路由器丢弃之前允许通过的最大网段数量，也就是允许被转发的次数。</p>
+<p>参数：</p>
+<p>-i 可以设置TTL值</p>
+<pre><code>ping www.baidu.com -i 15
+</code></pre><p>-f 设置转发过程不分组 可以不分组转发的数据包最大为1472</p>
+<pre><code>ping www.baidu.com -f
+</code></pre><p>-l 设置转发的数据包大小</p>
+<pre><code>ping www.baidu.com -l 1400
+</code></pre><p>Tracert命令用来显示数据包到达目标主机所经过的路径（路由器），并显示到达每个节点（路由器）的时间.<br>Tracert 先发送 TTL 为 1 的回应数据包，当数据包上的TTL在路由器收到后TTL自动减1，一旦某个服务器将TTL减1后，等于了0，路由器应该将“ICMP Time Exceeded”的消息发回源计算机，源计算机就根据收到的信息判断达到的路由器和所用时间。下次再次发送数据包时，将TTL递增1，继续上述测试，直到目标响应或 TTL 达到最大值，从而确定路由。</p>
+<pre><code>tracert www.upc.edu.cn
+</code></pre><p>在很多情况下，tracert跃点数减1，加上ping中的TTL值等于服务器默认的TTL值，等于64.但是这种情况不是绝对的，因为tracert的路径与ping之后，服务器返回数据包的路径不同。</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -176,46 +218,106 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/10/23/ping与tracert/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/10/20/hello-world/" class="archive-article-date">
-  	<time datetime="2017-10-20T00:36:22.937Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-20</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2017/10/20/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hello World</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/10/20/hello-world/">Hello World</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -238,8 +340,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
