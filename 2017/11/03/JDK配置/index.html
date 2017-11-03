@@ -6,19 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>ping与tracert | Hexo</title>
+  <title>JDK配置 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="标签： 网络原理    今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。">
-<meta name="keywords" content="网络原理">
+  <meta name="description" content="大二开了Java课，上机课，机房环境竟然都没配jdk，看来以后少不了配jdk，于是我整理一下配置JDK的步骤。">
+<meta name="keywords" content="java 环境">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ping与tracert">
-<meta property="og:url" content="http://yoursite.com/2017/10/23/ping与tracert/index.html">
+<meta property="og:title" content="JDK配置">
+<meta property="og:url" content="http://yoursite.com/2017/11/03/JDK配置/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="标签： 网络原理    今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。">
-<meta property="og:updated_time" content="2017-10-23T09:25:25.278Z">
+<meta property="og:description" content="大二开了Java课，上机课，机房环境竟然都没配jdk，看来以后少不了配jdk，于是我整理一下配置JDK的步骤。">
+<meta property="og:updated_time" content="2017-11-03T03:37:11.815Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ping与tracert">
-<meta name="twitter:description" content="标签： 网络原理    今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。">
+<meta name="twitter:title" content="JDK配置">
+<meta name="twitter:description" content="大二开了Java课，上机课，机房环境竟然都没配jdk，看来以后少不了配jdk，于是我整理一下配置JDK的步骤。">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -140,44 +140,47 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-ping与tracert" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-JDK配置" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      ping与tracert
+      JDK配置
     </h1>
   
 
         
-        <a href="/2017/10/23/ping与tracert/" class="archive-article-date">
-  	<time datetime="2017-10-23T09:16:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-23</time>
+        <a href="/2017/11/03/JDK配置/" class="archive-article-date">
+  	<time datetime="2017-11-03T03:32:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-03</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>标签： 网络原理</p>
-<hr>
-<p>  今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。</p>
-   <a id="more"></a>
-<p>  ping的作用：简单来说，就是判断网站的延迟或是连通率。</p>
-<pre><code>ping www.baidu.com
-</code></pre><p><em>正在 Ping www.a.shifen.com [115.239.210.27] 具有 32 字节的数据:<br>来自 115.239.210.27 的回复: 字节=32 时间=17ms TTL=51<br>来自 115.239.210.27 的回复: 字节=32 时间=21ms TTL=51<br>来自 115.239.210.27 的回复: 字节=32 时间=18ms TTL=51<br>来自 115.239.210.27 的回复: 字节=32 时间=19ms TTL=51<br>115.239.210.27 的 Ping 统计信息:<br>    数据包: 已发送 = 4，已接收 = 4，丢失 = 0 (0% 丢失)，<br>往返行程的估计时间(以毫秒为单位):<br>    最短 = 17ms，最长 = 21ms，平均 = 18ms</em></p>
-<p>这就是ping百度的结果，时间就是网络延迟，TTL该字段指定IP包被路由器丢弃之前允许通过的最大网段数量，也就是允许被转发的次数。</p>
-<p>参数：</p>
-<p>-i 可以设置TTL值</p>
-<pre><code>ping www.baidu.com -i 15
-</code></pre><p>-f 设置转发过程不分组 可以不分组转发的数据包最大为1472</p>
-<pre><code>ping www.baidu.com -f
-</code></pre><p>-l 设置转发的数据包大小</p>
-<pre><code>ping www.baidu.com -l 1400
-</code></pre><p>Tracert命令用来显示数据包到达目标主机所经过的路径（路由器），并显示到达每个节点（路由器）的时间.<br>Tracert 先发送 TTL 为 1 的回应数据包，当数据包上的TTL在路由器收到后TTL自动减1，一旦某个服务器将TTL减1后，等于了0，路由器应该将“ICMP Time Exceeded”的消息发回源计算机，源计算机就根据收到的信息判断达到的路由器和所用时间。下次再次发送数据包时，将TTL递增1，继续上述测试，直到目标响应或 TTL 达到最大值，从而确定路由。</p>
-<pre><code>tracert www.upc.edu.cn
-</code></pre><p>在很多情况下，tracert跃点数减1，加上ping中的TTL值等于服务器默认的TTL值，等于64.但是这种情况不是绝对的，因为tracert的路径与ping之后，服务器返回数据包的路径不同。</p>
+        <p>大二开了Java课，上机课，机房环境竟然都没配jdk，看来以后少不了配jdk，于是我整理一下配置JDK的步骤。</p>
+<a id="more"></a>
+<p><a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="external">http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html</a></p>
+<p>这是jdk官网，应该是J2SE，我们上课用的SE，据说大二小学期会用J2EE。下载，然后安装，一路点下来就好。不过要看一下安装目录，这个下面配环境变量会用到。</p>
+<p>接下来是配置环境变量</p>
+<ol>
+<li>系统变量→新建 JAVA_HOME 变量 。（本人是C:\Program Files\Java\jdk1.8.0_102）</li>
+<li><p>系统变量→寻找 Path 变量→编辑</p>
+<p>在变量值最后输入 </p>
+<p>%JAVA_HOME%\bin;%JAVA_HOME%\jre\bin;</p>
+<p>（注意原来Path的变量值末尾有没有;号，如果没有，先输入;号再输入上面的代码）</p>
+</li>
+<li><p>系统变量→新建 CLASSPATH 变量</p>
+<p>变量值填写   </p>
+<p>.;%JAVA_HOME%\lib;%JAVA_HOME%\lib\tools.jar</p>
+<p>（注意最前面有一点）</p>
+<p>jdk的环境变量这就配好了，运行cmd 输入 java -version 如果显示版本信息 则说明安装和配置成功。</p>
+</li>
+</ol>
+<p>ps：配置失败可能是变量名字打错了，或者输入了中文符，仔细检查一下，改正后，需要重启命令行，再试一下。</p>
+<p>其实有一个非常简单配置jdk的方法，在我的这篇文章中：window下的包管理器chocolatey。<br> 只需要在管理员模式的jdk下，输入choco install jdk 就ok了，它会帮你安装jdk，并且配置好环境变量。</p>
 
       
 
@@ -212,7 +215,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">网络原理</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">java 环境</a>
         		</li>
       		
 		</ul>
@@ -268,7 +271,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/10/23/ping与tracert/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/11/03/JDK配置/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -282,18 +285,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/10/24/听报告/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          听报告
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/10/20/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Hello World</div>
+    <a href="/2017/11/03/基本前端环境搭建/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">基本前端环境搭建</div>
       <i class="icon-circle-right"></i>
     </a>
   
