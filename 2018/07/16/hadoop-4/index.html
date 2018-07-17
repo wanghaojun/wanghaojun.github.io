@@ -6,14 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2017/11 | Hexo</title>
+  <title>hadoop-4 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/2017/11/index.html">
+  <meta name="description" content="Hadoop2 &amp;amp; Yarn  &amp;amp; hive">
+<meta name="keywords" content="hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hadoop-4">
+<meta property="og:url" content="http://yoursite.com/2018/07/16/hadoop-4/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hadoop2 &amp;amp; Yarn  &amp;amp; hive">
+<meta property="og:updated_time" content="2018-07-16T09:17:23.638Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="hadoop-4">
+<meta name="twitter:description" content="Hadoop2 &amp;amp; Yarn  &amp;amp; hive">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -135,98 +140,219 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-hadoop-4" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/11/03/JDK配置/" class="archive-article-date">
-  	<time datetime="2017-11-03T03:32:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-03</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/11/03/JDK配置/">JDK配置</a>
+    <h1 class="article-title" itemprop="name">
+      hadoop-4
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/07/16/hadoop-4/" class="archive-article-date">
+  	<time datetime="2018-07-16T00:32:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-16</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Hadoop2 &amp; Yarn  &amp; hive</p>
+<a id="more"></a>
+<p>Yarn的目标时实现“一个集群多个框架”,实现一个集群上的不用应用负载。</p>
+<h2 id="调度器"><a href="#调度器" class="headerlink" title="调度器"></a>调度器</h2><p>Yarn提供了接口用于实现可拔插的调度器<br>YARN有两个预定的调度器</p>
+<ul>
+<li>Fair Scheduler</li>
+<li>Capacity Scheduler<br>策略：</li>
+<li>FIFO：先进先出</li>
+<li>Capacity： 小人物单独通道</li>
+<li>Fair：新的作业提交，划分一半资源</li>
+</ul>
+<h2 id="Kafka"><a href="#Kafka" class="headerlink" title="Kafka"></a>Kafka</h2><p>高吞吐量的分布式发布订阅消息系统，用户通过Kafka系统可以发布大量的消息，同时实时订阅消费消息<br>在大数据生态系统中，Kafka作为数据交换枢纽，不同类型的分布式系统，可以统一接入Kafka，实现Hadoop各个组件间高效的数据交换</p>
+<h2 id="Hive"><a href="#Hive" class="headerlink" title="Hive"></a>Hive</h2><p>基于Hadoop的数据仓库工具，它将Hdfs中的结构化数据映射为数据表，并且将类SQL脚本转化为MapReduce作业。定义了简单的类SQL查询语言，成为HQL。<br>安装前提：</p>
+<ul>
+<li>jdk 1.7+</li>
+<li>hadoop -2.2.0+</li>
+<li>Mysql数据库 v5.6.x</li>
+<li>Hive安装在与Mysql同一台机器上</li>
+</ul>
+<h4 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h4><p>1.解压完毕hive压缩包后，切换目录到/simple/hive-0.12.0目录并查看下面的文件列表。</p>
+<p>2.在/simple/hive-0.12.0目录下执行命令：cd conf切换到conf目录并查看列表，执行命令：cp hive-env.sh.template hive-env.sh。</p>
+<p>3.在/simple/hive-0.12.0/conf目录下执行：vim hive-env.sh并编辑内容。</p>
+<p>4.在/simple/hive-0.12.0目录下执行命令：cd conf切换到conf目录并查看列表，执行命令：mv hive-default.xml.template  hive-site.xml。</p>
+<p>5.完成上一步操作之后，此时需要修改hive-site.xml文件的内容，由于hive-site.xml中内容较多，我们需要在本地打开文件进行删除文件中的内容，单击桌面Computer-&gt;Filesystem-&gt;simple-&gt;hive-0.12.0-&gt;conf,右击hive-site.xml文件选择Open With gedit进行编译，删除<br>所有内容，此操作会比较耗时，操作完之后再终端执行命令：vim hive-site.xml之后并查看内容，注意：mysql url路径地址的ip地址根据本机情况进行修改。</p>
+<pre><code>&lt;configuration&gt;
+  &lt;property&gt;
+    &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;
+    &lt;value&gt;jdbc:mysql://localhost:3306/hive&lt;/value&gt; 
+  &lt;/property&gt;
+  &lt;property&gt;
+    &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;
+    &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;
+  &lt;/property&gt;
+  &lt;property&gt;
+    &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;
+    &lt;value&gt;root&lt;/value&gt;
+  &lt;/property&gt;
+  &lt;property&gt;
+    &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;
+    &lt;value&gt;123456&lt;/value&gt;
+  &lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre><p>6.完成上一步之后，在目录/simple/hive-0.12.0/bin下面，修改文件hive-config.sh，增加以下内容：</p>
+<pre><code>export JAVA_HOME=/simple/jdk1.7.0_79
+export HIVE_HOME=/simple/hive-0.12.0
+export HADOOP_HOME=/simple/hadoop-2.4.1。
+</code></pre><p>7.在命令终端任意目录下，执行命令：vim /etc/profile然后编辑内容，进行hive环境变量的配置。配置完毕后执行命令source /etc/profile进行刷新。</p>
+<p>8.配置完环境变量之后，可以执行hive命令，进入./hive进入hive shell，环境表示安装配置成功。</p>
+<p>ps： 在测试的过程中有可能文件权限问题，对应目录主要有两个：<br>       1)hdfs://192.168.0.201:9000/tmp<br>       2)/tmp<br>   可以通过如下命令修改hdfs上的tmp和本地tmp文件夹权限的修改：<br>hdfs dfs -chmod -R 1777 /tmp //hdfs上的文件权限<br>chmod -R 1777 /tmp //linux文件权限。 </p>
+<h4 id="hive-数据模型"><a href="#hive-数据模型" class="headerlink" title="hive 数据模型"></a>hive 数据模型</h4><p>内部表 命名空间对应文件系统的一个目录<br>外部表<br>分区表<br>分桶表</p>
+<h4 id="创建表的语法"><a href="#创建表的语法" class="headerlink" title="创建表的语法"></a>创建表的语法</h4><p>数据类型<br>运算符</p>
+<h4 id="简单的查询语法"><a href="#简单的查询语法" class="headerlink" title="简单的查询语法"></a>简单的查询语法</h4><h4 id="使用函数"><a href="#使用函数" class="headerlink" title="使用函数"></a>使用函数</h4><p>内置函数<br>分析函数（窗口函数）<br>自定义函数</p>
+<h4 id="使用批处理模式"><a href="#使用批处理模式" class="headerlink" title="使用批处理模式"></a>使用批处理模式</h4><p>.hql脚本</p>
+<h4 id="保存结果"><a href="#保存结果" class="headerlink" title="保存结果"></a>保存结果</h4>
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">java 环境</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">hadoop</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/07/16/hadoop-4/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/11/03/基本前端环境搭建/" class="archive-article-date">
-  	<time datetime="2017-11-03T02:50:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-03</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/07/15/hadoop-3/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">hadoop(3)</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/11/03/基本前端环境搭建/">基本前端环境搭建</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">前端 环境</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -249,8 +375,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
