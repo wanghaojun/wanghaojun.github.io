@@ -6,14 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: java 环境 | Hexo</title>
+  <title>hadoop-6 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/tags/java-环境/index.html">
+  <meta name="description" content="spark：大数据的分析引擎基于mapreduce，但是对mapreduce进行了扩展，以有效地用于更多类型的计算，包括交互式查询和流处理。主要特性是内存中的集群计算">
+<meta name="keywords" content="hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hadoop-6">
+<meta property="og:url" content="http://yoursite.com/2018/07/18/hadoop-6/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="spark：大数据的分析引擎基于mapreduce，但是对mapreduce进行了扩展，以有效地用于更多类型的计算，包括交互式查询和流处理。主要特性是内存中的集群计算">
+<meta property="og:updated_time" content="2018-07-18T09:22:15.579Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="hadoop-6">
+<meta name="twitter:description" content="spark：大数据的分析引擎基于mapreduce，但是对mapreduce进行了扩展，以有效地用于更多类型的计算，包括交互式查询和流处理。主要特性是内存中的集群计算">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -135,60 +140,193 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-hadoop-6" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/11/03/JDK配置/" class="archive-article-date">
-  	<time datetime="2017-11-03T03:32:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-03</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/11/03/JDK配置/">JDK配置</a>
+    <h1 class="article-title" itemprop="name">
+      hadoop-6
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/07/18/hadoop-6/" class="archive-article-date">
+  	<time datetime="2018-07-18T00:26:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-18</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>spark：<br>大数据的分析引擎<br>基于mapreduce，但是对mapreduce进行了扩展，以有效地用于更多类型的计算，包括交互式查询和流处理。<br>主要特性是内存中的集群计算<br><a id="more"></a></p>
+<h2 id="spark组件"><a href="#spark组件" class="headerlink" title="spark组件"></a>spark组件</h2><ul>
+<li>spark core</li>
+<li>spark SQL</li>
+<li>spark Streaming</li>
+<li>MLlib( Machine Learning Library)</li>
+<li>GraphX</li>
+</ul>
+<h2 id="spark-VS-MapReduce"><a href="#spark-VS-MapReduce" class="headerlink" title="spark  VS MapReduce"></a>spark  VS MapReduce</h2><p>数据存储结构：弹性分布式数据集RDD，对数据进行运算和Cahce<br>编程范式：DAG：Transformation + Action<br>中间数据：内存中<br>Task：以线程的方式维护</p>
+<h2 id="类似"><a href="#类似" class="headerlink" title="类似"></a>类似</h2><p>Flink + Beam</p>
+<h2 id="Spark集群"><a href="#Spark集群" class="headerlink" title="Spark集群"></a>Spark集群</h2><p>spark基于standalone集群搭建，standalone是主从结构，分master,worker<br>首先，简单说明下Master、Worker、Application三种角色。<br>Application：带有自己需要的mem和cpu资源量，会在master里排队，最后被分发到worker上执行。app的启动是去各个worker遍历，获取可用的cpu，然后去各个worker launch executor。<br>Worker：每台slave起一个(也可以起多个)，默认或被设置cpu和mem数，并在内存里做加减维护资源剩余量。Worker同时负责拉起本地的executor backend，即执行进程。<br>Master：接受Worker、app的注册，为app执行资源分配。Master和Worker本质上都是一个带Actor的进程</p>
+<h2 id="RDD"><a href="#RDD" class="headerlink" title="RDD"></a>RDD</h2><p>saveAsTextFile：将数据以文本格式输出到指定目录<br>def saveAsTextFile(path: String)<br>saveAsObjectFile：写入文件为SequenceFile格式<br>def saveAsObjectFile(path: String)</p>
+<h2 id="RDD-Transformation的Lazy特性"><a href="#RDD-Transformation的Lazy特性" class="headerlink" title="RDD Transformation的Lazy特性"></a>RDD Transformation的Lazy特性</h2><p>Transformation中Lazy在action执行前是不会进行计算的，只是记录下当前要做的事情。<br>Action结果会返回给driver<br>可以避免产生各种众多的中间数据.<br>Transformation操作：得到一个新的RDD，比如从数据源生成一个新的RDD，从RDD生成一个新的RDD<br>哪些属于Transformation：map(func)，mapPartitions(func)，sample(withReplacement,faction,seed)，filter(func)，flatMap(func),distinct([numTasks])等<br>Action操作：action是得到一个值，或者一个结果<br>哪些属于Action: reduce(func),collect(),count(),first(),take(n),takeSample(withReplacement，num，seed),takeOrdered(n, [ordering]),saveAsTextFile（path）</p>
+<p>可以通过持久化机制避免这种重复计算的开始<br>持久化方法：</p>
+<ul>
+<li>persist()  MEMEORY_ONLY MEMORY_AND_DISK unpersist()</li>
+<li>cache()  持久化到内存中</li>
+<li>heckpoint() 持久化到外存中，可以用来备份</li>
+</ul>
+<p>cache：RDD的cache()方法其实调用的就是persist方法，缓存策略均为MEMORY_ONLY<br>persist：可以通过persist方法手工设定StorageLevel来满足工程需要的存储级别<br><code>def cache(): RDD[T]</code><br><code>def persist(): RDD[T]</code><br><code>def persist(newLevel: StorageLevel): RDD[T]</code><br><code>org.apache.spark.storage.StorageLevel = StorageLevel(disk=false, memory=false, offheap=false, deserialized=false, replication=1)</code><br>存储级别如下：<br>NONE (default)<br><code>DISK_ONLY</code><br><code>DISK_ONLY_2</code><br><code>MEMORY_ONLY (default for cache() operation)</code><br><code>MEMORY_ONLY_2</code><br><code>MEMORY_ONLY_SER</code><br><code>MEMORY_ONLY_SER_2</code><br><code>MEMORY_AND_DISK</code><br><code>MEMORY_AND_DISK_2</code><br><code>MEMORY_AND_DISK_SER</code><br><code>MEMORY_AND_DISK_SER_2</code><br><code>OFF_HEAP</code></p>
+<h2 id="算子"><a href="#算子" class="headerlink" title="算子"></a>算子</h2><ul>
+<li>foreach(f)：foreach用于遍历RDD,将函数f应用于每一个元素<br> def foreach(f: T =&gt; Unit)</li>
+<li>collect：将RDD转换成list，结果以List的方式输出<br> def collect(): Array[T]</li>
+<li>count：对RDD的元素进行统计，返回个数<br>def count(): Long</li>
+<li>top：返回最大的k个元素，返回List的形式<br>def top(num: Int)(implicit ord: Ordering[T]): Array[T]</li>
+<li>take：返回数据的前k个元素，返回List的形式<br>def take(num: Int): Array[T]</li>
+</ul>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">java 环境</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">hadoop</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/07/18/hadoop-6/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2018/07/17/hadoop-5/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">hadoop-5</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -211,9 +349,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
