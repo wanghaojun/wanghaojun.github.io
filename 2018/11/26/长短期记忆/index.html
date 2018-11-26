@@ -16,13 +16,14 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="长短期记忆（英语：Long Short-Term Memory，LSTM）是一种时间递归神经网络（RNN），论文首次发表于1997年。由于独特的设计结构，LSTM适合于处理和预测时间序列中间隔和延迟非常长的重要事件。">
 <meta property="og:image" content="http://img.wanghaojun.cn/img/RNN-rolled.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/RNN-unrolled.png">
 <meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-SimpleRNN.png">
 <meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-chain.png">
 <meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-SimpleRNN.png">
 <meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-focus-f.png">
 <meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-focus-i.png">
 <meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-focus-o.png">
-<meta property="og:updated_time" content="2018-11-26T02:29:07.190Z">
+<meta property="og:updated_time" content="2018-11-26T03:22:47.392Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="长短期记忆">
 <meta name="twitter:description" content="长短期记忆（英语：Long Short-Term Memory，LSTM）是一种时间递归神经网络（RNN），论文首次发表于1997年。由于独特的设计结构，LSTM适合于处理和预测时间序列中间隔和延迟非常长的重要事件。">
@@ -169,8 +170,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>长短期记忆（英语：Long Short-Term Memory，LSTM）是一种时间递归神经网络（RNN），论文首次发表于1997年。由于独特的设计结构，LSTM适合于处理和预测时间序列中间隔和延迟非常长的重要事件。<br><a id="more"></a></p>
-<h1 id="递归神经网络"><a href="#递归神经网络" class="headerlink" title="递归神经网络"></a>递归神经网络</h1><p>递归神经网络包含了一种循环，这种循环可以长时间的保存信息。<br><img src="http://img.wanghaojun.cn/img/RNN-rolled.png" alt=""><br>在上图中，一块循环网络A将一个输入 $x_{t}$ ，并输出一个$h_{t}$,一个循环允许信息从网络的一个步骤传递到另一个步骤。<br>这些循环让RNN看起来有些神秘，但是如果你多想一下，这与普通的循环神经网络并没有很大的不同，可以将循环神经网路看作是同一网络的多个副本，每一个副本都将信息传递给后继者，如果我们把循环展开</p>
-<p>这种类似链的性质表明，递归神经网络与序列和列表密切相关。它们是用于此类数据的神经网络和自然架构。<br>这种网络结构被证实非常有用，在过去的数年中，将RNN应用于各种问题取得了令人难以置信的成功：语音识别，语音建模，翻译，图像字幕等等。<br>这些成功的关键在于LSTM，这是一种非常特殊的RNN结构，对于许多任务而言，它比标准版本要好用的多，几乎所有的RNN神经网络都是用它们实现的。</p>
+<h1 id="递归神经网络"><a href="#递归神经网络" class="headerlink" title="递归神经网络"></a>递归神经网络</h1><p>递归神经网络包含了一种循环，这种循环可以长时间的保存信息。<br><img src="http://img.wanghaojun.cn/img/RNN-rolled.png" alt=""><br>在上图中，一块循环网络A将一个输入 $x_{t}$ ，并输出一个$h_{t}$,一个循环允许信息从网络的一个步骤传递到另一个步骤。<br>这些循环让RNN看起来有些神秘，但是如果你多想一下，这与普通的循环神经网络并没有很大的不同，可以将循环神经网路看作是同一网络的多个副本，每一个副本都将信息传递给后继者，如果我们把循环展开<br><img src="http://img.wanghaojun.cn/img/RNN-unrolled.png" alt=""><br>这种类似链的性质表明，递归神经网络与序列和列表密切相关。它们是用于此类数据的神经网络和自然架构。<br>这种网络结构被证实非常有用，在过去的数年中，将RNN应用于各种问题取得了令人难以置信的成功：语音识别，语音建模，翻译，图像字幕等等。<br>这些成功的关键在于LSTM，这是一种非常特殊的RNN结构，对于许多任务而言，它比标准版本要好用的多，几乎所有的RNN神经网络都是用它们实现的。</p>
 <h1 id="长期依赖的问题"><a href="#长期依赖的问题" class="headerlink" title="长期依赖的问题"></a>长期依赖的问题</h1><p>RNN的吸引力在于它能够将以前的信息连接到当前的任务，比如说使用先前的视频帧来理解现在的视频帧。如果RNN可以做到这一点，它们将非常有用。<br>有时，我们为了执行当前的任务需要查看最近的信息。举个例子，一个语言模型尝试通过前一个单词来预测下一个单词，如果我们尝试预测“the clouds are in sky”最后一个单词，我们不需要任何其他的内容，很明显下一个单词是sky。在这个例子中，相关信息和地点之间的间隙很小，RNN可以学习使用过去的信息。<br>但是，在一些情况下，我们需要更多的内容。尝试预测句子“I grew up in France…I speak fluent French”。最近的信息表明下一个单词可能是一个语言的名字，但是，如果我们继续缩小范围到哪一种语言，我们需要从前面获取“France”这个信息。相关信息和需要的点之间的间隙可能是非常大的。<br>不幸的是，随着间隙变大，RNN也不能学习去连接这些信息。<br>理论上，RNN绝对可以解决这种“长期依赖”的问题，一个人可以通过认真挑选参数的方式来解决这类问题。然而，在实践中，RNN似乎无法学习它们。Hochreiter（德国）和Bengio等人对该问题进行了深入探讨，它们找到了一些为什么很难学习的根本原因。<br>幸运的是，LSTM并没有这样的问题。</p>
 <h1 id="LSTM网络"><a href="#LSTM网络" class="headerlink" title="LSTM网络"></a>LSTM网络</h1><p>长端期记忆网络，通常被叫做“LSTM”，是RNN的一种特殊形式，能够像学习长期依赖，它们由Hochreiter和Schmidhuber介绍，并在以后的工作中被许多人提炼和推广。它们在各种各样的问题上表现的非常好，现在被广泛使用。<br>LSTM旨在避免长期依赖性的问题，长时间记住信息是它们的默认行为，而不是它们难以学习的东西。<br>所有的递归神经网络都有神经网络重复模块链的形式。在标准的RNN中，重复模块有非常简单的结构，比如说一个的单一的tanh（激活函数）层。<br><img src="http://img.wanghaojun.cn/img/LSTM3-SimpleRNN.png" alt=""><br>LSTM也有这种链式结构，但是重复模块是一个不同的结构。LSTM有四个，而不是一个神经网络层，通过一种特殊的方式进行交互。<br><img src="http://img.wanghaojun.cn/img/LSTM3-chain.png" alt=""><br>在上图中，每一行都携带一个完整的向量，从一个节点的输出到其他节点的输入。粉色圆圈表示逐点运算，如矢量加法，而黄色框表示神经网络层。行合并表示连接，而行分叉表示其内容被复制，副本将转移到不同的位置。</p>
 <h1 id="LSTM的核心思想"><a href="#LSTM的核心思想" class="headerlink" title="LSTM的核心思想"></a>LSTM的核心思想</h1><p>LSTM的关键是cell state（细胞状态），一条水平线贯穿整个图的顶部。<br>细胞状态类似于传送带，它之间沿整个链运行，只有一些微小的线性相互作用，信息很容易沿着它不变地流动。<br><img src="http://img.wanghaojun.cn/img/LSTM3-SimpleRNN.png" alt=""><br>LSTM拥有添加或删除信息到细胞状态的能力，由一种叫做门的结构进行调节。门是一种可选择通过信息的方式。它们由sigmoid 神经网络层和逐点乘法运算组成。sigmoid层输出0到1之间的数字，描述每个组件应该通过多少。值为零意味着“不让任何东西通过”，而值为1则意味着“让一切都通过”。<br>LSTM具有三个这样的门，用于保护和控制细胞状态。</p>
@@ -471,6 +471,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">环境 java 后端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">deeplearing</a>
               </li>
             
             <div class="clearfix"></div>
