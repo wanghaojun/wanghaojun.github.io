@@ -385,22 +385,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <a id="more"></a>
-<h1 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h1><p>机器学习是一门人工智能的科学，该领域的主要研究对象是人工智能，特别是如何在经验学习中改善具体算法的性能。<br>A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E.<br>机器学习可以分为监督学习和非监督学习。<br>监督学习和非监督学习的差别就是训练集目标是否人标注。他们都有训练集，且都有输入和输出。<br>监督学习从给定的训练数据集中学习出一个函数，当新的数据到来时，可以根据这个函数预测结果。监督学习的训练集要求是包括输入和输出，也可以说是特征和目标。训练集中的目标是由人标注的。常见的监督学习算法包括回归分析和统计分类。<br>无监督学习与监督学习相比，训练集没有人为标注的结果。常见的无监督学习算法有生成对抗网络（GAN）、聚类。<br>半监督学习介于监督学习与无监督学习之间。</p>
-<h1 id="深度学习"><a href="#深度学习" class="headerlink" title="深度学习"></a>深度学习</h1><p>深度学习（deep learning）是机器学习的分支，是一种试图使用包含复杂结构或由多重非线性变换构成的多个处理层对数据进行高层抽象的算法。<br>深度学习的基础是机器学习中的分散表示（distributed representation）。分散表示假定观测值是由不同因子相互作用生成。在此基础上，深度学习进一步假定这一相互作用的过程可分为多个层次，代表对观测值的多层抽象。不同的层数和层的规模可用于不同程度的抽象。<br>深度学习运用了这分层次抽象的思想，更高层次的概念从低层次的概念学习得到。这一分层结构常常使用贪心算法逐层构建而成，并从中选取有助于机器学习的更有效的特征。<br>不少深度学习算法都以无监督学习的形式出现，因而这些算法能被应用于其他算法无法企及的无标签数据，这一类数据比有标签数据更丰富，也更容易获得。这一点也为深度学习赢得了重要的优势。</p>
-<h1 id="人工神经网络"><a href="#人工神经网络" class="headerlink" title="人工神经网络"></a>人工神经网络</h1><p>人工神经网络（英语：Artificial Neural Network，ANN），简称神经网络（Neural Network，NN）或类神经网络，在机器学习和认知科学领域，是一种模仿生物神经网络（动物的中枢神经系统，特别是大脑）的结构和功能的数学模型或计算模型，用于对函数进行估计或近似。神经网络由大量的人工神经元联结进行计算。大多数情况下人工神经网络能在外界信息的基础上改变内部结构，是一种自适应系统，通俗的讲就是具备学习功能。现代神经网络是一种非线性统计性数据建模工具。</p>
-<h1 id="前馈神经网络"><a href="#前馈神经网络" class="headerlink" title="前馈神经网络"></a>前馈神经网络</h1><p>前馈神经网络（英文：Feedforward Neural Network），为人工智能领域中，最早发明的简单人工神经网络类型。在它内部，参数从输入层向输出层单向传播。有异于递归神经网络，它的内部不会构成有向环。</p>
-<h1 id="递归神经网络"><a href="#递归神经网络" class="headerlink" title="递归神经网络"></a>递归神经网络</h1><p>递归神经网络（RNN）是神经网络的一种。单纯的RNN因为无法处理随着递归，权重指数级爆炸或消失的问题（Vanishing gradient problem），难以捕捉长期时间关联；而结合不同的LSTM可以很好解决这个问题。</p>
-<h1 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h1><p>长短期记忆（英语：Long Short-Term Memory，LSTM）是一种时间递归神经网络（RNN），论文首次发表于1997年。由于独特的设计结构，LSTM适合于处理和预测时间序列中间隔和延迟非常长的重要事件。</p>
-<h1 id="卷积神经网络"><a href="#卷积神经网络" class="headerlink" title="卷积神经网络"></a>卷积神经网络</h1><p>卷积神经网络（Convolutional Neural Network, CNN）是一种前馈神经网络，它的人工神经元可以响应一部分覆盖范围内的周围单元，对于大型图像处理有出色表现。、<br>卷积神经网络由一个或多个卷积层和顶端的全连通层（对应经典的神经网络）组成，同时也包括关联权重和池化层（pooling layer）。这一结构使得卷积神经网络能够利用输入数据的二维结构。与其他深度学习结构相比，卷积神经网络在图像和语音识别方面能够给出更好的结果。这一模型也可以使用反向传播算法进行训练。相比较其他深度、前馈神经网络，卷积神经网络需要考量的参数更少，使之成为一种颇具吸引力的深度学习结构。</p>
-<h1 id="DBN"><a href="#DBN" class="headerlink" title="DBN"></a>DBN</h1><p>深度信念网络，DBN，Deep Belief Nets，神经网络的一种。既可以用于非监督学习，类似于一个自编码机；也可以用于监督学习，作为分类器来使用。DBN由若干层神经元构成，组成元件是受限玻尔兹曼机（RBM）。可以使用梯度下降法和反向传播算法进行调优。</p>
-<h1 id="ResNet"><a href="#ResNet" class="headerlink" title="ResNet"></a>ResNet</h1><p>Deep Residual Learning，深度残差网络。是一种CNN。可以利用残差来大幅度提高神经网络的深度。用于图像识别等领域。</p>
-<h1 id="增强学习"><a href="#增强学习" class="headerlink" title="增强学习"></a>增强学习</h1><p>强化学习（英语：Reinforcement learning，简称RL）是机器学习中的一个领域，强调如何基于环境而行动，以取得最大化的预期利益。其灵感来源于心理学中的行为主义理论，即有机体如何在环境给予的奖励或惩罚的刺激下，逐步形成对刺激的预期，产生能获得最大利益的习惯性行为。<br>强化学习和标准的监督式学习之间的区别在于，它并不需要出现正确的输入/输出对，也不需要精确校正次优化的行为。强化学习更加专注于在线规划，需要在探索（在未知的领域）和遵从（现有知识）之间找到平衡。强化学习中的“探索-遵从”的交换，在多臂老虎机问题和有限MDP中研究得最多。</p>
-<h1 id="胶囊网络"><a href="#胶囊网络" class="headerlink" title="胶囊网络"></a>胶囊网络</h1><p>一个胶囊网络是由胶囊而不是由神经元构成。一个胶囊是一小群神经元，它们可以学习在一个图片的一定区域内检查一个特定的对象（比如，一个矩形）。它的输出是一个向量（例如，一个8维的向量）。每个向量的长度代表了物体是否存在的估计概率，它的方向（例如在8维空间里）记录了物体的姿态参数（比如，精确的位置、旋转等）。如果物体有稍微的变化（比如，移动、旋转、尺寸变化等），胶囊将也会输出一个长度相同但是方向稍微变化的向量。因此胶囊是等变的。</p>
-<h1 id="对抗网络"><a href="#对抗网络" class="headerlink" title="对抗网络"></a>对抗网络</h1><p>生成对抗网络（英语：Generative Adversarial Network，简称GAN）是非监督式学习的一种方法，通过让两个神经网络相互博弈的方式进行学习。该方法由伊恩·古德费洛等人于2014年提出。<br>生成对抗网络由一个生成网络与一个判别网络组成。生成网络从潜在空间（latent space）中随机采样作为输入，其输出结果需要尽量模仿训练集中的真实样本。判别网络的输入则为真实样本或生成网络的输出，其目的是将生成网络的输出从真实样本中尽可能分辨出来。而生成网络则要尽可能地欺骗判别网络。两个网络相互对抗、不断调整参数，最终目的是使判别网络无法判断生成网络的输出结果是否真实。</p>
-<h1 id="迁移学习"><a href="#迁移学习" class="headerlink" title="迁移学习"></a>迁移学习</h1><p>所谓迁移学习，或者领域适应Domain Adaptation，一般就是要将从源领域（Source Domain）学习到的东西应用到目标领域（Target Domain）上去。源领域和目标领域之间往往有gap/domain discrepancy（源领域的数据和目标领域的数据遵循不同的分布）。<br>迁移学习是运用已存有的知识对不同但相关领域问题进行求解的一种新的机器学习方法.它放宽了传统机器学习中的两个基本假设:用于学习的训练样本与新的测试样本满足独立同分布的条件;必须有足够可利用的训练样本才能学习得到一个好的分类模型.目的是迁移已有的知识来解决目标领域中仅有少量有标签样本数据甚至没有的学习问题.</p>
-<h1 id="图神经网络"><a href="#图神经网络" class="headerlink" title="图神经网络"></a>图神经网络</h1><p>图卷积神经网络（Graph Convolutional Network）是一种能对图数据进行深度学习的方法。</p>
-
+        <h1 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h1>
+        
+          <a class="article-more-a" href="/2018/11/26/深度学习相关概念/#more">more >></a>
+        
       
 
       
@@ -413,7 +401,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">deeplearing</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">deeplearning</a>
         		</li>
       		
 		</ul>
@@ -1045,11 +1033,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
+                <a href="javascript:void(0)" class="js-tag color5">网络原理</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">网络原理</a>
+                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1062,10 +1050,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">环境 java 后端</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">deeplearing</a>
               </li>
             
             <div class="clearfix"></div>
