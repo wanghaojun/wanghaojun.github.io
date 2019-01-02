@@ -6,19 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>ping与tracert | Hexo</title>
+  <title>TF-IDF | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="标签： 网络原理    今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。">
-<meta name="keywords" content="网络原理">
+  <meta name="description" content="TF-IDF（Term Frequency–Inverse Document Frequency）是一种用于资讯检索与文本挖掘的常用加权技术。">
+<meta name="keywords" content="自然语言处理">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ping与tracert">
-<meta property="og:url" content="http://yoursite.com/2017/10/23/ping与tracert/index.html">
+<meta property="og:title" content="TF-IDF">
+<meta property="og:url" content="http://yoursite.com/2019/01/02/TF-IDF/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="标签： 网络原理    今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。">
-<meta property="og:updated_time" content="2017-10-23T09:25:25.278Z">
+<meta property="og:description" content="TF-IDF（Term Frequency–Inverse Document Frequency）是一种用于资讯检索与文本挖掘的常用加权技术。">
+<meta property="og:updated_time" content="2019-01-02T11:46:22.584Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ping与tracert">
-<meta name="twitter:description" content="标签： 网络原理    今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。">
+<meta name="twitter:title" content="TF-IDF">
+<meta name="twitter:description" content="TF-IDF（Term Frequency–Inverse Document Frequency）是一种用于资讯检索与文本挖掘的常用加权技术。">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -140,44 +140,34 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-ping与tracert" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-TF-IDF" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      ping与tracert
+      TF-IDF
     </h1>
   
 
         
-        <a href="/2017/10/23/ping与tracert/" class="archive-article-date">
-  	<time datetime="2017-10-23T09:16:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-23</time>
+        <a href="/2019/01/02/TF-IDF/" class="archive-article-date">
+  	<time datetime="2019-01-02T10:24:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-02</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>标签： 网络原理</p>
-<hr>
-<p>  今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。</p>
-   <a id="more"></a>
-<p>  ping的作用：简单来说，就是判断网站的延迟或是连通率。</p>
-<pre><code>  ping www.baidu.com
-</code></pre><p><em>正在 Ping www.a.shifen.com [115.239.210.27] 具有 32 字节的数据:<br>来自 115.239.210.27 的回复: 字节=32 时间=17ms TTL=51<br>来自 115.239.210.27 的回复: 字节=32 时间=21ms TTL=51<br>来自 115.239.210.27 的回复: 字节=32 时间=18ms TTL=51<br>来自 115.239.210.27 的回复: 字节=32 时间=19ms TTL=51<br>115.239.210.27 的 Ping 统计信息:<br>    数据包: 已发送 = 4，已接收 = 4，丢失 = 0 (0% 丢失)，<br>往返行程的估计时间(以毫秒为单位):<br>    最短 = 17ms，最长 = 21ms，平均 = 18ms</em></p>
-<p>这就是ping百度的结果，时间就是网络延迟，TTL该字段指定IP包被路由器丢弃之前允许通过的最大网段数量，也就是允许被转发的次数。</p>
-<p>参数：</p>
-<p>-i 可以设置TTL值</p>
-<pre><code>ping www.baidu.com -i 15
-</code></pre><p>-f 设置转发过程不分组 可以不分组转发的数据包最大为1472</p>
-<pre><code>ping www.baidu.com -f
-</code></pre><p>-l 设置转发的数据包大小</p>
-<pre><code> ping www.baidu.com -l 1400
-</code></pre><p>Tracert命令用来显示数据包到达目标主机所经过的路径（路由器），并显示到达每个节点（路由器）的时间.<br>Tracert 先发送 TTL 为 1 的回应数据包，当数据包上的TTL在路由器收到后TTL自动减1，一旦某个服务器将TTL减1后，等于了0，路由器应该将“ICMP Time Exceeded”的消息发回源计算机，源计算机就根据收到的信息判断达到的路由器和所用时间。下次再次发送数据包时，将TTL递增1，继续上述测试，直到目标响应或 TTL 达到最大值，从而确定路由。</p>
-<pre><code>tracert www.upc.edu.cn
-</code></pre><p>在很多情况下，tracert跃点数减1，加上ping中的TTL值等于服务器默认的TTL值，等于64.但是这种情况不是绝对的，因为tracert的路径与ping之后，服务器返回数据包的路径不同。</p>
+        <p> TF-IDF（Term Frequency–Inverse Document Frequency）是一种用于资讯检索与文本挖掘的常用加权技术。<br> <a id="more"></a>TF-IDF是一种统计方法，用以评估一个字词对于一个文件集或一个语料库中的其中一份文件的重要程度。字词的重要性随着它在文件中出现的次数成正比增加，但同时会随着它在语料库中出现的频率成反比下降。TF-IDF加权的各种形式常被搜索引擎应用，作为文件与用户查询之间相关程度的度量或评级。<br>TF-IDF的主要思想是：如果某个词或短语在一篇文章中出现的频率TF高，并且在其他文章中很少出现，则认为此词或者短语具有很好的类别区分能力，适合用来分类。TF-IDF实际上是：TF * IDF。<br>（1）词频（Term Frequency，TF）指的是某一个给定的词语在该文件中出现的频率。即词w在文档d中出现的次数count(w, d)和文档d中总词数size(d)的比值。</p>
+<pre><code>tf(w,d) = count(w, d) / size(d)
+</code></pre><p>这个数字是对词数 (term count) 的归一化，以防止它偏向长的文件。（同一个词语在长文件里可能会比短文件有更高的词数，而不管该词语重要与否。）</p>
+<p>（2）逆向文件频率（Inverse Document Frequency，IDF）是一个词语普遍重要性的度量。某一特定词语的IDF，可以由总文件数目除以包含该词语之文件的数目，再将得到的商取对数得到。即文档总数n与词w所出现文件数docs(w, D)比值的对数。</p>
+<pre><code>idf = log(n / docs(w, D))
+</code></pre><p>TF-IDF根据 tf 和 idf 为每一个文档d和由关键词w[1]…w[k]组成的查询串q计算一个权值，用于表示查询串q与文档d的匹配度：</p>
+<pre><code>tf-idf(q, d) = sum { i = 1..k | tf-idf(w[i], d) } = sum { i = 1..k | tf(w[i], d) * idf(w[i]) }
+</code></pre><p>某一特定文件内的高词语频率，以及该词语在整个文件集合中的低文件频率，可以产生出高权重的TF-IDF。因此，TF-IDF倾向于过滤掉常见的词语，保留重要的词语。</p>
 
       
 
@@ -212,7 +202,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">网络原理</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">自然语言处理</a>
         		</li>
       		
 		</ul>
@@ -268,7 +258,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/10/23/ping与tracert/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2019/01/02/TF-IDF/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -282,18 +272,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/10/24/听报告/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          听报告
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/10/20/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Hello World</div>
+    <a href="/2019/01/02/word2Vec/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">word2Vec</div>
       <i class="icon-circle-right"></i>
     </a>
   

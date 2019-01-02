@@ -6,19 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>ping与tracert | Hexo</title>
+  <title>word2Vec | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="标签： 网络原理    今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。">
-<meta name="keywords" content="网络原理">
+  <meta name="description" content="word2Vecword2vec的核心是神经网络，采用 CBOW（Continuous Bag-Of-Words，即连续的词袋模型）和 Skip-Gram 两种模型，将词语映像到同一坐标系，输出为数值型向量的方法。">
+<meta name="keywords" content="自然语言处理">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ping与tracert">
-<meta property="og:url" content="http://yoursite.com/2017/10/23/ping与tracert/index.html">
+<meta property="og:title" content="word2Vec">
+<meta property="og:url" content="http://yoursite.com/2019/01/02/word2Vec/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="标签： 网络原理    今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。">
-<meta property="og:updated_time" content="2017-10-23T09:25:25.278Z">
+<meta property="og:description" content="word2Vecword2vec的核心是神经网络，采用 CBOW（Continuous Bag-Of-Words，即连续的词袋模型）和 Skip-Gram 两种模型，将词语映像到同一坐标系，输出为数值型向量的方法。">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/20181226103700.jpg">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/20181226101922.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/20181222183129.png">
+<meta property="og:updated_time" content="2019-01-02T10:19:25.762Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ping与tracert">
-<meta name="twitter:description" content="标签： 网络原理    今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。">
+<meta name="twitter:title" content="word2Vec">
+<meta name="twitter:description" content="word2Vecword2vec的核心是神经网络，采用 CBOW（Continuous Bag-Of-Words，即连续的词袋模型）和 Skip-Gram 两种模型，将词语映像到同一坐标系，输出为数值型向量的方法。">
+<meta name="twitter:image" content="http://img.wanghaojun.cn/img/20181226103700.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -140,44 +144,33 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-ping与tracert" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-word2Vec" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      ping与tracert
+      word2Vec
     </h1>
   
 
         
-        <a href="/2017/10/23/ping与tracert/" class="archive-article-date">
-  	<time datetime="2017-10-23T09:16:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-23</time>
+        <a href="/2019/01/02/word2Vec/" class="archive-article-date">
+  	<time datetime="2019-01-02T10:17:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-02</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>标签： 网络原理</p>
-<hr>
-<p>  今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。</p>
-   <a id="more"></a>
-<p>  ping的作用：简单来说，就是判断网站的延迟或是连通率。</p>
-<pre><code>  ping www.baidu.com
-</code></pre><p><em>正在 Ping www.a.shifen.com [115.239.210.27] 具有 32 字节的数据:<br>来自 115.239.210.27 的回复: 字节=32 时间=17ms TTL=51<br>来自 115.239.210.27 的回复: 字节=32 时间=21ms TTL=51<br>来自 115.239.210.27 的回复: 字节=32 时间=18ms TTL=51<br>来自 115.239.210.27 的回复: 字节=32 时间=19ms TTL=51<br>115.239.210.27 的 Ping 统计信息:<br>    数据包: 已发送 = 4，已接收 = 4，丢失 = 0 (0% 丢失)，<br>往返行程的估计时间(以毫秒为单位):<br>    最短 = 17ms，最长 = 21ms，平均 = 18ms</em></p>
-<p>这就是ping百度的结果，时间就是网络延迟，TTL该字段指定IP包被路由器丢弃之前允许通过的最大网段数量，也就是允许被转发的次数。</p>
-<p>参数：</p>
-<p>-i 可以设置TTL值</p>
-<pre><code>ping www.baidu.com -i 15
-</code></pre><p>-f 设置转发过程不分组 可以不分组转发的数据包最大为1472</p>
-<pre><code>ping www.baidu.com -f
-</code></pre><p>-l 设置转发的数据包大小</p>
-<pre><code> ping www.baidu.com -l 1400
-</code></pre><p>Tracert命令用来显示数据包到达目标主机所经过的路径（路由器），并显示到达每个节点（路由器）的时间.<br>Tracert 先发送 TTL 为 1 的回应数据包，当数据包上的TTL在路由器收到后TTL自动减1，一旦某个服务器将TTL减1后，等于了0，路由器应该将“ICMP Time Exceeded”的消息发回源计算机，源计算机就根据收到的信息判断达到的路由器和所用时间。下次再次发送数据包时，将TTL递增1，继续上述测试，直到目标响应或 TTL 达到最大值，从而确定路由。</p>
-<pre><code>tracert www.upc.edu.cn
-</code></pre><p>在很多情况下，tracert跃点数减1，加上ping中的TTL值等于服务器默认的TTL值，等于64.但是这种情况不是绝对的，因为tracert的路径与ping之后，服务器返回数据包的路径不同。</p>
+        <p>word2Vec<br>word2vec的核心是神经网络，采用 CBOW（Continuous Bag-Of-Words，即连续的词袋模型）和 Skip-Gram 两种模型，将词语映像到同一坐标系，输出为数值型向量的方法。<a id="more"></a>简而言之，就是将人类才可以看懂的文字，转换为机器也可以识别、操作、处理的数值，将一串文字转化为一个数值型向量的过程。这个词向量的维度一般情况下要远远小于词语总数 V 的大小，所以 Word2vec 本质上是一种降维操作——把词语从 one-hot encoder 形式的表示降维到 Word2vec 形式的表示。<br>由word2vec思想，即考察前后文的关联性产生了这两个模型：Skip-gram是通过一个词a去预测它周围的上下文；而CBOW相反，是通过上下文来预测其间的词。CBOW一般用于数据，而Skip-Gram通常用在数据量较大的情况。<br>CBOW：</p>
+<p><img src="http://img.wanghaojun.cn/img/20181226103700.jpg" alt=""></p>
+<p>Skip-Gram</p>
+<p><img src="http://img.wanghaojun.cn/img/20181226101922.png" alt=""></p>
+<p>CBOW给出了文本中一个词语wt左右各两个词，输出为wt。然后通过单隐藏层的神经网络去输出文本中每个词按照这个输入数据，输出为wt的概率。Skip-gram相反，用一个输入词wt去预测左右两个词语，同样输出概率值。<br>word2Vec的输入是one hot encode的向量。</p>
+<p><img src="http://img.wanghaojun.cn/img/20181222183129.png" alt=""></p>
+<p>我们关注的点在隐藏层，如果我们想用将每个词表示为一个维度为100的向量，即每个词有100个特征，那么隐藏层就是一个10000行×100列的矩阵（也就是隐藏层有100个结点），这个10000×100的矩阵就是我们最后想要的结果，它会将10000个词中的每一个表示为一个100维的向量，有木有发现，10000维的词瞬间被降维到了100维，当然这个权重矩阵中的值就不是0-1了。<br>最终得到这个1×100的向量。在输出层通过softmax进行变换，使输出层每个结点将会输出一个0-1之间的值（概率），这些所有输出层结点的概率之和为1。</p>
 
       
 
@@ -212,7 +205,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">网络原理</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">自然语言处理</a>
         		</li>
       		
 		</ul>
@@ -268,7 +261,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/10/23/ping与tracert/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2019/01/02/word2Vec/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -282,18 +275,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/10/24/听报告/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/01/02/TF-IDF/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          听报告
+          TF-IDF
         
       </div>
     </a>
   
   
-    <a href="/2017/10/20/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Hello World</div>
+    <a href="/2019/01/02/记忆网络/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">记忆网络</div>
       <i class="icon-circle-right"></i>
     </a>
   
