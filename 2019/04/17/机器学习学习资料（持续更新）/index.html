@@ -6,19 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>hadoop(7) | 菜鸟的小主页</title>
+  <title>机器学习学习资料（持续更新） | 菜鸟的小主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="sqoop">
-<meta name="keywords" content="hadoop">
+  <meta name="description" content="书籍《神经网络与深度学习》英文版：http://neuralnetworksanddeeplearning.com/中文版（不完整）：https://tigerneil.gitbooks.io/neural-networks-and-deep-learning-zh/content/《Tensorflow：实战Google深度学习框架》https://pan.baidu.com/s/1BqEFn6">
+<meta name="keywords" content="deeplearning">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hadoop(7)">
-<meta property="og:url" content="http://yoursite.com/2018/07/19/hadoop-7/index.html">
+<meta property="og:title" content="机器学习学习资料（持续更新）">
+<meta property="og:url" content="http://yoursite.com/2019/04/17/机器学习学习资料（持续更新）/index.html">
 <meta property="og:site_name" content="菜鸟的小主页">
-<meta property="og:description" content="sqoop">
-<meta property="og:updated_time" content="2018-07-19T12:03:08.111Z">
+<meta property="og:description" content="书籍《神经网络与深度学习》英文版：http://neuralnetworksanddeeplearning.com/中文版（不完整）：https://tigerneil.gitbooks.io/neural-networks-and-deep-learning-zh/content/《Tensorflow：实战Google深度学习框架》https://pan.baidu.com/s/1BqEFn6">
+<meta property="og:updated_time" content="2019-04-17T03:03:45.879Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hadoop(7)">
-<meta name="twitter:description" content="sqoop">
+<meta name="twitter:title" content="机器学习学习资料（持续更新）">
+<meta name="twitter:description" content="书籍《神经网络与深度学习》英文版：http://neuralnetworksanddeeplearning.com/中文版（不完整）：https://tigerneil.gitbooks.io/neural-networks-and-deep-learning-zh/content/《Tensorflow：实战Google深度学习框架》https://pan.baidu.com/s/1BqEFn6">
   
     <link rel="alternative" href="/atom.xml" title="菜鸟的小主页" type="application/atom+xml">
   
@@ -140,31 +140,29 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-hadoop-7" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-机器学习学习资料（持续更新）" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      hadoop(7)
+      机器学习学习资料（持续更新）
     </h1>
   
 
         
-        <a href="/2018/07/19/hadoop-7/" class="archive-article-date">
-  	<time datetime="2018-07-19T01:21:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-19</time>
+        <a href="/2019/04/17/机器学习学习资料（持续更新）/" class="archive-article-date">
+  	<time datetime="2019-04-17T03:03:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-17</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>sqoop</p>
-<a id="more"></a>
-<h2 id="Sqoop伪分布式环境搭建"><a href="#Sqoop伪分布式环境搭建" class="headerlink" title="Sqoop伪分布式环境搭建"></a>Sqoop伪分布式环境搭建</h2><p>第一步：解压sqoop压缩包sqoop-1.99.7-bin-hadoop200.tar.gz<br>1)    执行解压命令<br>2)    查看解压目录<br>3)    配置环境变量，配置完毕之后，需要执行命令:source /etc/profile，使其生效,如图25所示<br>第二步：配置sqoop配置文件<br>1）确认是否把Hadoop的安装目录配置到环境变量中 ,如果没有需要在/etc/profile中添加<br>export HADOOP_HOME=/simple/Hadoop-2.7.2<br>2）配置第三方jar引用路径<br>export SQOOP_SERVER_EXTRA_LIB=$SQOOP_HOME/extra<br>4）    复制sqoop/conf/sqoop-env-template.sh重命名为sqoop-env.sh<br>5）    修改sqoop-env.sh的属性<br>6）    修改${SQOOP_HOME}/bin/configure-sqoop里面的配置<br>注释掉HCatalog等不用的组件<br>第三步： 验证是否安装成功<br>1）    启动hadoop，输入 start-all.sh可全部启动。<br>2）    启动mysql服务器<br>3）    启动sqoop，在${sqoop}的bin目录下有一个sqoop,执行<code>./sqoop</code><br>4）    输入命令链接mysql数据库，列出数据库列表</p>
-<pre><code>./sqoop list-databases --connect jdbc:mysql://localhost:3306/ --username root --password 123456
-</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过这次实验，我在虚拟机上分别搭建了Hadoop伪分布式环境、Hive伪分布式环境以及Sqoop伪分布式环境，对Hadoop大数据生态环境下的三个组件有了一定的了解。<br>在一台计算机上搭建hadoop环境，让hadoop的核心：hdfs和yarn运行在同一台机器上，虽然没有达到真实的分布式存储和分布式计算环境，但是能让我们认识到hadoop每个组件的作用，学习mapreduce的分布式计算的过程，能让我对hadoop整个体系有个初步的了解。<br>通过Hive伪分布式的搭建，对Hive有了初步的认识和了解，Hive可以将结构化的数据文件映射为一张数据库表，并提供简单的sql查询功能，可以将sql语句转换为MapReduce任务进行运行。<br>在搭建Sqoop伪分布式的过程中，认识到sqoop可以将一个关系型数据库（例如 ： MySQL ,Oracle ,Postgres等）中的数据导进到Hadoop的HDFS中，也可以将HDFS的数据导进到关系型数据库中，是一个强大的在Hadoop(Hive)与传统的数据库(mysql、postgresql…)间进行数据的传递的工具。<br>实验二使用MapReduce实现对HDFS上的日志文件处理并把处理结果输出到HDFS，让我对mapreduce的数据处理能力有了一定的认识，也对mapreduce进行离线计算的开发有了一定理解。MapReduce提供了一个庞大但设计精良的并行计算软件框架，能自动完成计算任务的并行化处理，自动划分计算数据和计算任务，在集群节点上自动分配和执行任务以及收集计算结果，将数据分布存储、数据通信、容错处理等并行计算涉及到的很多系统底层的复杂细节交由系统负责处理，大大减少了软件开发人员的负担。</p>
+        <h1 id="书籍"><a href="#书籍" class="headerlink" title="书籍"></a>书籍</h1><p>《神经网络与深度学习》<br>英文版：<a href="http://neuralnetworksanddeeplearning.com/" target="_blank" rel="external">http://neuralnetworksanddeeplearning.com/</a><br>中文版（不完整）：<a href="https://tigerneil.gitbooks.io/neural-networks-and-deep-learning-zh/content/" target="_blank" rel="external">https://tigerneil.gitbooks.io/neural-networks-and-deep-learning-zh/content/</a><br>《Tensorflow：实战Google深度学习框架》<br><a href="https://pan.baidu.com/s/1BqEFn6FJJoOBuor-tZylhQ" target="_blank" rel="external">https://pan.baidu.com/s/1BqEFn6FJJoOBuor-tZylhQ</a>     提取码：8cws</p>
+<h1 id="论文"><a href="#论文" class="headerlink" title="论文"></a>论文</h1><p>Github上学霸整理的论文汇总：<br><a href="https://github.com/floodsung/Deep-Learning-Papers-Reading-Roadmap" target="_blank" rel="external">https://github.com/floodsung/Deep-Learning-Papers-Reading-Roadmap</a><br>中文版：<a href="https://www.douban.com/note/632733952/" target="_blank" rel="external">https://www.douban.com/note/632733952/</a><br>（建议原版阅读）</p>
+<h1 id="课程"><a href="#课程" class="headerlink" title="课程"></a>课程</h1><p>吴恩达的机器学习公开课：<br><a href="https://study.163.com/course/courseMain.htm?courseId=1004570029" target="_blank" rel="external">https://study.163.com/course/courseMain.htm?courseId=1004570029</a><br>吴恩达的深度学习公开课：<br><a href="https://mooc.study.163.com/smartSpec/detail/1001319001.htm" target="_blank" rel="external">https://mooc.study.163.com/smartSpec/detail/1001319001.htm</a></p>
 
       
 
@@ -199,7 +197,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">hadoop</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">deeplearning</a>
         		</li>
       		
 		</ul>
@@ -255,7 +253,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/07/19/hadoop-7/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2019/04/17/机器学习学习资料（持续更新）/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -269,18 +267,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/10/23/java笔记（一）/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          java笔记 —— 存储
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/07/18/hadoop-6/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">hadoop-6</div>
+    <a href="/2019/04/05/激活函数/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">激活函数</div>
       <i class="icon-circle-right"></i>
     </a>
   

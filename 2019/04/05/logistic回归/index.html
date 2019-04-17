@@ -6,19 +6,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>hadoop(7) | 菜鸟的小主页</title>
+  <title>logistic回归 | 菜鸟的小主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="sqoop">
-<meta name="keywords" content="hadoop">
+  <meta name="description" content="logistic回归是一种用于监督式学习的算法，它的输出y总是0或者是1，logistic回归的目标是尽可能减少预测值和训练数据之间的差别。">
+<meta name="keywords" content="deeplearning">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hadoop(7)">
-<meta property="og:url" content="http://yoursite.com/2018/07/19/hadoop-7/index.html">
+<meta property="og:title" content="logistic回归">
+<meta property="og:url" content="http://yoursite.com/2019/04/05/logistic回归/index.html">
 <meta property="og:site_name" content="菜鸟的小主页">
-<meta property="og:description" content="sqoop">
-<meta property="og:updated_time" content="2018-07-19T12:03:08.111Z">
+<meta property="og:description" content="logistic回归是一种用于监督式学习的算法，它的输出y总是0或者是1，logistic回归的目标是尽可能减少预测值和训练数据之间的差别。">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/20190401210938.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/20190402154324.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/20190402154556.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/20190403105227.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/20190403170048.png">
+<meta property="og:updated_time" content="2019-04-05T03:35:21.651Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hadoop(7)">
-<meta name="twitter:description" content="sqoop">
+<meta name="twitter:title" content="logistic回归">
+<meta name="twitter:description" content="logistic回归是一种用于监督式学习的算法，它的输出y总是0或者是1，logistic回归的目标是尽可能减少预测值和训练数据之间的差别。">
+<meta name="twitter:image" content="http://img.wanghaojun.cn/img/20190401210938.png">
   
     <link rel="alternative" href="/atom.xml" title="菜鸟的小主页" type="application/atom+xml">
   
@@ -140,31 +146,70 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-hadoop-7" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-logistic回归" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      hadoop(7)
+      logistic回归
     </h1>
   
 
         
-        <a href="/2018/07/19/hadoop-7/" class="archive-article-date">
-  	<time datetime="2018-07-19T01:21:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-19</time>
+        <a href="/2019/04/05/logistic回归/" class="archive-article-date">
+  	<time datetime="2019-04-05T03:29:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-05</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>sqoop</p>
-<a id="more"></a>
-<h2 id="Sqoop伪分布式环境搭建"><a href="#Sqoop伪分布式环境搭建" class="headerlink" title="Sqoop伪分布式环境搭建"></a>Sqoop伪分布式环境搭建</h2><p>第一步：解压sqoop压缩包sqoop-1.99.7-bin-hadoop200.tar.gz<br>1)    执行解压命令<br>2)    查看解压目录<br>3)    配置环境变量，配置完毕之后，需要执行命令:source /etc/profile，使其生效,如图25所示<br>第二步：配置sqoop配置文件<br>1）确认是否把Hadoop的安装目录配置到环境变量中 ,如果没有需要在/etc/profile中添加<br>export HADOOP_HOME=/simple/Hadoop-2.7.2<br>2）配置第三方jar引用路径<br>export SQOOP_SERVER_EXTRA_LIB=$SQOOP_HOME/extra<br>4）    复制sqoop/conf/sqoop-env-template.sh重命名为sqoop-env.sh<br>5）    修改sqoop-env.sh的属性<br>6）    修改${SQOOP_HOME}/bin/configure-sqoop里面的配置<br>注释掉HCatalog等不用的组件<br>第三步： 验证是否安装成功<br>1）    启动hadoop，输入 start-all.sh可全部启动。<br>2）    启动mysql服务器<br>3）    启动sqoop，在${sqoop}的bin目录下有一个sqoop,执行<code>./sqoop</code><br>4）    输入命令链接mysql数据库，列出数据库列表</p>
-<pre><code>./sqoop list-databases --connect jdbc:mysql://localhost:3306/ --username root --password 123456
-</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过这次实验，我在虚拟机上分别搭建了Hadoop伪分布式环境、Hive伪分布式环境以及Sqoop伪分布式环境，对Hadoop大数据生态环境下的三个组件有了一定的了解。<br>在一台计算机上搭建hadoop环境，让hadoop的核心：hdfs和yarn运行在同一台机器上，虽然没有达到真实的分布式存储和分布式计算环境，但是能让我们认识到hadoop每个组件的作用，学习mapreduce的分布式计算的过程，能让我对hadoop整个体系有个初步的了解。<br>通过Hive伪分布式的搭建，对Hive有了初步的认识和了解，Hive可以将结构化的数据文件映射为一张数据库表，并提供简单的sql查询功能，可以将sql语句转换为MapReduce任务进行运行。<br>在搭建Sqoop伪分布式的过程中，认识到sqoop可以将一个关系型数据库（例如 ： MySQL ,Oracle ,Postgres等）中的数据导进到Hadoop的HDFS中，也可以将HDFS的数据导进到关系型数据库中，是一个强大的在Hadoop(Hive)与传统的数据库(mysql、postgresql…)间进行数据的传递的工具。<br>实验二使用MapReduce实现对HDFS上的日志文件处理并把处理结果输出到HDFS，让我对mapreduce的数据处理能力有了一定的认识，也对mapreduce进行离线计算的开发有了一定理解。MapReduce提供了一个庞大但设计精良的并行计算软件框架，能自动完成计算任务的并行化处理，自动划分计算数据和计算任务，在集群节点上自动分配和执行任务以及收集计算结果，将数据分布存储、数据通信、容错处理等并行计算涉及到的很多系统底层的复杂细节交由系统负责处理，大大减少了软件开发人员的负担。</p>
+        <p>logistic回归是一种用于监督式学习的算法，它的输出y总是0或者是1，logistic回归的目标是尽可能减少预测值和训练数据之间的差别。 <a id="more"></a><br>举例：Cat vs No-cat<br>给出一张由特征向量x表示的图片，该算法会预测图片中有一只猫的可能性。</p>
+<script type="math/tex; mode=display">Given   x,\hat{y}=P(y=1|x),where \quad 0 \le \hat{y} \le 1</script><p>logistic回归中的参数如下：</p>
+<ul>
+<li>输入特征向量：$x \in R^{n_x}$ ，$n_x$是指特征的数量</li>
+<li>训练标签：$y \in 0,1$</li>
+<li>权重：$w \in  R^{n_x} $，$n_x$是指特征的数量</li>
+<li>偏移量：$b \in R$</li>
+<li>输出：$\hat{y}=\sigma(w^T x+b)$</li>
+<li>sigmoid函数：$s=\sigma(w^T x+b)=\sigma(z)=\frac{1}{1+e^{-z}}$<br><img src="http://img.wanghaojun.cn/img/20190401210938.png" alt=""><br>$(w^T x+b)$是一个线性函数$(ax+b)$，但是我们需要的是一个介于[0,1]之间的值，所以使用了sigmoid函数，该函数的函数值范围是[0,1]。<br>从图中可以发现：</li>
+<li>当z是一个很大的正数时，$\sigma(z)=1$</li>
+<li>当z是一个绝对值很大的负数时，$\sigma(z)=0$</li>
+<li>如果z=0，$\sigma(z)=0.5$<h3 id="logistic回归的损失函数"><a href="#logistic回归的损失函数" class="headerlink" title="logistic回归的损失函数"></a>logistic回归的损失函数</h3>为了训练参数w和b，我们需要一个损失函数。<script type="math/tex; mode=display">\hat{y}^{(i)}=\sigma(w^T x^{(i)}+b),where\quad\sigma(z^{(i)})=\frac{1}{1+e^{-z^{(i)}}}</script>$Given[(x^{(1)},y^{(1)}),(x^{(2)},y^{(2)}),…,(x^{(i)},y^{(i)})]$ 我们希望$\hat{y}^{(i)}\approx{y}^{(i)}$<br>损失函数(Loss function)是为了计算预测值$\hat{y}^{(i)}$和期望值${y}^{(i)}$之间的差别，对于单个的训练样本，损失函数有如下形式：<script type="math/tex; mode=display">L(\hat{y}^{(i)},{y}^{(i)})=-[{y}^{(i)}log(\hat{y}^{(i)})+(1-{y}^{(i)})log(1-\hat{y}^{(i)})]</script></li>
+<li>当${y}^{(i)}=1:L(\hat{y}^{(i)},{y}^{(i)})=-log(\hat{y}^{(i)})$,当$\hat{y}^{(i)}$接近1时，L接近0。</li>
+<li>当${y}^{(i)}=0:L(\hat{y}^{(i)},{y}^{(i)})=-log(1-\hat{y}^{(i)})$,当$\hat{y}^{(i)}$接近0时，L接近0。</li>
+</ul>
+<p>成本函数（Cost function）是损失函数在整个训练集的体现，我们希望获得最好的w和b来最小化成本函数。</p>
+<script type="math/tex; mode=display">J(w,b)=\frac{1}{m}\sum_{i=1}^{m}L(\hat{y}^{(i)},{y}^{(i)})=-\frac{1}{m}\sum_{i=1}^{m}[{y}^{(i)}log(\hat{y}^{(i)})+(1-{y}^{(i)})log(1-\hat{y}^{(i)})]</script><h3 id="logistic回归的梯度下降"><a href="#logistic回归的梯度下降" class="headerlink" title="logistic回归的梯度下降"></a>logistic回归的梯度下降</h3><p>假设输入x是两维的，所以w也是两维的那么此时的正向计算单个样本的损失函数如下：<br><img src="http://img.wanghaojun.cn/img/20190402154324.png" alt=""><br>反向过程如下：<br><img src="http://img.wanghaojun.cn/img/20190402154556.png" alt=""><br>计算导数时：</p>
+<ul>
+<li>$da=\frac{dL(a,y)}{da}=-\frac{a}{y}+\frac{1-y}{1-a}$</li>
+<li>$ dz=\frac{dL(a,y)}{dz}=a-y$</li>
+</ul>
+<p>以下是计算整个样本集代码：<br><img src="http://img.wanghaojun.cn/img/20190403105227.png" alt=""></p>
+<h3 id="logistic回归的代码实现"><a href="#logistic回归的代码实现" class="headerlink" title="logistic回归的代码实现"></a>logistic回归的代码实现</h3><p>使用向量化去代替循环，可以极大的提高程序的运行速度，因为向量化的运算使用了CPU或者GPU的SIMD（全称Single Instruction Multiple Data，单指令多数据流），SIMD在GPU上的表现也要优于CPU。所以尽量在程序中避免使用循环。<br>使用向量化简化以上正向传播和反向传播的过程如下：</p>
+<pre><code>import numpy as np
+s = 1 # 学习率
+m = 10 # 样本集大小
+w = np.zeros(10) # 权值
+w = w.reshape(10,1)
+X = np.random.randn(10,10) # 输入
+b = 0   # 截距
+Y = np.array([1,0,1,0,1,1,1,0,1,0]) # 输出
+for item in range(10):
+        Z = np.dot(w.T,X) + b
+        A = 1.0/(1.0 + np.exp(-Z)) # 预测值
+        L = -(np.dot(Y,np.log(A).T))+np.dot((1-Y),np.log(1-A).T) #Loss function
+        dZ = A - Y        
+        dw = np.dot(X,dZ.T) / m 
+        db = np.sum(dZ) / m
+        w -= s * dw   
+        b -= s * db
+        print(str(item) + &quot;:&quot; + str(L))
+print(w)
+print(b)
+</code></pre><p><img src="http://img.wanghaojun.cn/img/20190403170048.png" alt=""></p>
 
       
 
@@ -199,7 +244,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">hadoop</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">deeplearning</a>
         		</li>
       		
 		</ul>
@@ -255,7 +300,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/07/19/hadoop-7/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2019/04/05/logistic回归/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -269,18 +314,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/10/23/java笔记（一）/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/04/05/激活函数/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          java笔记 —— 存储
+          激活函数
         
       </div>
     </a>
   
   
-    <a href="/2018/07/18/hadoop-6/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">hadoop-6</div>
+    <a href="/2019/01/02/TF-IDF/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">TF-IDF</div>
       <i class="icon-circle-right"></i>
     </a>
   
