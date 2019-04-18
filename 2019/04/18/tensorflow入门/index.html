@@ -6,19 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>hadoop(2) | 菜鸟的小主页</title>
+  <title>tensorflow入门 | 菜鸟的小主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="HDFS:分布式文件存储系统">
-<meta name="keywords" content="hadoop">
+  <meta name="description" content="本文将从tensorflow的计算模型、数据模型和运行模型三个角度介绍tensorflow框架。">
+<meta name="keywords" content="deeplearning,tensorflow">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hadoop(2)">
-<meta property="og:url" content="http://yoursite.com/2018/07/14/hadoop-2/index.html">
+<meta property="og:title" content="tensorflow入门">
+<meta property="og:url" content="http://yoursite.com/2019/04/18/tensorflow入门/index.html">
 <meta property="og:site_name" content="菜鸟的小主页">
-<meta property="og:description" content="HDFS:分布式文件存储系统">
-<meta property="og:updated_time" content="2018-07-15T00:32:08.916Z">
+<meta property="og:description" content="本文将从tensorflow的计算模型、数据模型和运行模型三个角度介绍tensorflow框架。">
+<meta property="og:updated_time" content="2019-04-18T07:31:38.803Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hadoop(2)">
-<meta name="twitter:description" content="HDFS:分布式文件存储系统">
+<meta name="twitter:title" content="tensorflow入门">
+<meta name="twitter:description" content="本文将从tensorflow的计算模型、数据模型和运行模型三个角度介绍tensorflow框架。">
   
     <link rel="alternative" href="/atom.xml" title="菜鸟的小主页" type="application/atom+xml">
   
@@ -140,76 +140,165 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-hadoop-2" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-tensorflow入门" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      hadoop(2)
+      tensorflow入门
     </h1>
   
 
         
-        <a href="/2018/07/14/hadoop-2/" class="archive-article-date">
-  	<time datetime="2018-07-14T00:58:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-14</time>
+        <a href="/2019/04/18/tensorflow入门/" class="archive-article-date">
+  	<time datetime="2019-04-18T07:25:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-18</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>HDFS:分布式文件存储系统</p>
-<a id="more"></a>
-<h2 id="hdfs设计前提与目标："><a href="#hdfs设计前提与目标：" class="headerlink" title="hdfs设计前提与目标："></a>hdfs设计前提与目标：</h2><ul>
-<li>硬件容错</li>
-<li>流式数据访问</li>
-<li>超大规模数据集</li>
-<li>简单一致性模型</li>
-<li>移动计算比移动数据便宜</li>
-<li>跨异构硬件和软件平台的可移植性</li>
+        <p>本文将从tensorflow的计算模型、数据模型和运行模型三个角度介绍tensorflow框架。<a id="more"></a></p>
+<h1 id="计算模型——计算图"><a href="#计算模型——计算图" class="headerlink" title="计算模型——计算图"></a>计算模型——计算图</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>TensorFlow这个名字就说明了两个概念——tensor和flow，tensor是指张量，也就是该框架的数据结构，可以简单的理解为多维数组，flow则体现了框架的计算模型，翻译成中文就是“流”，直观的表达了张量之间通过计算相互转化的过程。TensorFlow是通过计算图的形式来表述计算的编程系统，TensorFlow中的每一个计算都是计算图上的节点，而节点之间的边则描述了计算之间的依赖关系。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>TensorFlow程序一般分为两个阶段，第一个阶段是定义计算图中的所有计算，第二个阶段为执行阶段，下面代码给出了计算定义阶段的样例。</p>
+<pre><code>import tensorflow as tf
+a = tf.constant([1.0,2.0],name = &#39;a&#39;)
+b = tf.constant([2.0,3.0],name = &#39;b&#39;)
+result = a + b
+</code></pre><p>在TensorFlow程序中，系统会自动维护一个默认的计算图通过函数tf.get_defalut_graph()可以获取当前的默认的计算图。</p>
+<pre><code>#使用a.graph可以获取该张量所属的计算图，因为没有特别指定计算图，
+#所以这个计算图应该等于默认计算图，下面的输出为True
+print(a.graph is tf.get_default_graph())
+</code></pre><p>除了使用默认的计算图之外，TensorFlow还支持使用tf.Graph()函数来生成新的计算图，不同计算图上的张量和运算都不会共享。</p>
+<pre><code>import tensorflow as tf
+g1 = tf.Graph()
+with g1.as_default():
+    v = tf.get_variable(&quot;v&quot;, [1], initializer = tf.zeros_initializer()) # 设置初始值为0
+g2 = tf.Graph()
+with g2.as_default():
+    v = tf.get_variable(&quot;v&quot;, [1], initializer = tf.ones_initializer())  # 设置初始值为1
+
+with tf.Session(graph = g1) as sess:
+    tf.global_variables_initializer().run()
+    with tf.variable_scope(&quot;&quot;, reuse=True):
+        print(sess.run(tf.get_variable(&quot;v&quot;)))
+with tf.Session(graph = g2) as sess:
+    tf.global_variables_initializer().run()
+    with tf.variable_scope(&quot;&quot;, reuse=True):
+        print(sess.run(tf.get_variable(&quot;v&quot;)))
+</code></pre><p>在一个计算图中可以使用集合(collection)来管理不同类型的资源，可以通过tf.add_to_collection()函数来将资源加入一个或者多个集合中，可以使用tf.get_collection()获取一个集合里面的所有资源，这些资源可以是张量，变量或者TensorFlow所需要的队列资源等。</p>
+<h1 id="数据模型——张量"><a href="#数据模型——张量" class="headerlink" title="数据模型——张量"></a>数据模型——张量</h1><h2 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h2><p>从功能的角度看，张量可以被简单的理解为多维数组，其中零阶张量表示标量(slcar)，也就是一个数，第一阶的张量为向量(vector)，也就是一个一维数组，n阶张量可以理解为n维数组。要注意的是张量在TensorFlow中并不是直接采用数组的形式，它只是对TensorFlow计算结果的引用。张量中并没有保存数字，只是保存了如何得到这些数字的计算过程。</p>
+<pre><code>import tensorflow as tf
+a = tf.constant([1.0, 2.0], name=&quot;a&quot;)
+b = tf.constant([2.0, 3.0], name=&quot;b&quot;)
+result = a + b
+print (result)
+&#39;&#39;&#39;&#39;
+输出：
+Tensor(&quot;add:0&quot;, shape=(2,), dtype=float32)
+&#39;&#39;&#39;&#39;
+</code></pre><p>从上面代码可以看出张量和Numpy中的数组是不同的，TensorFlow的计算结果不是一个具体的数字，而是一个张量的结构，从代码的运行结果可以看出，张量主要保存三个属性：名字(name)，维度(shape)，类型(type).<br>张量的名字不仅是一个张量的唯一标识符，它同样给出了这个张量是如何计算出来的。张量和计算图上的节点是对应的，这样张量的命名就可以通过”node:src_output”来给出，node为节点名称，src_output表示当前向量来自第几个节点的输出。”add:0”就表示是计算节点”add”输出的第一个结果。<br>张量的第二个属性是维度，这个属性描述了张量的维度信息，上面代码中的result的维度是(2,)表示是一个一维数组，长度为2.<br>张量的第三个属性是类型，每个张量会有一个唯一的类型。TensorFlow会对所有参与运算的张量进行检车，发现类型不匹配时会报错。TensorFlow支持14种不同的类型，主要包括了实数(tf.float32,tf.float64)，整数(tf.int8,tf.int16,tf.int32,tf.int64,tf.unit8)，布尔型(tf.bool)和复数(tf.complex64,tf.complex128)</p>
+<h2 id="使用-1"><a href="#使用-1" class="headerlink" title="使用"></a>使用</h2><p>张量的使用一般可以归结为两大类，一类是对中间计算结果的引用。可以提高代码的可读性。另一类是当计算图完成构造后，通过张量来获得计算结果，也就是得到真实的数字。</p>
+<h1 id="运行模型——会话"><a href="#运行模型——会话" class="headerlink" title="运行模型——会话"></a>运行模型——会话</h1><p>会话(session)拥有并管理TensorFlow程序运行时的所有资源，当计算完成时需要关闭会话来帮助系统回收资源，否则就可能会出现资源泄露的问题，会话的使用方式一般有两种，第一种需要明确调用会话生成和关闭函数：</p>
+<pre><code>sess = tf.Session ()
+sess.run(...)
+sess.close()
+</code></pre><p>这种使用可能会因为程序的异常退出而不执行关闭会话函数，从而导致资源泄露。为了解决资源释放的问题，TensorFlow可以通过Python上下文管理器来使用会话。</p>
+<pre><code>with tf.Session() as sess:
+print(sess.run(result))
+</code></pre><p>上文介绍过TensorFlow会自动生成默认的计算图，会话中也有类似的机制，但是需要手动指定默认会话，默认的会话被指定后，可以通过tf.Tensor.eval()函数来计算张量的值。</p>
+<pre><code>sess = tf.Session()
+with sess.as_default():
+     print(result.eval())
+</code></pre><p>在交互式的环境下，TensorFlow还提供了一种在交互式环境下直接构建默认会话的函数，就是tf.InteractiveSesssion()，使用这个函数会将自动生成的会话注册为默认会话。</p>
+<pre><code>sess = tf.InteractiveSession ()
+print(result.eval())
+sess.close()
+</code></pre><p>无论用哪种方法都可以通过ConfigProto Protocol Buffer来配置需要生成的会话。</p>
+<pre><code>config=tf.ConfigProto(allow_soft_placement=True, log_device_placement=True)
+sess1 = tf.InteractiveSession(config=config)
+sess2 = tf.Session(config=config)
+</code></pre><h1 id="使用TensorFlow实现简单的神经网络"><a href="#使用TensorFlow实现简单的神经网络" class="headerlink" title="使用TensorFlow实现简单的神经网络"></a>使用TensorFlow实现简单的神经网络</h1><h2 id="神经网络参数和TensorFlow变量"><a href="#神经网络参数和TensorFlow变量" class="headerlink" title="神经网络参数和TensorFlow变量"></a>神经网络参数和TensorFlow变量</h2><p>在TensorFlow中，变量(tf.Variable)的作用就是保存和更新神经网络参数的。与其他编程语言类似，也需要指定初始值，初始值一般是随机值。常用的随机生成函数如下：</p>
+<ul>
+<li>tf.random_normal()，正态分布，主要参数为:平均值(mean)，标准差(stddev)，取值类型。</li>
+<li>tf.truncated_normal()，正态分布，但是如果随机值偏离平均值超过2个标准差，那么这个数会被重新随机，主要参数为:平均值(mean)，标准差(stddev)，取值类型。</li>
+<li>tf.random_uniform()，均匀分布，主要参数为：最小，最大值和取值类型。</li>
+<li>tf.random_gamma()，Gamma分布，主要参数：形状参数alpha，尺度参数beta，取值类型。</li>
 </ul>
-<h2 id="hdfs的主要组件"><a href="#hdfs的主要组件" class="headerlink" title="hdfs的主要组件"></a>hdfs的主要组件</h2><h3 id="NameNode"><a href="#NameNode" class="headerlink" title="NameNode"></a>NameNode</h3><ul>
-<li>存储元数据</li>
-<li>元数据保存在内存中</li>
-<li>保存文件，block，datanode之间的映射关系</li>
-<li>镜像文件FsImage:目录树，加载到内存中</li>
-<li>修改日志EditLog:记录了所有针对文件的创建、删除、重命名等操作</li>
-<li>元数据Metadata:存储目录树，记录块信息</li>
-<li>NameNode启动时，把EditLog的事务都应用到FsImage的内存表现上，进入保护模式，只允许访问不允许操作。</li>
+<p>TensorFlow也支持使用常数来初始化变量，常数生成函数如下：</p>
+<ul>
+<li>tf.zeros()，产生全0数组</li>
+<li>tf.ones()，产生全1数组</li>
+<li>tf.fill(),产生一个全部为给定数字的数组</li>
+<li>tf.constant,产生一个给定值的常量</li>
 </ul>
-<h3 id="DataNode"><a href="#DataNode" class="headerlink" title="DataNode"></a>DataNode</h3><ul>
-<li>存储文件内容</li>
-<li>文件内容保存在磁盘中</li>
-<li>维护了block id到datanode的文件的映射关系</li>
-<li>管理存储在它们所运行节点上的数据</li>
-<li>按照客户端的请求，执行文件系统的读写操作</li>
-<li>根据NameNode的指令执行block的创建，删除和配分。</li>
-<li>每隔3秒发送一次心跳报告给NameNode，同时NameNode将命令响应给datanode</li>
-</ul>
-<h3 id="SecondaryNameNode"><a href="#SecondaryNameNode" class="headerlink" title="SecondaryNameNode"></a>SecondaryNameNode</h3><p>相当于NameNode的秘书，在达到一定限度后（一个小时，或者一百万条），使用http请求下载NameNode的editlog与fsimage，然后在本地合并，使用httppost将fsimage ckpt复制到NameNode。辅助的作用，能够备份，防止NameNode过大</p>
-<h2 id="HDFS特性与优点"><a href="#HDFS特性与优点" class="headerlink" title="HDFS特性与优点"></a>HDFS特性与优点</h2><ul>
-<li>横向线性扩展 半年到两年扩充一次</li>
-<li>自动冗余  三倍冗余</li>
-<li>高容错性</li>
-<li>可构建在廉价商用机</li>
-<li>并发处理</li>
-</ul>
-<h2 id="HDFS缺点"><a href="#HDFS缺点" class="headerlink" title="HDFS缺点"></a>HDFS缺点</h2><ul>
-<li>命名空间的限制 不适合存放小文件</li>
-<li>性能问题</li>
-<li>不适合低延迟</li>
-<li>无法高效存储大量小文件</li>
-<li>不支持多用户写入及任意修改文件</li>
-</ul>
-<h2 id="HDFS-常用命令"><a href="#HDFS-常用命令" class="headerlink" title="HDFS 常用命令"></a>HDFS 常用命令</h2><pre><code>hadoop fs -ls &lt;path&gt; 指定文件的详细信息
-hadoop fs  -mkdir &lt;path&gt; 创建文件
-hadoop fs -copyFromLocal &lt;localsrc&gt; &lt;dst&gt; 把本地文件上传到hdfs
-hadoop fs -put  &lt;localsrc&gt; &lt;dst&gt; 把本地文件上传到hdfs
-hadoop fs -get  &lt;dst&gt; &lt;local&gt; 从hdfs上下载文件
-hadoop fs -copyToLocal &lt;dst&gt; &lt;localsrc&gt; 从hdfs上下载文件
-</code></pre><h3 id="HDFS-safemode"><a href="#HDFS-safemode" class="headerlink" title="HDFS safemode"></a>HDFS safemode</h3>
+<p>变量的生成函数tf.Variable()是一个运算，这个运算结果得到的张量就是变量，所以说变量是特殊的张量。tf.Variable()依赖了两种操作，对应计算图两个节点，一种是Assign，这个节点的输入为随机数生成函数的输出，然后将输出赋给了变量，所以这个节点完成了变量的初始化，而另一个节点read，可以将这个变量提供给其他运算。<br>类似张量，维度和属性也变量最重要的两个属性，变量的类型在构建之后是不可以改变的，但是维度是可以改变的，需要设置参数validate_shape=False。</p>
+<pre><code>w1 = tf.Variable(tf.random_normal((2,2),stddev = 1,seed = 1))
+w2 = tf.Variable(tf.random_normal((2,3),stddev = 1,seed = 1))
+tf.assign(w1,w2,validate_shape=False)
+</code></pre><h2 id="使用TensorFlow训练神经网络模型"><a href="#使用TensorFlow训练神经网络模型" class="headerlink" title="使用TensorFlow训练神经网络模型"></a>使用TensorFlow训练神经网络模型</h2><pre><code>import tensorflow as tensor
+from numpy.random import RandomState
+#定义batch的大小
+batch_size = 8
+# 定义神经网络参数
+w1 = tf.Variable(tf.random_normal((2,3),stddev = 1,seed = 1))
+w2 = tf.Variable(tf.random_normal((3,1),stddev = 1,seed = 1))
+#定义神经网络的输入
+x = tf.placeholder(tf.float32,shape = (None,2),name = &#39;input_x&#39;)
+y_ = tf.placeholder(tf.float32,shape = (None,1),name = &#39;input_y&#39;)
+#定义向前传播过程
+a = tf.matmul(x,w1)
+y = tf.matmul(a,w2)
+#定义损失函数和反向传播过程
+y = tf.sigmoid(y)
+cross_entropy = -tf.reduce_mean(y_ * tf.log(tf.clip_by_value(y,1e-10,1.0)) + (1-y) * tf.log(tf.clip_by_value(1-y,1e-10,1.0)))
+train_step = tf.train.AdamOptimizer(0.001).minimize(cross_entropy)
+#生成随机数据集
+rdm = RandomState(1)
+dateset_size = 128
+X = rdm.rand(dateset_size,2)
+Y = [[int(x1+x2 &lt; 1)] for (x1,x2) in X]
+#创建会话
+with tf.Session() as sess:
+    init_op = tf.global_variables_initializer()
+    sess.run(init_op)
+    print (sess.run(w1))
+    print (sess.run(w2))
+    STEP = 5000 #训练的轮数
+    for i in range(STEP):
+        #选取batch_size大小的数据进行训练
+        start = (i * batch_size) % dateset_size
+        end = min(start + batch_size,dateset_size)
+        #训练神经网络并且更新参数
+        sess.run(train_step,feed_dict={x:X[start:end],y_:Y[start:end]})
+        #每隔一段时间计算在所有数据上的损失函数并输出
+        if (i+1) % 1000 == 0:
+            total_cross_entropy = sess.run(cross_entropy,feed_dict={x:X,y_:Y}) 
+            print(&quot;after %d training steps,cross entropy on all dateset is %g&quot;%(i+1,total_cross_entropy))
+    # 打印最终的w1和w2
+    print(sess.run(w1))
+    print(sess.run(w2))
+&#39;&#39;&#39;&#39;
+输出：
+[[-0.8113182   1.4845988   0.06532937]
+ [-2.4427042   0.0992484   0.5912243 ]]
+[[-0.8113182 ]
+ [ 1.4845988 ]
+ [ 0.06532937]]
+after 1000 training steps,cross entropy on all dateset is 0.0685192
+after 2000 training steps,cross entropy on all dateset is 0.0337346
+after 3000 training steps,cross entropy on all dateset is 0.020567
+after 4000 training steps,cross entropy on all dateset is 0.0136916
+after 5000 training steps,cross entropy on all dateset is 0.00963481
+[[-2.5486627  3.0793145  2.895183 ]
+ [-4.111281   1.6259116  3.3972812]]
+[[-2.3231003]
+ [ 3.3011749]
+ [ 2.4632177]]    
+&#39;&#39;&#39;&#39;
+</code></pre>
       
 
       
@@ -243,7 +332,11 @@ hadoop fs -copyToLocal &lt;dst&gt; &lt;localsrc&gt; 从hdfs上下载文件
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">hadoop</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">deeplearning</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
         		</li>
       		
 		</ul>
@@ -299,7 +392,7 @@ hadoop fs -copyToLocal &lt;dst&gt; &lt;localsrc&gt; 从hdfs上下载文件
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/07/14/hadoop-2/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2019/04/18/tensorflow入门/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -313,18 +406,9 @@ hadoop fs -copyToLocal &lt;dst&gt; &lt;localsrc&gt; 从hdfs上下载文件
   
 <nav id="article-nav">
   
-    <a href="/2018/07/15/hadoop-3/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          hadoop(3)
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/07/13/hadoop-1/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">hadoop(1)</div>
+    <a href="/2019/04/17/机器学习学习资料（持续更新）/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">机器学习学习资料（持续更新）</div>
       <i class="icon-circle-right"></i>
     </a>
   
