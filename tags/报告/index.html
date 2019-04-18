@@ -6,28 +6,14 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>长短期记忆 | 菜鸟的小主页</title>
+  <title>Tag: 报告 | 菜鸟的小主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="长短期记忆（英语：Long Short-Term Memory，LSTM）是一种时间递归神经网络（RNN），论文首次发表于1997年。由于独特的设计结构，LSTM适合于处理和预测时间序列中间隔和延迟非常长的重要事件。">
-<meta name="keywords" content="deeplearning">
-<meta property="og:type" content="article">
-<meta property="og:title" content="长短期记忆">
-<meta property="og:url" content="http://yoursite.com/2018/11/26/长短期记忆/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="菜鸟的小主页">
+<meta property="og:url" content="http://yoursite.com/tags/报告/index.html">
 <meta property="og:site_name" content="菜鸟的小主页">
-<meta property="og:description" content="长短期记忆（英语：Long Short-Term Memory，LSTM）是一种时间递归神经网络（RNN），论文首次发表于1997年。由于独特的设计结构，LSTM适合于处理和预测时间序列中间隔和延迟非常长的重要事件。">
-<meta property="og:image" content="http://img.wanghaojun.cn/img/RNN-rolled.png">
-<meta property="og:image" content="http://img.wanghaojun.cn/img/RNN-unrolled.png">
-<meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-SimpleRNN.png">
-<meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-chain.png">
-<meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-SimpleRNN.png">
-<meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-focus-f.png">
-<meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-focus-i.png">
-<meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-focus-o.png">
-<meta property="og:updated_time" content="2018-11-26T03:22:47.392Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="长短期记忆">
-<meta name="twitter:description" content="长短期记忆（英语：Long Short-Term Memory，LSTM）是一种时间递归神经网络（RNN），论文首次发表于1997年。由于独特的设计结构，LSTM适合于处理和预测时间序列中间隔和延迟非常长的重要事件。">
-<meta name="twitter:image" content="http://img.wanghaojun.cn/img/RNN-rolled.png">
+<meta name="twitter:title" content="菜鸟的小主页">
   
     <link rel="alternative" href="/atom.xml" title="菜鸟的小主页" type="application/atom+xml">
   
@@ -149,182 +135,64 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-长短期记忆" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      长短期记忆
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2017" class="archive-year">2017</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2017/10/24/听报告/" class="archive-article-date">
+  	<time datetime="2017-10-24T14:34:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-24</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2017/10/24/听报告/">听报告</a>
     </h1>
   
 
-        
-        <a href="/2018/11/26/长短期记忆/" class="archive-article-date">
-  	<time datetime="2018-11-26T02:25:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>长短期记忆（英语：Long Short-Term Memory，LSTM）是一种时间递归神经网络（RNN），论文首次发表于1997年。由于独特的设计结构，LSTM适合于处理和预测时间序列中间隔和延迟非常长的重要事件。<br><a id="more"></a></p>
-<h1 id="递归神经网络"><a href="#递归神经网络" class="headerlink" title="递归神经网络"></a>递归神经网络</h1><p>递归神经网络包含了一种循环，这种循环可以长时间的保存信息。<br><img src="http://img.wanghaojun.cn/img/RNN-rolled.png" alt=""><br>在上图中，一块循环网络A将一个输入 $x_{t}$ ，并输出一个$h_{t}$,一个循环允许信息从网络的一个步骤传递到另一个步骤。<br>这些循环让RNN看起来有些神秘，但是如果你多想一下，这与普通的循环神经网络并没有很大的不同，可以将循环神经网路看作是同一网络的多个副本，每一个副本都将信息传递给后继者，如果我们把循环展开<br><img src="http://img.wanghaojun.cn/img/RNN-unrolled.png" alt=""><br>这种类似链的性质表明，递归神经网络与序列和列表密切相关。它们是用于此类数据的神经网络和自然架构。<br>这种网络结构被证实非常有用，在过去的数年中，将RNN应用于各种问题取得了令人难以置信的成功：语音识别，语音建模，翻译，图像字幕等等。<br>这些成功的关键在于LSTM，这是一种非常特殊的RNN结构，对于许多任务而言，它比标准版本要好用的多，几乎所有的RNN神经网络都是用它们实现的。</p>
-<h1 id="长期依赖的问题"><a href="#长期依赖的问题" class="headerlink" title="长期依赖的问题"></a>长期依赖的问题</h1><p>RNN的吸引力在于它能够将以前的信息连接到当前的任务，比如说使用先前的视频帧来理解现在的视频帧。如果RNN可以做到这一点，它们将非常有用。<br>有时，我们为了执行当前的任务需要查看最近的信息。举个例子，一个语言模型尝试通过前一个单词来预测下一个单词，如果我们尝试预测“the clouds are in sky”最后一个单词，我们不需要任何其他的内容，很明显下一个单词是sky。在这个例子中，相关信息和地点之间的间隙很小，RNN可以学习使用过去的信息。<br>但是，在一些情况下，我们需要更多的内容。尝试预测句子“I grew up in France…I speak fluent French”。最近的信息表明下一个单词可能是一个语言的名字，但是，如果我们继续缩小范围到哪一种语言，我们需要从前面获取“France”这个信息。相关信息和需要的点之间的间隙可能是非常大的。<br>不幸的是，随着间隙变大，RNN也不能学习去连接这些信息。<br>理论上，RNN绝对可以解决这种“长期依赖”的问题，一个人可以通过认真挑选参数的方式来解决这类问题。然而，在实践中，RNN似乎无法学习它们。Hochreiter（德国）和Bengio等人对该问题进行了深入探讨，它们找到了一些为什么很难学习的根本原因。<br>幸运的是，LSTM并没有这样的问题。</p>
-<h1 id="LSTM网络"><a href="#LSTM网络" class="headerlink" title="LSTM网络"></a>LSTM网络</h1><p>长端期记忆网络，通常被叫做“LSTM”，是RNN的一种特殊形式，能够像学习长期依赖，它们由Hochreiter和Schmidhuber介绍，并在以后的工作中被许多人提炼和推广。它们在各种各样的问题上表现的非常好，现在被广泛使用。<br>LSTM旨在避免长期依赖性的问题，长时间记住信息是它们的默认行为，而不是它们难以学习的东西。<br>所有的递归神经网络都有神经网络重复模块链的形式。在标准的RNN中，重复模块有非常简单的结构，比如说一个的单一的tanh（激活函数）层。<br><img src="http://img.wanghaojun.cn/img/LSTM3-SimpleRNN.png" alt=""><br>LSTM也有这种链式结构，但是重复模块是一个不同的结构。LSTM有四个，而不是一个神经网络层，通过一种特殊的方式进行交互。<br><img src="http://img.wanghaojun.cn/img/LSTM3-chain.png" alt=""><br>在上图中，每一行都携带一个完整的向量，从一个节点的输出到其他节点的输入。粉色圆圈表示逐点运算，如矢量加法，而黄色框表示神经网络层。行合并表示连接，而行分叉表示其内容被复制，副本将转移到不同的位置。</p>
-<h1 id="LSTM的核心思想"><a href="#LSTM的核心思想" class="headerlink" title="LSTM的核心思想"></a>LSTM的核心思想</h1><p>LSTM的关键是cell state（细胞状态），一条水平线贯穿整个图的顶部。<br>细胞状态类似于传送带，它之间沿整个链运行，只有一些微小的线性相互作用，信息很容易沿着它不变地流动。<br><img src="http://img.wanghaojun.cn/img/LSTM3-SimpleRNN.png" alt=""><br>LSTM拥有添加或删除信息到细胞状态的能力，由一种叫做门的结构进行调节。门是一种可选择通过信息的方式。它们由sigmoid 神经网络层和逐点乘法运算组成。sigmoid层输出0到1之间的数字，描述每个组件应该通过多少。值为零意味着“不让任何东西通过”，而值为1则意味着“让一切都通过”。<br>LSTM具有三个这样的门，用于保护和控制细胞状态。</p>
-<h1 id="LSTM的具体过程"><a href="#LSTM的具体过程" class="headerlink" title="LSTM的具体过程"></a>LSTM的具体过程</h1><p>LSTM的第一步决定我们将从细胞状态中抛弃哪些信息，这个决定由一个叫做“forget gate layer（遗忘门层）”的sigmoid层完成。它会将查看$h_{t-1}$和$x_t$，然后对于细胞状态$C_{t-1}$中的每个值输出一个0与1之间的数，1代表“完全保留这个”，而0代表“完全摆脱这个”。<br>我们回到语言模型的例子，尝试在先前的单词的基础上预测下一个单词。在这个问题中，细胞状态可能包含当前主题的性别，所以就可以使用正确的代词。当我们看到一个新的主题时，就会忘记旧主题的性别。<br><img src="http://img.wanghaojun.cn/img/LSTM3-focus-f.png" alt=""><br>下一步是确定我们将在单元状态中存储哪些新的信息。这包含两部分，首先，一个叫“输入门”的sigmoid层决定我们要更新哪些值。接下来，一个tanh层创造新的候选值的向量，${\vec{C_t}}$，可能会添加到状态。在下一步中，我们将结合这两个来进行状态更新。<br>在我们的语言模型的例子中，我们想要将新主题的性别添加到细胞状态，以替换我们忘记的旧主题。<br><img src="http://img.wanghaojun.cn/img/LSTM3-focus-i.png" alt=""><br>最后，我们需要决定我们要输出的内容。此输出将基于我们的单元状态，但将是过滤版本。首先，我们通过一个sigmoid层来决定细胞状态的哪一部分将被输出。然后，我们将单元状态通过tanh（将值推到-1和1之间）并将其乘以sigmoid门的输出，这样我们只输出我们决定的部分。<br>对于语言模型示例，由于它只是看到一个主题，它可能想要输出与动词相关的信息，以防接下来会发生什么。例如，它可能输出主语是单数还是复数，以便我们知道动词应该用什么形式。<br><img src="http://img.wanghaojun.cn/img/LSTM3-focus-o.png" alt=""></p>
-<p>本文转自<br><a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="external">http://colah.github.io/posts/2015-08-Understanding-LSTMs/</a></p>
-
-      
-
-      
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">deeplearning</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">报告</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">生活</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/11/26/长短期记忆/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2018/11/26/深度学习相关概念/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          深度学习相关概念
-        
-      </div>
-    </a>
   
   
-    <a href="/2018/10/23/服务器开发环境搭建/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">服务器开发环境搭建</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
+    
 
 
           </div>
@@ -347,9 +215,9 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
