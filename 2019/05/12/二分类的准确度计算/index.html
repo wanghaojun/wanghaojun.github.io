@@ -6,14 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: java 环境 | 菜鸟的小主页</title>
+  <title>二分类的准确度计算 | 菜鸟的小主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="菜鸟的小主页">
-<meta property="og:url" content="http://yoursite.com/tags/java-环境/index.html">
+  <meta name="description" content="二分类的作为机器学习分类问题中最简单的类型，其模型预测结果和真实结果只能为0或者1，可以说为True或者False，">
+<meta name="keywords" content="deeplearning,tensorflow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二分类的准确度计算">
+<meta property="og:url" content="http://yoursite.com/2019/05/12/二分类的准确度计算/index.html">
 <meta property="og:site_name" content="菜鸟的小主页">
+<meta property="og:description" content="二分类的作为机器学习分类问题中最简单的类型，其模型预测结果和真实结果只能为0或者1，可以说为True或者False，">
+<meta property="og:updated_time" content="2019-05-12T04:43:17.941Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="菜鸟的小主页">
+<meta name="twitter:title" content="二分类的准确度计算">
+<meta name="twitter:description" content="二分类的作为机器学习分类问题中最简单的类型，其模型预测结果和真实结果只能为0或者1，可以说为True或者False，">
   
     <link rel="alternative" href="/atom.xml" title="菜鸟的小主页" type="application/atom+xml">
   
@@ -135,60 +140,226 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-二分类的准确度计算" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/11/03/JDK配置/" class="archive-article-date">
-  	<time datetime="2017-11-03T03:32:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-03</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/11/03/JDK配置/">JDK配置</a>
+    <h1 class="article-title" itemprop="name">
+      二分类的准确度计算
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2019/05/12/二分类的准确度计算/" class="archive-article-date">
+  	<time datetime="2019-05-12T04:37:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>二分类的作为机器学习分类问题中最简单的类型，其模型预测结果和真实结果只能为0或者1，可以说为True或者False，<a id="more"></a>可以将二分类模型的预测结果进行进一步的细致分类，可以分为以下四种：<br>TP：True Positive ，预测值与真实值相符，而且预测值为1的预测结果，即1：1<br>TN：True Negative，预测值与真实值相符，而且预测值为0的预测结果，即0：0<br>FP: False Positive，预测值与真实值不符，而且预测值为1的预测结果，即1：0<br>FN：False Negative，预测值与真实值不符，而且预测值为0的预测结果，即0：1<br>True 或者False表示的是预测值与真实值是否相等，Positive和Negative表示预测的结果。<br>从这四个基本的分类可以延伸出以下评价指标：</p>
+<ul>
+<li>准确率（Accuracy），模型判断正确的数据占数据集的比例<script type="math/tex; mode=display">Acc = \frac{TP+TN}{TP+TN+FP+FN}</script></li>
+<li>召回率(Recall),模型判断出的正例占整个数据集正例的比例，等于true positive rate（TPR),sensitivity<script type="math/tex; mode=display">TPR=recall = \frac{TP}{TP+FN}</script></li>
+<li>精确率(Precision)，模型判断正确的正例占模型所有判断的所有整理的比例 ，或者叫positive pretictive value(PPV)<script type="math/tex; mode=display">PPV = Precision = \frac{TP}{TP+NP}</script></li>
+<li>False postive rate:<script type="math/tex; mode=display">FPR=\frac{FP}{FP+TN}</script></li>
+<li>True Negative rate(specificity):<script type="math/tex; mode=display">TNR = \frac{TN}{FP+TN} = 1-FPR</script></li>
+<li>False Negative rate:<script type="math/tex; mode=display">FNR = \frac{FN}{TP+FN} = 1-TPR</script></li>
+</ul>
+<p>以下是TP，TN，FP，FN的tensorflow代码实现：</p>
+<pre><code>    def build_accuracy(logits,targets):
+    # logits,targets的模拟值
+    # logits = tf.constant([[0,1]]*64+[[1,0]]*64,tf.int64)
+    # targets = tf.constant([[0,1]]*32+[[1,0]]*32+[[0,1]]*16+[[1,0]]*48,tf.int64)
+    # 取每行最大的元素的下标，如果最大值下标为1，则为正例，为0，则为反例
+    pretictions = tf.argmax(logits,1)
+    targets = tf.argmax(targets,1)
+    ones = tf.ones_like(pretictions)
+    zeros = tf.zeros_like(pretictions)
+    TN = tf.reduce_sum(
+        tf.cast(
+            tf.logical_and(
+                tf.equal(pretictions,zeros),
+                tf.equal(targets,zeros)
+            ),
+            &#39;float32&#39;
+        )
+    )
+    TP = tf.reduce_sum(
+        tf.cast(
+            tf.logical_and(
+                tf.equal(pretictions,ones),
+                tf.equal(targets,ones)
+            ),
+            &#39;float32&#39;
+        )
+    )
+    FN = tf.reduce_sum(
+        tf.cast(
+            tf.logical_and(
+                tf.equal(pretictions,zeros),
+                tf.equal(targets,ones)
+            ),
+            &#39;float32&#39;
+        )
+    )
+    FP = tf.reduce_sum(
+        tf.cast(
+            tf.logical_and(
+                tf.equal(pretictions,ones),
+                tf.equal(targets,zeros)
+            ),
+            &#39;float32&#39;
+        )
+    )
+    return TN,TP,FN,FP
+</code></pre>
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">java 环境</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">deeplearning</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2019/05/12/二分类的准确度计算/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2019/04/18/tensorflow入门/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">tensorflow入门</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -211,9 +382,9 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
@@ -302,15 +473,15 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">java 环境</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">日记</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">hadoop</a>
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">环境搭建</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -318,7 +489,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">java 读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color2">hadoop</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -330,19 +505,27 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">报告 生活</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">前端 环境</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">环境 java 后端</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">报告</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">前端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">环境</a>
               </li>
             
             <div class="clearfix"></div>
