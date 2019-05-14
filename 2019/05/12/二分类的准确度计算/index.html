@@ -15,7 +15,7 @@
 <meta property="og:url" content="http://yoursite.com/2019/05/12/二分类的准确度计算/index.html">
 <meta property="og:site_name" content="菜鸟的小主页">
 <meta property="og:description" content="二分类的作为机器学习分类问题中最简单的类型，其模型预测结果和真实结果只能为0或者1，可以说为True或者False，">
-<meta property="og:updated_time" content="2019-05-12T04:43:17.941Z">
+<meta property="og:updated_time" content="2019-05-14T08:03:41.994Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二分类的准确度计算">
 <meta name="twitter:description" content="二分类的作为机器学习分类问题中最简单的类型，其模型预测结果和真实结果只能为0或者1，可以说为True或者False，">
@@ -164,58 +164,90 @@
 <ul>
 <li>准确率（Accuracy），模型判断正确的数据占数据集的比例<script type="math/tex; mode=display">Acc = \frac{TP+TN}{TP+TN+FP+FN}</script></li>
 <li>召回率(Recall),模型判断出的正例占整个数据集正例的比例，等于true positive rate（TPR),sensitivity<script type="math/tex; mode=display">TPR=recall = \frac{TP}{TP+FN}</script></li>
-<li>精确率(Precision)，模型判断正确的正例占模型所有判断的所有整理的比例 ，或者叫positive pretictive value(PPV)<script type="math/tex; mode=display">PPV = Precision = \frac{TP}{TP+NP}</script></li>
+<li>精确率(Precision)，模型判断正确的正例占模型所有判断的所有整理的比例 ，或者叫positive pretictive value(PPV)<script type="math/tex; mode=display">PPV = Precision = \frac{TP}{TP+FP}</script></li>
 <li>False postive rate:<script type="math/tex; mode=display">FPR=\frac{FP}{FP+TN}</script></li>
 <li>True Negative rate(specificity):<script type="math/tex; mode=display">TNR = \frac{TN}{FP+TN} = 1-FPR</script></li>
 <li>False Negative rate:<script type="math/tex; mode=display">FNR = \frac{FN}{TP+FN} = 1-TPR</script></li>
 </ul>
 <p>以下是TP，TN，FP，FN的tensorflow代码实现：</p>
-<pre><code>    def build_accuracy(logits,targets):
-    # logits,targets的模拟值
-    # logits = tf.constant([[0,1]]*64+[[1,0]]*64,tf.int64)
-    # targets = tf.constant([[0,1]]*32+[[1,0]]*32+[[0,1]]*16+[[1,0]]*48,tf.int64)
-    # 取每行最大的元素的下标，如果最大值下标为1，则为正例，为0，则为反例
-    pretictions = tf.argmax(logits,1)
-    targets = tf.argmax(targets,1)
-    ones = tf.ones_like(pretictions)
-    zeros = tf.zeros_like(pretictions)
-    TN = tf.reduce_sum(
-        tf.cast(
-            tf.logical_and(
-                tf.equal(pretictions,zeros),
-                tf.equal(targets,zeros)
-            ),
-            &#39;float32&#39;
-        )
+<pre><code>def build_accuracy(logits,targets):
+# logits,targets的模拟值
+# logits = tf.constant([[0,1]]*64+[[1,0]]*64,tf.int64)
+# targets = tf.constant([[0,1]]*32+[[1,0]]*32+[[0,1]]*16+[[1,0]]*48,tf.int64)
+# 取每行最大的元素的下标，如果最大值下标为1，则为正例，为0，则为反例
+pretictions = tf.argmax(logits,1)
+targets = tf.argmax(targets,1)
+ones = tf.ones_like(pretictions)
+zeros = tf.zeros_like(pretictions)
+TN = tf.reduce_sum(
+    tf.cast(
+        tf.logical_and(
+            tf.equal(pretictions,zeros),
+            tf.equal(targets,zeros)
+        ),
+        &#39;float32&#39;
     )
-    TP = tf.reduce_sum(
-        tf.cast(
-            tf.logical_and(
-                tf.equal(pretictions,ones),
-                tf.equal(targets,ones)
-            ),
-            &#39;float32&#39;
-        )
+)
+TP = tf.reduce_sum(
+    tf.cast(
+        tf.logical_and(
+            tf.equal(pretictions,ones),
+            tf.equal(targets,ones)
+        ),
+        &#39;float32&#39;
     )
-    FN = tf.reduce_sum(
-        tf.cast(
-            tf.logical_and(
-                tf.equal(pretictions,zeros),
-                tf.equal(targets,ones)
-            ),
-            &#39;float32&#39;
-        )
+)
+FN = tf.reduce_sum(
+    tf.cast(
+        tf.logical_and(
+            tf.equal(pretictions,zeros),
+            tf.equal(targets,ones)
+        ),
+        &#39;float32&#39;
     )
-    FP = tf.reduce_sum(
-        tf.cast(
-            tf.logical_and(
-                tf.equal(pretictions,ones),
-                tf.equal(targets,zeros)
-            ),
-            &#39;float32&#39;
-        )
+)
+FP = tf.reduce_sum(
+    tf.cast(
+        tf.logical_and(
+            tf.equal(pretictions,ones),
+            tf.equal(targets,zeros)
+        ),
+        &#39;float32&#39;
     )
-    return TN,TP,FN,FP
+)
+return TN,TP,FN,FP
+</code></pre><p>下面是numpy版本的：</p>
+<pre><code>def build_accuracy(predictions,targets):
+# 模拟数据
+# preditions = [0]*16+[1]*16+[0]*16+[1]*16
+# targets = [0]*32+[1]*32
+ones = np.ones_like(predictions)
+zeros = np.zeros_like(targets)
+TN = np.sum(
+        np.logical_and(
+            np.equal(predictions, zeros),
+            np.equal(targets, zeros)
+        ).astype(np.float)
+    )
+TP = np.sum(
+        np.logical_and(
+            np.equal(predictions, ones),
+            np.equal(targets, ones)
+        ).astype(np.float)
+    )
+FN = np.sum(
+        np.logical_and(
+            np.equal(predictions, zeros),
+            np.equal(targets, ones)
+        ).astype(np.float)
+    )
+FP = np.sum(
+        np.logical_and(
+            np.equal(predictions, ones),
+            np.equal(targets, zeros)
+        ).astype(np.float)
+    )
+return TN,TP,FN,FP
 </code></pre>
       
 
@@ -485,11 +517,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">自然语言处理</a>
+                <a href="javascript:void(0)" class="js-tag color2">hadoop</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">hadoop</a>
+                <a href="javascript:void(0)" class="js-tag color2">自然语言处理</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -497,15 +529,23 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">网络原理</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">前端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">环境</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -518,14 +558,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">后端</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">前端</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">环境</a>
               </li>
             
             <div class="clearfix"></div>
