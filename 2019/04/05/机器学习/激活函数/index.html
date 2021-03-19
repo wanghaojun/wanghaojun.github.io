@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>激活函数 | 菜鸟的小主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -15,6 +15,7 @@
 <meta property="og:url" content="http://yoursite.com/2019/04/05/机器学习/激活函数/index.html">
 <meta property="og:site_name" content="菜鸟的小主页">
 <meta property="og:description" content="如果不在神经元中引入非线性激活函数的话，那么无论隐藏层有多少层，">
+<meta property="og:locale" content="default">
 <meta property="og:image" content="http://img.wanghaojun.cn/img/20190401210938.png">
 <meta property="og:image" content="http://img.wanghaojun.cn/img/20190405095659.png">
 <meta property="og:image" content="http://img.wanghaojun.cn/img/20190405100836.png">
@@ -42,7 +43,7 @@
   
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -166,10 +167,10 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>如果不在神经元中引入非线性激活函数的话，那么无论隐藏层有多少层，<a id="more"></a>神经网络都在做线性函数运算，只是将输入进行线性组合而已，这种线性函数的隐藏层是没有用的。<br>在某些回归问题中，可能会在输出层使用线性激活函数，$g(z) = z$，比如说房价预测问题，这时候的输出应该是一个实数，取值范围是0到无穷大。</p>
-<h3 id="sigmoid"><a href="#sigmoid" class="headerlink" title="sigmoid"></a>sigmoid</h3><p>sigmoid函数：$s=\sigma(w^T x+b)=\sigma(z)=\frac{1}{1+e^{-z}}$<br><img src="http://img.wanghaojun.cn/img/20190401210938.png" alt=""><br>sigmoid的应用场景很少，因为一帮情况下tanh的性能都要优于sigmoid，该激活函数主要应用于二分法的输出层。<br>导数：$g’(z) = g(z)*(1-g(z))$</p>
-<h3 id="tanh"><a href="#tanh" class="headerlink" title="tanh"></a>tanh</h3><script type="math/tex; mode=display">g(z) =tanh(z) = \frac{e^z-e^{-z}}{e^z+e^{-z}}</script><p><img src="http://img.wanghaojun.cn/img/20190405095659.png" alt=""><br>其值域为[-1,1]，平均值更接近于0，而不是sigmoid激活函数的0.5，所以有利于输入下一层的神经元进行进一步运算，但是由于可能为负值，所以不适合用于输出层，相比之下，tanh适合于隐藏层，sigmoid适合于输出层。<br>导数： $g’(z) = 1- (g(z))^2$</p>
-<h3 id="Rectified-Linear-Unit-ReLU"><a href="#Rectified-Linear-Unit-ReLU" class="headerlink" title="Rectified Linear Unit(ReLU)"></a>Rectified Linear Unit(ReLU)</h3><script type="math/tex; mode=display">ReLU:   g(z) = max(0,z)</script><p><img src="http://img.wanghaojun.cn/img/20190405100836.png" alt=""><br>优点：当x很大时，导数不会像sigmoid或者tanh一样变小，所以进行梯度下降的时候，速度比前两者快的多。目前比较常用。<br>导数：<br>$g’(z) = 1 \quad  if \quad z&gt;0$<br>$g’(z) = 0  \quad if \quad z &lt;0$<br>当z=0，ReLU不存在导数，但是可以定义为1，或者0，对实际运算影响不大。下面leaky ReLU同样如此。</p>
-<h3 id="leaky-ReLU"><a href="#leaky-ReLU" class="headerlink" title="leaky ReLU"></a>leaky ReLU</h3><script type="math/tex; mode=display">leaky \quad ReLU:   g(z) = max(0.01z,z)</script><p><img src="http://img.wanghaojun.cn/img/20190405104546.png" alt=""><br>类似于ReLU，只不过当z&lt;0时，函数值不再为0，导数也不为0.系数0.01是看实际情况具体选取的。<br>导数：<br>$g’(z) = 1 \quad  if \quad z&gt;0$<br>$g’(z) = 0.01  \quad if \quad z &lt;0$</p>
+<h3 id="sigmoid"><a href="#sigmoid" class="headerlink" title="sigmoid"></a>sigmoid</h3><p>sigmoid函数：$s=\sigma(w^T x+b)=\sigma(z)=\frac{1}{1+e^{-z}}$<br><img src="http://img.wanghaojun.cn/img/20190401210938.png" alt><br>sigmoid的应用场景很少，因为一帮情况下tanh的性能都要优于sigmoid，该激活函数主要应用于二分法的输出层。<br>导数：$g’(z) = g(z)*(1-g(z))$</p>
+<h3 id="tanh"><a href="#tanh" class="headerlink" title="tanh"></a>tanh</h3><script type="math/tex; mode=display">g(z) =tanh(z) = \frac{e^z-e^{-z}}{e^z+e^{-z}}</script><p><img src="http://img.wanghaojun.cn/img/20190405095659.png" alt><br>其值域为[-1,1]，平均值更接近于0，而不是sigmoid激活函数的0.5，所以有利于输入下一层的神经元进行进一步运算，但是由于可能为负值，所以不适合用于输出层，相比之下，tanh适合于隐藏层，sigmoid适合于输出层。<br>导数： $g’(z) = 1- (g(z))^2$</p>
+<h3 id="Rectified-Linear-Unit-ReLU"><a href="#Rectified-Linear-Unit-ReLU" class="headerlink" title="Rectified Linear Unit(ReLU)"></a>Rectified Linear Unit(ReLU)</h3><script type="math/tex; mode=display">ReLU:   g(z) = max(0,z)</script><p><img src="http://img.wanghaojun.cn/img/20190405100836.png" alt><br>优点：当x很大时，导数不会像sigmoid或者tanh一样变小，所以进行梯度下降的时候，速度比前两者快的多。目前比较常用。<br>导数：<br>$g’(z) = 1 \quad  if \quad z&gt;0$<br>$g’(z) = 0  \quad if \quad z &lt;0$<br>当z=0，ReLU不存在导数，但是可以定义为1，或者0，对实际运算影响不大。下面leaky ReLU同样如此。</p>
+<h3 id="leaky-ReLU"><a href="#leaky-ReLU" class="headerlink" title="leaky ReLU"></a>leaky ReLU</h3><script type="math/tex; mode=display">leaky \quad ReLU:   g(z) = max(0.01z,z)</script><p><img src="http://img.wanghaojun.cn/img/20190405104546.png" alt><br>类似于ReLU，只不过当z&lt;0时，函数值不再为0，导数也不为0.系数0.01是看实际情况具体选取的。<br>导数：<br>$g’(z) = 1 \quad  if \quad z&gt;0$<br>$g’(z) = 0.01  \quad if \quad z &lt;0$</p>
 
       
 
@@ -333,7 +334,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 wanghaojun
+    		&copy; 2021 wanghaojun
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -437,18 +438,6 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">日记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
@@ -457,7 +446,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">日记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -465,27 +458,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">报告</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">生活</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+                <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -497,11 +478,27 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">隐私保护</a>
+                <a href="javascript:void(0)" class="js-tag color3">报告</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SMC</a>
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -509,11 +506,27 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Federated Learning</a>
+                <a href="javascript:void(0)" class="js-tag color4">SMC</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+                <a href="javascript:void(0)" class="js-tag color5">隐私保护</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Federated Learning</a>
               </li>
             
             <div class="clearfix"></div>

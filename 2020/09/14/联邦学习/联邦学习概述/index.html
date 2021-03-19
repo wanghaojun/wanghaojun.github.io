@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>联邦学习概述 | 菜鸟的小主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -15,6 +15,7 @@
 <meta property="og:url" content="http://yoursite.com/2020/09/14/联邦学习/联邦学习概述/index.html">
 <meta property="og:site_name" content="菜鸟的小主页">
 <meta property="og:description" content="本文主要从联邦学习背景、定义、分类和框架这些角度简单的介绍联邦学习。">
+<meta property="og:locale" content="default">
 <meta property="og:image" content="http://img.wanghaojun.cn//img/20200914095353.png">
 <meta property="og:image" content="http://img.wanghaojun.cn//img/20200914095855.png">
 <meta property="og:updated_time" content="2020-09-14T02:04:42.388Z">
@@ -40,7 +41,7 @@
   
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -185,7 +186,7 @@
 <p>联邦学习是要解决这个问题：它希望做到各个企业的自有数据不出本地，而联邦系统可以通过 加密机制下的参数交换方式，即在不违反数据隐私法规情况下，建立一个虚拟的共有模型。这个虚 拟模型就好像大家把数据聚合在一起建立的最优模型一样。但是在建立虚拟模型的时候，数据本身 不移动，也不泄露隐私和影响数据合规。这样，建好的模型在各自的区域仅为本地的目标服务。在 这样一个联邦机制下，各个参与者的身份和地位相同，而联邦系统帮助大家建立了“共同富裕”的 策略。这就是为什么这个体系叫做“联邦学习”。</p>
 <p>联邦学习（Federated Learning）是一种机器学习技术，可在拥有 本地数据样本的多个分散边缘设备或服务器之间训练算法，而无需交换其数据样本。 这种方法与传统的集中式机器学习技术不同，传统的集中式机器学习技术将所有数据样本都上传到一个服务器。</p>
 <p> 联邦学习使多个参与者可以构建通用的，健壮的机器学习模型而无 需共享数据，从而解决了诸如数据隐私，数据安全性，数据访问权以及 对异构数据的访问之类的关键问题。</p>
-<p><img src="http://img.wanghaojun.cn//img/20200914095353.png" alt=""></p>
+<p><img src="http://img.wanghaojun.cn//img/20200914095353.png" alt></p>
 <h4 id="联邦学习与差分隐私理论的区别"><a href="#联邦学习与差分隐私理论的区别" class="headerlink" title="联邦学习与差分隐私理论的区别"></a>联邦学习与差分隐私理论的区别</h4><p>联邦学习的特点使其可以被用来保护用户数据的隐私，但是它和大数据、数据挖掘 领域中常用的隐私保护理论如差分隐私保护理论（ Differential Privacy）、k匿名 （ k-Anonymity）和l多样化（l-Diversity）等方法还是有较大的差别的。首先，联邦学习与传统隐私保护方法的原理不同，联邦学习通过加密机制下的参数交换方式保护用户数据隐私，加密手段包括同态加密等。与差分隐私理论不同，其数据和模型本身 不会进行传输，因此在数据层面上不存在泄露的可能，也不违反更严格的数据保护法 案如GDPR等。而差分隐私理论、k匿名和l多样化等方法是通过在数据里加噪音，或者釆用概括化的方法模糊某些敏感属性，直到第三方不能区分个体为止，从而以较高 的概率使数据无法被还原，以此来保护用户隐私。</p>
 <h4 id="联邦学习与分布式机器学习的区别"><a href="#联邦学习与分布式机器学习的区别" class="headerlink" title="联邦学习与分布式机器学习的区别"></a>联邦学习与分布式机器学习的区别</h4><p>橫向联邦学习中多方联合训练的方式与分布式机器学习（ Distributed Machine Learning） 有部分相似的地方。 </p>
 <p>分布式机器学习涵盖了多个方面，包括把机器学习中的训练数据分布式存储、计算仼务分 布式运行、模型结果分布式发布等，参数服务器（ Parameter Server）是分布式机器学习中 一个典型的例子。</p>
@@ -211,7 +212,7 @@
 <li>两个数据集的用户(U1,U2,…)与用户特征重叠(X1,X2,…)部分都比较小。</li>
 </ul>
 <p>为了应对以上三种数据分布情况，联邦学习分为横向联邦学习、纵向联邦学习和联邦迁移学习。</p>
-<p><img src="http://img.wanghaojun.cn//img/20200914095855.png" alt=""></p>
+<p><img src="http://img.wanghaojun.cn//img/20200914095855.png" alt></p>
 <h4 id="横向联邦学习（Horizontal-Federated-Learning）"><a href="#横向联邦学习（Horizontal-Federated-Learning）" class="headerlink" title="横向联邦学习（Horizontal Federated Learning）"></a>横向联邦学习（Horizontal Federated Learning）</h4><p>在两个数据集的用户特征重叠较多而用户重叠较少的情况下，我们把数据集 按照横向（即用户维度）切分，并取出双方用户特征相同而用户不完全相同的那 部分数据进行训练。这种方法叫做横向联邦学习。比如有两家不同地区银行，它 们的用户群体分别来自各自所在的地区，相互的交集很小。但是，它们的业务很相似，因此，记录的用户特征是相同的。此时，就可以使用横向联邦学习来构建 联合模型。 Google在2017年提出了一个针对安卓手机模型更新的数据联合建模方案：在单个用户使用安卓手机时，不断在本地更新模型参数并将参数上传到安卓云上，从而使特征维度相同的各数据拥有方建立联合模型的一种联邦学习方案。</p>
 <h4 id="纵向联邦学习（Vertical-Federated-Learning）"><a href="#纵向联邦学习（Vertical-Federated-Learning）" class="headerlink" title="纵向联邦学习（Vertical Federated Learning）"></a>纵向联邦学习（Vertical Federated Learning）</h4><p>在两个数据集的用户重叠较多而用户特征重叠较少的情况下，我们把数据集 按照纵向（即特征维度）切分，并取出双方用户相同而用户特征不完全相同的那 部分数据进行训练。这种方法叫做纵向联邦学习。比如有两个不同机构，一家是 某地的银行，另一家是同一个地方的电商。它们的用户群体很有可能包含该地的 大部分居民，因此用户的交集较大。但是，由于银行记录的都是用户的收支行为 与信用评级，而电商则保有用户的浏览与购买历史，因此它们的用户特征交集较 小。纵向联邦学习就是将这些不同特征在加密的状态下加以聚合，以增强模型能 力的联邦学习。目前，逻辑回归模型，树型结构模型和神经网络模型等众多机器 学习模型已经逐渐被证实能够建立在这个联邦体系上。</p>
 <h4 id="迁移联邦学习-（Federated-Transfer-Learning）"><a href="#迁移联邦学习-（Federated-Transfer-Learning）" class="headerlink" title="迁移联邦学习 （Federated Transfer Learning）"></a>迁移联邦学习 （Federated Transfer Learning）</h4><p>在两个数据集的用户与用户特征重叠都较少的情况下，我们不对数据进行切 分，而可以利用迁移学习来克服数据或标签不足的情况，这种方法叫作联邦迁移学习。 比如有两个不同机构，一家是位于中国的银行，另一家是位于美国的电商。 由于受到地域限制，这两家机构的用户群体交集很小。同时，由于机构类型的不同，二者的数据特征也只有小部分重合。在这种情况下，要想进行有效的联邦学习，就必须引入迁移学习，来解决单边数据规模小和标签样本少的问题，从而提升模型的效果。</p>
@@ -382,7 +383,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 wanghaojun
+    		&copy; 2021 wanghaojun
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -486,18 +487,6 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">日记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
@@ -506,7 +495,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">日记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -514,27 +507,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">报告</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">生活</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+                <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -546,11 +527,27 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">隐私保护</a>
+                <a href="javascript:void(0)" class="js-tag color3">报告</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SMC</a>
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -558,11 +555,27 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Federated Learning</a>
+                <a href="javascript:void(0)" class="js-tag color4">SMC</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+                <a href="javascript:void(0)" class="js-tag color5">隐私保护</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Federated Learning</a>
               </li>
             
             <div class="clearfix"></div>

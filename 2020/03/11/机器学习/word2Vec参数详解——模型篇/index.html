@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>word2Vec参数详解——模型篇 | 菜鸟的小主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -15,6 +15,7 @@
 <meta property="og:url" content="http://yoursite.com/2020/03/11/机器学习/word2Vec参数详解——模型篇/index.html">
 <meta property="og:site_name" content="菜鸟的小主页">
 <meta property="og:description" content="这篇文章是学习Xin Rong的《word2vec Parameter Learning Explained》记录的学习笔记，主要介绍了word2Vec的CBOW模型和Skip-gram模型，以及其模型涉及的推导过程。">
+<meta property="og:locale" content="default">
 <meta property="og:image" content="http://img.wanghaojun.cn//img/20200306094756.png">
 <meta property="og:image" content="http://img.wanghaojun.cn//img/20200310095823.png">
 <meta property="og:image" content="http://img.wanghaojun.cn//img/20200310154042.png">
@@ -41,7 +42,7 @@
   
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -233,7 +234,7 @@ E&= =-\log p\left(w_{O} | w_{I, 1}, \cdots, w_{I, C}\right)\\
 &=-{\mathbf{v}_{w_{O}}^{'}}^T \cdot \mathbf{h} + \log \sum_{j'=1}^{V} \exp \left({\mathbf{v}_{w_{j}}^{\prime}}^{T} \cdot \mathbf{h}\right)
 \end{aligned}
 \tag{16}</script><p>如下图所示</p>
-<p><img src="http://img.wanghaojun.cn//img/20200310095823.png" alt=""></p>
+<p><img src="http://img.wanghaojun.cn//img/20200310095823.png" alt></p>
 <p><center>图2 连续的词袋模型</center><br>从隐藏层到输出层的权重更新公式与单个上下文单词的模型是一样的，把公式(8)复制下来：</p>
 <script type="math/tex; mode=display">
 w_{i j}^{\prime}(\mathrm{new})=w_{i j}^{\prime}(\mathrm{old})-\eta \cdot e_{j} \cdot h_{i}\tag{17}</script><p>注意，对于每一次训练，都要把这个公式应用到从隐藏层到输出层的向量矩阵的每个元素上。</p>
@@ -241,7 +242,7 @@ w_{i j}^{\prime}(\mathrm{new})=w_{i j}^{\prime}(\mathrm{old})-\eta \cdot e_{j} \
 <script type="math/tex; mode=display">
 \mathbf{v}_{w_{I,c}}^{(\text {new })}=\mathbf{v}_{w_{I,c}}^{(\text {old })}-\frac{1}{C} \eta \mathrm{EH}^{T}\tag{18}</script><p>$v_{w_{I,c}}$是上下文单词的第c个输入向量，$\eta$是正向学习率，$EH$可以从公式(10)得出。这个更新公式的直接理解是和公式(14)一样的。</p>
 <h2 id="2-skip-Gram-Model"><a href="#2-skip-Gram-Model" class="headerlink" title="2 skip-Gram Model"></a>2 skip-Gram Model</h2><p>图3展示了skip-gram模型的过程，这是CBOW模型相反的一种方式，目标词是输入层，而上下文单词在输出层。</p>
-<p><img src="http://img.wanghaojun.cn//img/20200310154042.png" alt=""></p>
+<p><img src="http://img.wanghaojun.cn//img/20200310154042.png" alt></p>
 <p><center>图3 skip-gram模型</center><br>这里仍然使用$v_{w_I}$作为输入层唯一的一个单词向量，因此隐藏层的计算过程和公式(1)是一样的，即$\mathbf{h}$只是从输入层到隐藏层的权重矩阵W的与输入单词$w_I$有关的一行的简单的复制。</p>
 <script type="math/tex; mode=display">
 \mathbf{h}=\mathbf{W}^{T} \mathbf{x}=\mathbf{W}_{(k,)}^{T}:=\mathbf{v}_{w_{I}}^{T}
@@ -438,7 +439,7 @@ EH_i = \sum_{j=1}^{V}EI_j \cdot w'_{ij}\tag{29}</script><p>公式(28)的理解�
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 wanghaojun
+    		&copy; 2021 wanghaojun
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -542,18 +543,6 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">日记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
@@ -562,7 +551,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">日记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -570,27 +563,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">报告</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">生活</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+                <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -602,11 +583,27 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">隐私保护</a>
+                <a href="javascript:void(0)" class="js-tag color3">报告</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SMC</a>
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -614,11 +611,27 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Federated Learning</a>
+                <a href="javascript:void(0)" class="js-tag color4">SMC</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+                <a href="javascript:void(0)" class="js-tag color5">隐私保护</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Federated Learning</a>
               </li>
             
             <div class="clearfix"></div>

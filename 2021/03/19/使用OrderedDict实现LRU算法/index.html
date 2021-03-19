@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>hadoop(7) | 菜鸟的小主页</title>
+  <title>使用OrderedDict实现LRU算法 | 菜鸟的小主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="sqoop">
-<meta name="keywords" content="hadoop">
+  <meta name="description" content="本文主要介绍LRU机制和python中的OrderedDict字典，以及如何使用OrderedDict实现LRU算法。对应leetcode的第 146 题「LRU缓存机制」">
+<meta name="keywords" content="python,算法,面试">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hadoop(7)">
-<meta property="og:url" content="http://yoursite.com/2018/07/19/hadoop-7/index.html">
+<meta property="og:title" content="使用OrderedDict实现LRU算法">
+<meta property="og:url" content="http://yoursite.com/2021/03/19/使用OrderedDict实现LRU算法/index.html">
 <meta property="og:site_name" content="菜鸟的小主页">
-<meta property="og:description" content="sqoop">
-<meta property="og:updated_time" content="2018-07-19T12:03:08.111Z">
+<meta property="og:description" content="本文主要介绍LRU机制和python中的OrderedDict字典，以及如何使用OrderedDict实现LRU算法。对应leetcode的第 146 题「LRU缓存机制」">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-03-19T07:02:53.017Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hadoop(7)">
-<meta name="twitter:description" content="sqoop">
+<meta name="twitter:title" content="使用OrderedDict实现LRU算法">
+<meta name="twitter:description" content="本文主要介绍LRU机制和python中的OrderedDict字典，以及如何使用OrderedDict实现LRU算法。对应leetcode的第 146 题「LRU缓存机制」">
   
     <link rel="alternative" href="/atom.xml" title="菜鸟的小主页" type="application/atom+xml">
   
@@ -37,7 +38,7 @@
   
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -140,31 +141,49 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-hadoop-7" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-使用OrderedDict实现LRU算法" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      hadoop(7)
+      使用OrderedDict实现LRU算法
     </h1>
   
 
         
-        <a href="/2018/07/19/hadoop-7/" class="archive-article-date">
-  	<time datetime="2018-07-19T01:21:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-19</time>
+        <a href="/2021/03/19/使用OrderedDict实现LRU算法/" class="archive-article-date">
+  	<time datetime="2021-03-19T05:06:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-19</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>sqoop</p>
+        <p>本文主要介绍LRU机制和python中的OrderedDict字典，以及如何使用OrderedDict实现LRU算法。对应leetcode的第 146 题「LRU缓存机制」</p>
 <a id="more"></a>
-<h2 id="Sqoop伪分布式环境搭建"><a href="#Sqoop伪分布式环境搭建" class="headerlink" title="Sqoop伪分布式环境搭建"></a>Sqoop伪分布式环境搭建</h2><p>第一步：解压sqoop压缩包sqoop-1.99.7-bin-hadoop200.tar.gz<br>1)    执行解压命令<br>2)    查看解压目录<br>3)    配置环境变量，配置完毕之后，需要执行命令:source /etc/profile，使其生效,如图25所示<br>第二步：配置sqoop配置文件<br>1）确认是否把Hadoop的安装目录配置到环境变量中 ,如果没有需要在/etc/profile中添加<br>export HADOOP_HOME=/simple/Hadoop-2.7.2<br>2）配置第三方jar引用路径<br>export SQOOP_SERVER_EXTRA_LIB=$SQOOP_HOME/extra<br>4）    复制sqoop/conf/sqoop-env-template.sh重命名为sqoop-env.sh<br>5）    修改sqoop-env.sh的属性<br>6）    修改${SQOOP_HOME}/bin/configure-sqoop里面的配置<br>注释掉HCatalog等不用的组件<br>第三步： 验证是否安装成功<br>1）    启动hadoop，输入 start-all.sh可全部启动。<br>2）    启动mysql服务器<br>3）    启动sqoop，在${sqoop}的bin目录下有一个sqoop,执行<code>./sqoop</code><br>4）    输入命令链接mysql数据库，列出数据库列表</p>
-<pre><code>./sqoop list-databases --connect jdbc:mysql://localhost:3306/ --username root --password 123456
-</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过这次实验，我在虚拟机上分别搭建了Hadoop伪分布式环境、Hive伪分布式环境以及Sqoop伪分布式环境，对Hadoop大数据生态环境下的三个组件有了一定的了解。<br>在一台计算机上搭建hadoop环境，让hadoop的核心：hdfs和yarn运行在同一台机器上，虽然没有达到真实的分布式存储和分布式计算环境，但是能让我们认识到hadoop每个组件的作用，学习mapreduce的分布式计算的过程，能让我对hadoop整个体系有个初步的了解。<br>通过Hive伪分布式的搭建，对Hive有了初步的认识和了解，Hive可以将结构化的数据文件映射为一张数据库表，并提供简单的sql查询功能，可以将sql语句转换为MapReduce任务进行运行。<br>在搭建Sqoop伪分布式的过程中，认识到sqoop可以将一个关系型数据库（例如 ： MySQL ,Oracle ,Postgres等）中的数据导进到Hadoop的HDFS中，也可以将HDFS的数据导进到关系型数据库中，是一个强大的在Hadoop(Hive)与传统的数据库(mysql、postgresql…)间进行数据的传递的工具。<br>实验二使用MapReduce实现对HDFS上的日志文件处理并把处理结果输出到HDFS，让我对mapreduce的数据处理能力有了一定的认识，也对mapreduce进行离线计算的开发有了一定理解。MapReduce提供了一个庞大但设计精良的并行计算软件框架，能自动完成计算任务的并行化处理，自动划分计算数据和计算任务，在集群节点上自动分配和执行任务以及收集计算结果，将数据分布存储、数据通信、容错处理等并行计算涉及到的很多系统底层的复杂细节交由系统负责处理，大大减少了软件开发人员的负担。</p>
+<h4 id="LRU"><a href="#LRU" class="headerlink" title="LRU"></a>LRU</h4><p>LRU是一种缓存淘汰策略，全称是Least Recently Used，就是说我们认为最近访问过的缓存数据是有用的，很长时间没有使用的是无用的，如果缓存满了，应该优先删除那行很久没有使用过的数据。</p>
+<h4 id="有序字典OrderedDict"><a href="#有序字典OrderedDict" class="headerlink" title="有序字典OrderedDict"></a>有序字典OrderedDict</h4><p>python中常用的字典是dict，OrderedDict类似于常规字典，但是有一些与排序操作相关的额外功能。</p>
+<p><strong>实现</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">collections</span>.<span class="title">OrderedDict</span><span class="params">([items])</span></span></span><br></pre></td></tr></table></figure>
+<p>返回一个dict子类的实例，它具有专门用于重新排列字典顺序的方法。</p>
+<p><strong>主要方法</strong>：</p>
+<ul>
+<li><p><code>popitem</code>(<em>last=True</em>)</p>
+<p>有序字典的 <code>popitem()</code>方法移除并返回一个 (key, value) 键值对。 如果 <em>last</em> 值为真，则按 LIFO 后进先出的顺序返回键值对，否则就按 FIFO 先进先出的顺序返回键值对。</p>
+</li>
+<li><p><code>move_to_end</code>(<em>key</em>, <em>last=True</em>)</p>
+<p>将现有 <em>key</em> 移动到有序字典的任一端。 如果 <em>last</em> 为真值（默认）则将元素移至末尾；如果 <em>last</em> 为假值则将元素移至开头。</p>
+</li>
+</ul>
+<h4 id="LRU算法实现"><a href="#LRU算法实现" class="headerlink" title="LRU算法实现"></a>LRU算法实现</h4><p>力扣第 146 题「LRU缓存机制」就是设计数据结构：</p>
+<p>首先要接收一个 <code>capacity</code> 参数作为缓存的最大容量，然后实现两个 API，一个是 <code>put(key, val)</code> 方法存入键值对，另一个是 <code>get(key)</code> 方法获取 <code>key</code> 对应的 <code>val</code>，如果 <code>key</code> 不存在则返回 -1。</p>
+<p>LRU 缓存算法的核心数据结构就是哈希链表，双向链表和哈希表的结合体。</p>
+<p>自己实现的LRU算法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, key: int, val: int)</span>:</span></span><br><span class="line">        self.key = key</span><br><span class="line">        self.val = val</span><br><span class="line">        self.next = <span class="keyword">None</span></span><br><span class="line">        self.prev = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DoubleList</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.head = Node(<span class="number">0</span>,<span class="number">0</span>)</span><br><span class="line">        self.tail = Node(<span class="number">0</span>,<span class="number">0</span>)</span><br><span class="line">        self.head.next = self.tail</span><br><span class="line">        self.tail.prev = self.head</span><br><span class="line">        self.size = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 尾部添加节点</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">addLast</span><span class="params">(self, x: Node)</span>:</span></span><br><span class="line">        x.prev = self.tail.prev</span><br><span class="line">        x.next = self.tail</span><br><span class="line">        self.tail.prev.next = x</span><br><span class="line">        self.tail.prev = x</span><br><span class="line">        self.size += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#删除链表节点</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">remove</span><span class="params">(self, x: Node)</span>:</span></span><br><span class="line">        x.prev.next = x.next</span><br><span class="line">        x.next.prev = x.prev</span><br><span class="line">        self.size -= <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">#删除链表第一个节点并返回</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">removeFirst</span><span class="params">(self)</span> -&gt; Node:</span></span><br><span class="line">        <span class="keyword">if</span> self.head.next == self.tail:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">        first = self.head.next</span><br><span class="line">        self.remove(first)</span><br><span class="line">        <span class="keyword">return</span> first</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LRUCache</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, c: int)</span>:</span></span><br><span class="line">        self.capacity = c</span><br><span class="line">        self.map = &#123;int: Node&#125;</span><br><span class="line">        self.cache = DoubleList()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 将某个key提升为最近使用的</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">makeRecently</span><span class="params">(self, key: int)</span>:</span></span><br><span class="line">        x = self.map[key]</span><br><span class="line">        self.cache.remove(x)</span><br><span class="line">        self.cache.addLast(x)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 添加最近使用的节点</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">addRecent</span><span class="params">(self, key: int, val: int)</span>:</span></span><br><span class="line">        x = Node(key,val)</span><br><span class="line">        self.cache.addLast(x)</span><br><span class="line">        self.map[key] = x</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 删除某个key</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">removeKey</span><span class="params">(self, key: int)</span>:</span></span><br><span class="line">        x = self.map[key]</span><br><span class="line">        self.cache.remove(x)</span><br><span class="line">        self.map.pop(key)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 删除最久未使用的</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">removeLastRecently</span><span class="params">(self)</span>:</span></span><br><span class="line">        x = self.cache.removeFirst()</span><br><span class="line">        <span class="keyword">if</span> x:</span><br><span class="line">            self.map.pop(x.key)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, key: int)</span> -&gt; int:</span></span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">in</span> self.map:</span><br><span class="line">            self.makeRecently(key)</span><br><span class="line">            <span class="keyword">return</span> self.map[key].val</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">put</span><span class="params">(self,key: int, val :int)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">in</span> self.map:</span><br><span class="line">            self.map[key].val = val</span><br><span class="line">            self.makeRecently(key)</span><br><span class="line">            <span class="comment"># self.removeKey(key)</span></span><br><span class="line">            <span class="comment"># self.addRecent(key,val)</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">        <span class="keyword">if</span> (self.capacity == self.cache.size):</span><br><span class="line">            self.removeLastRecently()</span><br><span class="line">        self.addRecent(key,val)</span><br></pre></td></tr></table></figure>
+<p>使用OrderedDict实现的LRU算法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LRUCache</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, capacity: int)</span>:</span></span><br><span class="line">        self.cache = collections.OrderedDict()</span><br><span class="line">        self.capacity = capacity</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, key: int)</span> -&gt; int:</span></span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">in</span> self.cache:</span><br><span class="line">            self.cache.move_to_end(key)</span><br><span class="line">            <span class="keyword">return</span> self.cache[key]</span><br><span class="line">        <span class="keyword">else</span>: <span class="keyword">return</span> <span class="number">-1</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">put</span><span class="params">(self, key: int, value: int)</span> -&gt; <span class="keyword">None</span>:</span></span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">in</span> self.cache:</span><br><span class="line">            self.cache[key] = value</span><br><span class="line">            self.cache.move_to_end(key)</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">        <span class="keyword">if</span> len(self.cache) == self.capacity:</span><br><span class="line">            self.cache.popitem(last=<span class="keyword">False</span>)</span><br><span class="line">        self.cache[key] = value</span><br></pre></td></tr></table></figure>
 
       
 
@@ -204,7 +223,15 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">hadoop</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">面试</a>
         		</li>
       		
 		</ul>
@@ -260,7 +287,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/07/19/hadoop-7/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2021/03/19/使用OrderedDict实现LRU算法/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -274,18 +301,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/10/23/java笔记（一）/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          java笔记 —— 存储
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/07/18/hadoop-6/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">hadoop-6</div>
+    <a href="/2020/09/15/安全/2取1的不经意传输/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">2取1的不经意传输</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -328,7 +346,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 wanghaojun
+    		&copy; 2021 wanghaojun
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -432,10 +450,6 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">日记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
@@ -444,23 +458,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">hadoop</a>
+                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color3">日记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -468,23 +470,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">报告</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">生活</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+                <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -496,7 +490,55 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">隐私保护 SMC</a>
+                <a href="javascript:void(0)" class="js-tag color3">报告</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">hadoop</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SMC</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">隐私保护</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Federated Learning</a>
               </li>
             
             <div class="clearfix"></div>

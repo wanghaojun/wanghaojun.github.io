@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>人工神经网络 | 菜鸟的小主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -15,6 +15,7 @@
 <meta property="og:url" content="http://yoursite.com/2018/11/26/机器学习/人工神经网络/index.html">
 <meta property="og:site_name" content="菜鸟的小主页">
 <meta property="og:description" content="人工神经网络（英语：Artificial Neural Network，ANN），简称神经网络（Neural Network，NN）或类神经网络，在机器学习和认知科学领域，是一种模仿生物神经网络（动物的中枢神经系统，特别是大脑）的结构和功能的数学模型或计算模型，用于对函数进行估计或近似。神经网络由大量的人工神经元联结进行计算。大多数情况下人工神经网络能在外界信息的基础上改变内部结构，是一种自适应系">
+<meta property="og:locale" content="default">
 <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Ncell.png/343px-Ncell.png">
 <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/a/a8/SingleLayerNeuralNetwork_english.png">
 <meta property="og:updated_time" content="2018-11-26T02:34:31.787Z">
@@ -40,7 +41,7 @@
   
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -166,7 +167,7 @@
         <p>人工神经网络（英语：Artificial Neural Network，ANN），简称神经网络（Neural Network，NN）或类神经网络，在机器学习和认知科学领域，是一种模仿生物神经网络（动物的中枢神经系统，特别是大脑）的结构和功能的数学模型或计算模型，用于对函数进行估计或近似。神经网络由大量的人工神经元联结进行计算。大多数情况下人工神经网络能在外界信息的基础上改变内部结构，是一种自适应系统，通俗的讲就是具备学习功能。现代神经网络是一种非线性统计性数据建模工具。<br><a id="more"></a><br>人工神经网络目前没有一个统一的正式定义。不过，具有下列特点的统计模型可以被称作是“神经化”的：</p>
 <ul>
 <li>具有一组可以被调节的权重（被学习算法调节的数值参数）</li>
-<li>可以估计输入数据的非线性函数关系<br>这些可调节的权重可以被看做神经元之间的连接强度。<br>典型的人工神经网络具有以下三个部分：<br>结构（Architecture）结构指定了网络中的变量和它们的拓扑关系。例如，神经网络中的变量可以是神经元连接的权重（weights）和神经元的激励值（activities of the neurons）。<br>激励函数（Activity Rule）大部分神经网络模型具有一个短时间尺度的动力学规则，来定义神经元如何根据其他神经元的活动来改变自己的激励值。一般激励函数依赖于网络中的权重（即该网络的参数）。<br>学习规则（Learning Rule）学习规则指定了网络中的权重如何随着时间推进而调整。这一般被看做是一种长时间尺度的动力学规则。一般情况下，学习规则依赖于神经元的激励值。它也可能依赖于监督者提供的目标值和当前权重的值。例如，用于手写识别的一个神经网络，有一组输入神经元。输入神经元会被输入图像的数据所激发。在激励值被加权并通过一个函数（由网络的设计者确定）后，这些神经元的激励值被传递到其他神经元。这个过程不断重复，直到输出神经元被激发。最后，输出神经元的激励值决定了识别出来的是哪个字母。<h1 id="神经元"><a href="#神经元" class="headerlink" title="神经元"></a>神经元</h1><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Ncell.png/343px-Ncell.png" alt=""></li>
+<li>可以估计输入数据的非线性函数关系<br>这些可调节的权重可以被看做神经元之间的连接强度。<br>典型的人工神经网络具有以下三个部分：<br>结构（Architecture）结构指定了网络中的变量和它们的拓扑关系。例如，神经网络中的变量可以是神经元连接的权重（weights）和神经元的激励值（activities of the neurons）。<br>激励函数（Activity Rule）大部分神经网络模型具有一个短时间尺度的动力学规则，来定义神经元如何根据其他神经元的活动来改变自己的激励值。一般激励函数依赖于网络中的权重（即该网络的参数）。<br>学习规则（Learning Rule）学习规则指定了网络中的权重如何随着时间推进而调整。这一般被看做是一种长时间尺度的动力学规则。一般情况下，学习规则依赖于神经元的激励值。它也可能依赖于监督者提供的目标值和当前权重的值。例如，用于手写识别的一个神经网络，有一组输入神经元。输入神经元会被输入图像的数据所激发。在激励值被加权并通过一个函数（由网络的设计者确定）后，这些神经元的激励值被传递到其他神经元。这个过程不断重复，直到输出神经元被激发。最后，输出神经元的激励值决定了识别出来的是哪个字母。<h1 id="神经元"><a href="#神经元" class="headerlink" title="神经元"></a>神经元</h1><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Ncell.png/343px-Ncell.png" alt></li>
 <li>a1~an为输入向量的各个分量</li>
 <li>w1~wn为神经元各个突触的权值</li>
 <li>b为偏置</li>
@@ -178,7 +179,7 @@
 <li>${f} $为传递函数<br>可见，一个神经元的功能是求得输入向量与权向量的内积后，经一个非线性传递函数得到一个标量结果。<br>单个神经元的作用：把一个n维向量空间用一个超平面分割成两部分（称之为判断边界），给定一个输入向量，神经元可以判断出这个向量位于超平面的哪一边。<br>该超平面的方程：<script type="math/tex">{\vec {W'}}{\vec {p}}+b=0</script></li>
 <li>$ {\vec{W}}$权向量</li>
 <li>${b} $偏置</li>
-<li>${\vec{p}}$超平面上的向量<h1 id="单层神经元网络"><a href="#单层神经元网络" class="headerlink" title="单层神经元网络"></a>单层神经元网络</h1>是最基本的神经元网络形式，由有限个神经元构成，所有神经元的输入向量都是同一个向量。由于每一个神经元都会产生一个标量结果，所以单层神经元的输出是一个向量，向量的维数等于神经元的数目。<br>示意图：<br><img src="https://upload.wikimedia.org/wikipedia/commons/a/a8/SingleLayerNeuralNetwork_english.png" alt=""><h1 id="人工神经元网络模型"><a href="#人工神经元网络模型" class="headerlink" title="人工神经元网络模型"></a>人工神经元网络模型</h1>通常来说，一个人工神经元网络是由一个多层神经元结构组成，每一层神经元拥有输入（它的输入是前一层神经元的输出）和输出，每一层（我们用符号记做）Layer(i)是由Ni(Ni代表在第i层上的N)个网络神经元组成，每个Ni上的网络神经元把对应在Ni-1上的神经元输出做为它的输入，我们把神经元和与之对应的神经元之间的连线用生物学的名称，叫做突触（英语：Synapse），在数学模型中每个突触有一个加权数值，我们称做权重，那么要计算第i层上的某个神经元所得到的势能等于每一个权重乘以第i-1层上对应的神经元的输出，然后全体求和得到了第i层上的某个神经元所得到的势能，然后势能数值通过该神经元上的激活函数（activation function，常是∑函数（英语：Sigmoid function）以控制输出大小，因为其可微分且连续，方便差量规则（英语：Delta rule）处理。），求出该神经元的输出，注意的是该输出是一个非线性的数值，也就是说通过激励函数求的数值根据极限值来判断是否要激活该神经元，换句话说我们对一个神经元网络的输出是否线性不感兴趣。<h1 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h1>一种常见的多层结构的前馈网络（Multilayer Feedforward Network）由三部分组成，</li>
+<li>${\vec{p}}$超平面上的向量<h1 id="单层神经元网络"><a href="#单层神经元网络" class="headerlink" title="单层神经元网络"></a>单层神经元网络</h1>是最基本的神经元网络形式，由有限个神经元构成，所有神经元的输入向量都是同一个向量。由于每一个神经元都会产生一个标量结果，所以单层神经元的输出是一个向量，向量的维数等于神经元的数目。<br>示意图：<br><img src="https://upload.wikimedia.org/wikipedia/commons/a/a8/SingleLayerNeuralNetwork_english.png" alt><h1 id="人工神经元网络模型"><a href="#人工神经元网络模型" class="headerlink" title="人工神经元网络模型"></a>人工神经元网络模型</h1>通常来说，一个人工神经元网络是由一个多层神经元结构组成，每一层神经元拥有输入（它的输入是前一层神经元的输出）和输出，每一层（我们用符号记做）Layer(i)是由Ni(Ni代表在第i层上的N)个网络神经元组成，每个Ni上的网络神经元把对应在Ni-1上的神经元输出做为它的输入，我们把神经元和与之对应的神经元之间的连线用生物学的名称，叫做突触（英语：Synapse），在数学模型中每个突触有一个加权数值，我们称做权重，那么要计算第i层上的某个神经元所得到的势能等于每一个权重乘以第i-1层上对应的神经元的输出，然后全体求和得到了第i层上的某个神经元所得到的势能，然后势能数值通过该神经元上的激活函数（activation function，常是∑函数（英语：Sigmoid function）以控制输出大小，因为其可微分且连续，方便差量规则（英语：Delta rule）处理。），求出该神经元的输出，注意的是该输出是一个非线性的数值，也就是说通过激励函数求的数值根据极限值来判断是否要激活该神经元，换句话说我们对一个神经元网络的输出是否线性不感兴趣。<h1 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h1>一种常见的多层结构的前馈网络（Multilayer Feedforward Network）由三部分组成，</li>
 <li>输入层（Input layer），众多神经元（Neuron）接受大量非线形输入消息。输入的消息称为输入向量。</li>
 <li>输出层（Output layer），消息在神经元链接中传输、分析、权衡，形成输出结果。输出的消息称为输出向量。</li>
 <li>隐藏层（Hidden layer），简称“隐层”，是输入层和输出层之间众多神经元和链接组成的各个层面。隐层可以有一层或多层。隐层的节点（神经元）数目不定，但数目越多神经网络的非线性越显著，从而神经网络的强健性（robustness）（控制系统在一定结构、大小等的参数摄动下，维持某些性能的特性）更显著。习惯上会选输入节点1.2至1.5倍的节点。<br>这种网络一般称为感知器（对单隐藏层）或多层感知器（对多隐藏层），神经网络的类型已经演变出很多种，这种分层的结构也并不是对所有的神经网络都适用。<h1 id="学习过程"><a href="#学习过程" class="headerlink" title="学习过程"></a>学习过程</h1>通过训练样本的校正，对各个层的权重进行校正（learning）而创建模型的过程，称为自动学习过程（training algorithm）。具体的学习方法则因网络结构和模型不同而不同，常用反向传播算法（Backpropagation/倒传递/逆传播，以output利用一次微分Delta rule来修正weight）来验证。<h1 id="种类"><a href="#种类" class="headerlink" title="种类"></a>种类</h1>依据学习策略（Algorithm）分为：</li>
@@ -354,7 +355,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 wanghaojun
+    		&copy; 2021 wanghaojun
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -458,18 +459,6 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">日记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
@@ -478,7 +467,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">日记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -486,27 +479,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">报告</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">生活</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+                <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -518,11 +499,27 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">隐私保护</a>
+                <a href="javascript:void(0)" class="js-tag color3">报告</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SMC</a>
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -530,11 +527,27 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Federated Learning</a>
+                <a href="javascript:void(0)" class="js-tag color4">SMC</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+                <a href="javascript:void(0)" class="js-tag color5">隐私保护</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Federated Learning</a>
               </li>
             
             <div class="clearfix"></div>

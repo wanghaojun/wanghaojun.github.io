@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>ElGamal公钥密码体系 | 菜鸟的小主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -15,8 +15,9 @@
 <meta property="og:url" content="http://yoursite.com/2020/09/15/安全/ElGamal公钥密码体系/index.html">
 <meta property="og:site_name" content="菜鸟的小主页">
 <meta property="og:description" content="1985年ElGamal提出ElGamal公钥密码体系，它基于离散对数问题（Discrete logarithm problem，DLP）且主要为数字签名的目的而设计，是继RSA之后最著名的数字签名方案。">
+<meta property="og:locale" content="default">
 <meta property="og:image" content="http://img.wanghaojun.cn//img/20200915153209.png">
-<meta property="og:updated_time" content="2020-09-15T07:32:19.372Z">
+<meta property="og:updated_time" content="2020-10-15T07:39:16.732Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ElGamal公钥密码体系">
 <meta name="twitter:description" content="1985年ElGamal提出ElGamal公钥密码体系，它基于离散对数问题（Discrete logarithm problem，DLP）且主要为数字签名的目的而设计，是继RSA之后最著名的数字签名方案。">
@@ -39,7 +40,7 @@
   
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -164,13 +165,13 @@
       
         <p>1985年ElGamal提出ElGamal公钥密码体系，它基于离散对数问题（Discrete logarithm problem，DLP）且主要为数字签名的目的而设计，是继RSA之后最著名的数字签名方案。<a id="more"></a></p>
 <p>ElGamal的公私钥对生成过程如下：</p>
-<p>参数生成：设$G$为有限域$Z_p^<em>$上的乘法群，$p$是一个素数，$g$是$Z_p^</em>$上的一个生成元。</p>
+<p>参数生成：设$G$为有限域$Z_p^{*}$上的乘法群，$p$是一个素数，$g$是$Z_p^*$上的一个生成元。</p>
 <p>密钥生成：选取$a\in(1,p-1)$，计算$\beta=g^a mod p$,那么得到的私钥为a，公钥为$(p,g,\beta)$。</p>
 <p>加密过程：</p>
 <p>对于加密消息$m$可以任意的选取随机数$k\in(1,p-1)$，计算$\gamma=g^k mod p$和$\delta=m\beta^k mod p$，可以得到密文$c=(\gamma,\delta)$。</p>
 <p>解密过程：</p>
 <p>接收者收到密文$c=(\gamma,\delta)$后，使用私钥$a$，计算$\gamma^{-a}\delta=(g^k)^{-a}\delta=m  mod  p = m$，可以得到相对应的明文$m$。</p>
-<p><img src="http://img.wanghaojun.cn//img/20200915153209.png" alt=""></p>
+<p><img src="http://img.wanghaojun.cn//img/20200915153209.png" alt></p>
 
       
 
@@ -280,8 +281,17 @@
   
 <nav id="article-nav">
   
+    <a href="/2020/09/15/安全/2取1的不经意传输/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          2取1的不经意传输
+        
+      </div>
+    </a>
   
-    <a href="/2020/09/15/安全/RSA公钥密码体系/" id="article-nav-older" class="article-nav-link-wrap">
+  
+    <a href="/2020/09/15/RSA公钥密码体系/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">RSA公钥密码体系</div>
       <i class="icon-circle-right"></i>
     </a>
@@ -325,7 +335,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 wanghaojun
+    		&copy; 2021 wanghaojun
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -429,18 +439,6 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">日记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
@@ -449,7 +447,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">日记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -457,27 +459,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">报告</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">生活</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+                <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -489,11 +479,27 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">隐私保护</a>
+                <a href="javascript:void(0)" class="js-tag color3">报告</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SMC</a>
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -501,11 +507,27 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Federated Learning</a>
+                <a href="javascript:void(0)" class="js-tag color4">SMC</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+                <a href="javascript:void(0)" class="js-tag color5">隐私保护</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Federated Learning</a>
               </li>
             
             <div class="clearfix"></div>

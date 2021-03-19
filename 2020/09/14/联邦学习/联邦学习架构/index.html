@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>联邦学习架构 | 菜鸟的小主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -15,6 +15,7 @@
 <meta property="og:url" content="http://yoursite.com/2020/09/14/联邦学习/联邦学习架构/index.html">
 <meta property="og:site_name" content="菜鸟的小主页">
 <meta property="og:description" content="本文主要介绍横向联邦学习和纵向联邦学习的简单架构，主要参考自论文《Federated Machine Learning: Concept and Applications》">
+<meta property="og:locale" content="default">
 <meta property="og:image" content="http://img.wanghaojun.cn//img/20200911093737.png">
 <meta property="og:image" content="http://img.wanghaojun.cn//img/20200911101153.png">
 <meta property="og:image" content="http://img.wanghaojun.cn//img/20200911165751.png">
@@ -43,7 +44,7 @@
   
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -176,10 +177,10 @@
 </ol>
 <p>通过上述步骤进行迭代，直到损失函数收敛，从而完成整个训练过程。该体系结构独立于特定的机器学习算法（逻辑回归、DNN等），所有参与者将共享最终的模型参数。</p>
 <p>安全性分析：如果梯度聚合使用SMC或者同态加密完成的，上述架构被证实可以防止半诚实服务器的数据泄露。但它可能会受到另一种安全模式的攻击，即恶意参与者在协作学习过程中训练生成对抗网络（GAN）。</p>
-<p><img src="http://img.wanghaojun.cn//img/20200911093737.png" alt=""></p>
+<p><img src="http://img.wanghaojun.cn//img/20200911093737.png" alt></p>
 <p><strong>纵向联邦学习：</strong>假设A公司和B公司想要联合培训一个机器学习模型，并且他们的业务系统都有自己的数据。此外，B公司还拥有模型需要预测的标签数据。由于数据隐私和安全原因，A和B不能直接交换数据。为了确保培训过程中数据的保密性，涉及第三方合作者C。在此，我们假设合作者C是诚实的，不与A或B勾结，但A和B是诚实的，但彼此好奇。一个可信的第三方C是一个合理的假设，因为C可以由政府等权威机构扮演，也可以由安全计算节点（如Intel软件保护扩展，SGX）取代。这种联邦学习系统由两部分组成，如图所示：</p>
 <p>第一部分：加密的实体对齐。由于两家公司的用户组不同，系统使用基于加密的用户ID对齐技术，如来确认双方的共同用户，而A和B不会暴露各自的数据。在实体对齐过程中，系统不会公开彼此不重叠的用户。</p>
-<p><img src="http://img.wanghaojun.cn//img/20200911101153.png" alt=""></p>
+<p><img src="http://img.wanghaojun.cn//img/20200911101153.png" alt></p>
 <p>B创建RSA的公钥和私钥，并把公钥发给A。</p>
 <p>A选取一个随机数r，使用B的公钥进行加密，将A的用户ID先使用哈希加密，再乘上公钥加密后的随机数r，得到集合$Y_A$，然后发送给B。</p>
 <p>B先将$Y_A$集合中的每个元素使用私钥解密，得到$Z_A$，B再将自己的用户ID先用哈希加密，再用私钥加密，再用哈希加密，得到$Z_B$，B将$Z_A$和$Z_B$一起发送给A。</p>
@@ -198,7 +199,7 @@
 <p>训练过程如下表：</p>
 <p><img src="http://img.wanghaojun.cn//img/20200911165857.png" style="zoom:150%;"></p>
 <p>推断过程：</p>
-<p><img src="http://img.wanghaojun.cn//img/20200911165919.png" alt=""></p>
+<p><img src="http://img.wanghaojun.cn//img/20200911165919.png" alt></p>
 <p>在实体对齐和模型训练过程中，A和B的数据在本地保存，训练中的数据交互不会导致数据隐私泄露。注：向C泄漏的潜在信息可能被视为或不被视为侵犯隐私。为了进一步阻止C从A或B中学习信息，在这种情况下，A和B可以通过添加加密的随机屏蔽进一步隐藏其梯度。因此，双方在联合学习的帮助下实现了共同模式的培训。因为在培训过程中，每一方收到的损失和梯度和不考虑隐私的收集数据进行模型训练的传统过程的损失和梯度是完全相同的，也就是说，这个模型是无损的。模型的效率取决于加密数据的通信成本和计算成本。在每次迭代中，A和B之间发送的信息按重叠样本的数量缩放。因此，采用分布式并行计算技术可以进一步提高算法的效率。</p>
 <p>安全性分析：表1所示的训练协议没有向C透露任何信息，因为所有C学习都是掩盖梯度，并且保证了掩盖矩阵的随机性和保密性。在上述协议中，A方在每一步都要学习其梯度，但这还不足以使A根据等式8从B中学习任何信息，因为在n个以上未知的情况下，无法解n个方程，就很好地建立了标量积协议的安全性。这里我们假设$N_A$远大于$n_A$，$n_A$指的是特征数。同样，B方也不能从A处获得任何信息，因此协议的安全性得到了证明。注意，我们假设双方都是半诚实的。如果一方是恶意的，试图通过伪造输入来欺骗系统，比如A提交了只有一个非零的输入，只有一个非零的特征，它可以告诉这个样本的$u_i^B$的值，它仍然不会暴露B的特征值或者参数值，并且偏差会扭曲下一次迭代的结果，警告另一方终止学习过程。在培训过程结束时，每一方（A或B）都会对另一方的数据结构视而不见，只获取与其自身特性相关的模型参数。推断时，双方需要协同计算预测结果，步骤如表2所示，但仍不会导致信息泄露。</p>
 
@@ -364,7 +365,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 wanghaojun
+    		&copy; 2021 wanghaojun
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -468,18 +469,6 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">日记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
@@ -488,7 +477,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">日记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -496,27 +489,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">报告</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">生活</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+                <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -528,11 +509,27 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">隐私保护</a>
+                <a href="javascript:void(0)" class="js-tag color3">报告</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SMC</a>
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -540,11 +537,27 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Federated Learning</a>
+                <a href="javascript:void(0)" class="js-tag color4">SMC</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+                <a href="javascript:void(0)" class="js-tag color5">隐私保护</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Federated Learning</a>
               </li>
             
             <div class="clearfix"></div>

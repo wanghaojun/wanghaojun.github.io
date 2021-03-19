@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>记忆网络 | 菜鸟的小主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -15,6 +15,7 @@
 <meta property="og:url" content="http://yoursite.com/2019/01/02/机器学习/记忆网络/index.html">
 <meta property="og:site_name" content="菜鸟的小主页">
 <meta property="og:description" content="MEMORY NETWORK 介绍记忆网络将一个推理模块和一个长期记忆模块相结合，并学习如何组合使用这两个模块。">
+<meta property="og:locale" content="default">
 <meta property="og:image" content="http://img.wanghaojun.cn/img/20181219090752.png">
 <meta property="og:image" content="http://img.wanghaojun.cn/img/20181219094102.png">
 <meta property="og:image" content="http://img.wanghaojun.cn/img/20181219095831.png">
@@ -43,7 +44,7 @@
   
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -184,16 +185,16 @@ Where is the milk now? A: office
 Where is Joe? A: bathroom
 Where was Joe before the office? A: kitchen
 </code></pre><p>在上述例子中，为了回答问题x=“Where is the milk now?”，O模块首先给所有的记忆打分，包括以前见过的所有句子，根据x找出最相关的事实，在这个例子中是$m_{o1}$=“Joe left the milk”，然后，会基于$[x,m_{o1}]$再次检索记忆来发现第二个相关事实，$m_{o2}$=“Joe travelled to the office”。最终，R模块会基于$[x,m_{o1},m_{o2}]$评分单词，给出输出r=”office“。<br>在我们的实验中，得分函数$s_O$和$s_R$具有相同的形式，即嵌入模型:</p>
-<p><img src="http://img.wanghaojun.cn/img/20181219090752.png" alt=""></p>
+<p><img src="http://img.wanghaojun.cn/img/20181219090752.png" alt></p>
 <p>U是一个n*D的矩阵，D是特征数，n是嵌入维度。$\Phi_x$和$\Phi_y$的任务是将原始的文本转化为D维度的特征空间，最简单的特征空间是选择一组单词表示，我们选择D=3|W|作为$S_O$，字典中每个单词有三个表示，一个是$\Phi_y$,两个是$\Phi_x$,输入参数来自于真实输入x，还是来自相关记忆，这样我们可以在模型中将他们区分开。同样的，我们使用D=3|W|作为$S_R$，$S_O$和$S_R$使用不同的权重矩阵$U_O$和$U_R$。<br>我们使用完全的监督式训练，我们给出输入和希望的输出，并且在测试集中标注出相关的句子，这意味着在测试中我们知道最佳选择。然后以边际排序损失和随机梯度下降法(SGD)进行训练。对于一个给定的问题x和正确的响应r，以及相关句子$m_{O1}$和$m_{O2}$(k=2)，最小化的模型参数$U_O$和$U_R$如下：</p>
-<p><img src="http://img.wanghaojun.cn/img/20181219094102.png" alt=""></p>
+<p><img src="http://img.wanghaojun.cn/img/20181219094102.png" alt></p>
 <p>$\overline{f}$、$\overline{f}’$和$\overline{r}$是除了正确的之外，其他所有选择，$\gamma$是偏移向量。每一步都是对$\overline{f}$、$\overline{f}’$和$\overline{r}$进行取样，而不是计算训练样本的和。</p>
-<h3 id="输入序列是单词"><a href="#输入序列是单词" class="headerlink" title="输入序列是单词"></a>输入序列是单词</h3><p>当输序列是单词而不是句子的时候，因为单词没有被分割成陈述句和问题，因此我们需要一个分割函数。这个函数会将尚未分段的最后一个单词序列作为输入，并查找断点。当句子被分割完写入记忆之后，就可以想之前那样对其进行处理。分割函数和之前的组件类似，使用一个嵌入模型。<br><img src="http://img.wanghaojun.cn/img/20181219095831.png" alt=""><br>$W_{seg}$是一个向量（有效地确定了线性分类器在嵌入空间中的参数），c是输入单词的序列，如果seg(c)&gt;$\gamma$，这个序列就会被认为是一段。使用这种方式的话，MemNN在写入阶段就会有一个学习组件。我们认为这个分段器是概念的第一个证明:当然，可以设计更复杂的东西。</p>
+<h3 id="输入序列是单词"><a href="#输入序列是单词" class="headerlink" title="输入序列是单词"></a>输入序列是单词</h3><p>当输序列是单词而不是句子的时候，因为单词没有被分割成陈述句和问题，因此我们需要一个分割函数。这个函数会将尚未分段的最后一个单词序列作为输入，并查找断点。当句子被分割完写入记忆之后，就可以想之前那样对其进行处理。分割函数和之前的组件类似，使用一个嵌入模型。<br><img src="http://img.wanghaojun.cn/img/20181219095831.png" alt><br>$W_{seg}$是一个向量（有效地确定了线性分类器在嵌入空间中的参数），c是输入单词的序列，如果seg(c)&gt;$\gamma$，这个序列就会被认为是一段。使用这种方式的话，MemNN在写入阶段就会有一个学习组件。我们认为这个分段器是概念的第一个证明:当然，可以设计更复杂的东西。</p>
 <h3 id="使用哈希来进行更高效的记忆"><a href="#使用哈希来进行更高效的记忆" class="headerlink" title="使用哈希来进行更高效的记忆"></a>使用哈希来进行更高效的记忆</h3><p>如果我们需要存储的记忆非常大，需要花费过高的代价在计算$S_O$和$S_R$上。我们可以使用哈希的方式来加速这个过程：使用哈希将输入I(x)放到一个或者多个存储桶中，这样只需要对同一个存储桶中的记忆$m_i$进行打分。我们通过两种方式来使用哈希：(i)通过哈希单词，(ii)通过单词嵌入的聚类。对于方法(i)我们构造许多装有词典中单词的桶，当输入一个句子时，我们将它散列到所有与它的单词相对应的桶中。这种方法的问题是只有$m_i$从I(x)分享到至少一个单词时才会被考虑。方法(ii)尝试使用聚类的方式来解决这个问题。在训练完$U_O$之后，我们使用K-means来对单词进行聚类$(U_O)_i$，然后得到K个存储桶，然后，我们将一个给定的句子散列到其单个单词所属的所有桶中。由于单词与同义词的向量相近，它们聚在一起，因此我们也会为这些相似的记忆评分。输入和内存之间的精确单词匹配仍然按照定义进行评分，选择K来进行速度和精度的权衡。</p>
-<h3 id="写入时间建模"><a href="#写入时间建模" class="headerlink" title="写入时间建模"></a>写入时间建模</h3><p>我们可以将我们的模型扩展到考虑记忆被写入的时间。当在回答既定事实的问题，类似于“What is the capital of France?”的时候不是很重要，但是在回答一个关于故事的问题时很重要。一种直接的实现方式是为$\Phi_x$和$\Phi_y$添加额外的特征，能让j成为一个给定记忆$m_j$的索引，而j是按照时间进行排序的。然而，这需要处理绝对时间而不是相对时间。根据经验，我们在以下过程中取得了更大的成功:不给输入打分，而是像上面那样让候选对与s配对，学习关于三元组的函数$S_{O_t}(x,y,y’)$：<br><img src="http://img.wanghaojun.cn/img/20181219143443.png" alt=""><br>$\Phi_{t}(x,y,y’)$使用三个值为1或者0的特征，x是否比y老，x是否比y’老，y是否比y’老（这意味着我们把所有的$\Phi$植入的维度扩展了三倍，当我们没有使用时，这些维度的值为0）。现在，如果$\Phi_{t}(x,y,y’)$&gt;0,模型就会更倾向于y，而不是y’；如果$\Phi_{t}(x,y,y’)$&lt;0，模型就会更倾向于y’，而不是y。将上文中计算$S_O$和$S_R$的过程中的$argmax$替换为记忆上的循环，$i=1,…,N$ ，每步只保留赢的那个(y或者y’),并且总是把胜者与下一个记忆$m_i$相比较。如果去掉了时间特征，这个过程相当于以前的argmax。</p>
+<h3 id="写入时间建模"><a href="#写入时间建模" class="headerlink" title="写入时间建模"></a>写入时间建模</h3><p>我们可以将我们的模型扩展到考虑记忆被写入的时间。当在回答既定事实的问题，类似于“What is the capital of France?”的时候不是很重要，但是在回答一个关于故事的问题时很重要。一种直接的实现方式是为$\Phi_x$和$\Phi_y$添加额外的特征，能让j成为一个给定记忆$m_j$的索引，而j是按照时间进行排序的。然而，这需要处理绝对时间而不是相对时间。根据经验，我们在以下过程中取得了更大的成功:不给输入打分，而是像上面那样让候选对与s配对，学习关于三元组的函数$S_{O_t}(x,y,y’)$：<br><img src="http://img.wanghaojun.cn/img/20181219143443.png" alt><br>$\Phi_{t}(x,y,y’)$使用三个值为1或者0的特征，x是否比y老，x是否比y’老，y是否比y’老（这意味着我们把所有的$\Phi$植入的维度扩展了三倍，当我们没有使用时，这些维度的值为0）。现在，如果$\Phi_{t}(x,y,y’)$&gt;0,模型就会更倾向于y，而不是y’；如果$\Phi_{t}(x,y,y’)$&lt;0，模型就会更倾向于y’，而不是y。将上文中计算$S_O$和$S_R$的过程中的$argmax$替换为记忆上的循环，$i=1,…,N$ ，每步只保留赢的那个(y或者y’),并且总是把胜者与下一个记忆$m_i$相比较。如果去掉了时间特征，这个过程相当于以前的argmax。</p>
 <h3 id="为之前未见过的单词建模"><a href="#为之前未见过的单词建模" class="headerlink" title="为之前未见过的单词建模"></a>为之前未见过的单词建模</h3><p>即使对于阅读了大量文本的人来说，新词也是不断被引入的。比如说，当《指环王》中第一次出现“Boromir” 的时候。我们如何让机器学习模型来处理这样的事呢？可能的方法是使用语言模型:根据相邻单词，预测单词应该是什么，并且假设新单词与之相近。我们使用了这种方法，把它放入了$S_O$和$S_R$中，而不是单独的一部。<br>具体地，对于我们见过的每个单词，我们都会存储与之共同出现的一系列单词，一部分是与上文相关的，一部分是下文相关的。任何没有见过的单词都能被这些特征所表示。我们将特征表示D从3|W|扩展到5|W|。我们的模型在训练中使用一种“dropout”的技术来学习处理新单词:d%的时间里，我们假装以前没有见过一个单词，因此没有n维的单词嵌入，而是用上下文来表示它.</p>
 <h3 id="精确匹配和未见过的单词"><a href="#精确匹配和未见过的单词" class="headerlink" title="精确匹配和未见过的单词"></a>精确匹配和未见过的单词</h3><p>由于维数较低，嵌入模型不能有效地进行精确的词匹配。一种解决方式是使用这样的函数来对一对x，y进行打分：</p>
-<p><img src="http://img.wanghaojun.cn/img/20181219151049.png" alt=""></p>
+<p><img src="http://img.wanghaojun.cn/img/20181219151049.png" alt></p>
 <p>这意味着将”bag of words“的匹配分数加到学习的嵌入式分数中（使用一个混合参数$\gamma$）。我们提出的另一种相关的方法是保持在n维的嵌入空间中，但是用匹配特征来扩展特征表示D。匹配特征表示一个单词是否同时出现在x和y中。我们使用原先的函数进行打分，$\Phi_y$是基于x的，如果y中的一些单词匹配到了x中的一些单词，我们把匹配特征的值设为1.通过对上下文词使用匹配特征，可以对没见过的词进行类似建模。这样就得到了一个特征空间D=8|W|。</p>
 
       
@@ -358,7 +359,7 @@ Where was Joe before the office? A: kitchen
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 wanghaojun
+    		&copy; 2021 wanghaojun
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -462,18 +463,6 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">日记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
@@ -482,7 +471,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">日记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -490,27 +483,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">报告</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">生活</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+                <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -522,11 +503,27 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">隐私保护</a>
+                <a href="javascript:void(0)" class="js-tag color3">报告</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SMC</a>
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">后端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Kafka</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -534,11 +531,27 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Federated Learning</a>
+                <a href="javascript:void(0)" class="js-tag color4">SMC</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+                <a href="javascript:void(0)" class="js-tag color5">隐私保护</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">NLP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">deeplearning</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Federated Learning</a>
               </li>
             
             <div class="clearfix"></div>
