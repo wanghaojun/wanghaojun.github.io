@@ -1,7 +1,7 @@
 ---
 title: JDK配置
 date: 2017-11-03 11:32:50
-tags: [java,环境搭建]
+tags: [环境搭建,java]
 ---
 大二开了Java课，上机课，机房环境竟然都没配jdk，看来以后少不了配jdk，于是我整理一下配置JDK的步骤。
 
@@ -37,4 +37,4 @@ ps：配置失败可能是变量名字打错了，或者输入了中文符，仔
  只需要在管理员模式的jdk下，输入choco install jdk 就ok了，它会帮你安装jdk，并且配置好环境变量。
 
 
-  [1]: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+[1]: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html

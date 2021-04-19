@@ -1,7 +1,7 @@
 ---
 title: TF-IDF
 date: 2019-01-02 18:24:08
-tags: NLP
+tags: [NLP]
 ---
 
  TF-IDF（Term Frequency–Inverse Document Frequency）是一种用于资讯检索与文本挖掘的常用加权技术。

@@ -1,7 +1,7 @@
 ---
 title: hadoop(2)
 date: 2018-07-14 08:58:48
-tags: hadoop 
+tags: [大数据]
 ---
 HDFS:分布式文件存储系统
 
@@ -53,7 +53,7 @@ HDFS:分布式文件存储系统
 * 不支持多用户写入及任意修改文件
 
 ## HDFS 常用命令
-	
+
 	hadoop fs -ls <path> 指定文件的详细信息
 	hadoop fs  -mkdir <path> 创建文件
 	hadoop fs -copyFromLocal <localsrc> <dst> 把本地文件上传到hdfs

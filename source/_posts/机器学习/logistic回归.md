@@ -1,7 +1,7 @@
 ---
 title: logistic回归
 date: 2019-04-05 11:29:21
-tags: deeplearning
+tags: [机器学习]
 ---
 logistic回归是一种用于监督式学习的算法，它的输出y总是0或者是1，logistic回归的目标是尽可能减少预测值和训练数据之间的差别。 <!--more-->
 举例：Cat vs No-cat

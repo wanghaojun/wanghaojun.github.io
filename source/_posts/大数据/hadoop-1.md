@@ -1,7 +1,7 @@
 ---
 title: hadoop(1)
 date: 2018-07-13 09:06:13
-tags: hadoop 
+tags: [大数据]
 ---
 
 ##大数据简介
@@ -22,7 +22,7 @@ unbuntu 下jdk的配置
 	export PATH =$JAVA_HOME/bin:$PATH
 	
 	source /etc/profile
-
+	
 	sudo update-alternatives --install /usr/bin/java java /home/whj/Desktop/jdk1.8.0_171/bin/java 300  
 	sudo update-alternatives --install /usr/bin/javac javac /home/whj/Desktop/jdk1.8.0_171/bin/javac 300  
 	sudo update-alternatives --install /usr/bin/jar jar /home/whj/Desktop/jdk1.8.0_171/bin/jar 300   
@@ -35,12 +35,12 @@ core-site.xml
 		<name>fs.default.name</name>
 		<value>hdfs://192.168.159.128:9000</value>
 	</property>
-
+	
 	<property>
 		<name>fs.defaultFS</name>
 		<value>hdfs://192.168.159.128:9000</value>
 	</property>
-
+	
 	<property>
 		<name>hadoop.tmp.dir</name>
 		<value>/home/whj/Desktop/hadoop-2.8.3/tmp</value>
@@ -52,12 +52,12 @@ hdfs-site.xml
 			<name>dfs.replication</name>
 			<value>1</value>
 		</property>
-
+	
 		<property>
 			<name>dfs.data.dir</name>
 			<value>/home/whj/Desktop/hadoop-2.8.3/hdfs/name</value>
 		</property>
-
+	
 		<property>
 			<name>dfs.data.dir</name>
 			<value>/home/whj/Desktop/hadoop-2.8.3/hdfs/data</value>

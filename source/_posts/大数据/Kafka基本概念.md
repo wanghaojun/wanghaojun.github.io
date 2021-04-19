@@ -1,7 +1,7 @@
 ---
 title: Kafka基本概念
 date: 2020-05-08 09:00:06
-tags: kafka
+tags: [大数据]
 ---
 
 这篇文章将主要介绍Kafka的一些基本术语。

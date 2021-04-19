@@ -1,20 +1,16 @@
 ---
 title: ping与tracert
 date: 2017-10-23 17:16:03
-tags: 网络原理
----
-
-标签： 网络原理
-
+tags: [笔记,网络原理]
 ---
 
 
   今天网络原理老师布置了关于ping与tracert使用的探究性作业，通过这篇文章简单的记录一下ping与tracert的用法和原理。
-  
+
    <!--more-->
 
   ping的作用：简单来说，就是判断网站的延迟或是连通率。
-  
+
 
       ping www.baidu.com
 
@@ -35,7 +31,7 @@ tags: 网络原理
 -i 可以设置TTL值
 
     ping www.baidu.com -i 15
-    
+
 -f 设置转发过程不分组 可以不分组转发的数据包最大为1472
 
     ping www.baidu.com -f
@@ -43,10 +39,10 @@ tags: 网络原理
 -l 设置转发的数据包大小
 
      ping www.baidu.com -l 1400
-     
+
 Tracert命令用来显示数据包到达目标主机所经过的路径（路由器），并显示到达每个节点（路由器）的时间.
 Tracert 先发送 TTL 为 1 的回应数据包，当数据包上的TTL在路由器收到后TTL自动减1，一旦某个服务器将TTL减1后，等于了0，路由器应该将“ICMP Time Exceeded”的消息发回源计算机，源计算机就根据收到的信息判断达到的路由器和所用时间。下次再次发送数据包时，将TTL递增1，继续上述测试，直到目标响应或 TTL 达到最大值，从而确定路由。
 
     tracert www.upc.edu.cn
-    
+
 在很多情况下，tracert跃点数减1，加上ping中的TTL值等于服务器默认的TTL值，等于64.但是这种情况不是绝对的，因为tracert的路径与ping之后，服务器返回数据包的路径不同。

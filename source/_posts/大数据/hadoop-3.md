@@ -1,7 +1,7 @@
 ---
 title: hadoop(3)  
 date: 2018-07-15 08:31:53
-tags: hadoop 
+tags: [大数据]
 ---
 
 MapReduce 简介
@@ -44,42 +44,42 @@ Hadoop部署jar包
 Hadoop Maven依赖
 
 	 <repositories>
-        <repository>
-            <id>alimaven</id>
-            <name>aliyun maven</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-        </repository>
-    </repositories>
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-common</artifactId>
-            <version>2.8.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-hdfs</artifactId>
-            <version>2.8.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
-            <version>2.8.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
-            <version>2.8.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-mapreduce-client-common</artifactId>
-            <version>2.8.3</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+	    <repository>
+	        <id>alimaven</id>
+	        <name>aliyun maven</name>
+	        <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+	    </repository>
+	</repositories>
+	<dependencies>
+	    <dependency>
+	        <groupId>org.apache.hadoop</groupId>
+	        <artifactId>hadoop-common</artifactId>
+	        <version>2.8.3</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.apache.hadoop</groupId>
+	        <artifactId>hadoop-hdfs</artifactId>
+	        <version>2.8.3</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.apache.hadoop</groupId>
+	        <artifactId>hadoop-client</artifactId>
+	        <version>2.8.3</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.apache.hadoop</groupId>
+	        <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
+	        <version>2.8.3</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.apache.hadoop</groupId>
+	        <artifactId>hadoop-mapreduce-client-common</artifactId>
+	        <version>2.8.3</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>junit</groupId>
+	        <artifactId>junit</artifactId>
+	        <version>3.8.1</version>
+	        <scope>test</scope>
+	    </dependency>
+	</dependencies>

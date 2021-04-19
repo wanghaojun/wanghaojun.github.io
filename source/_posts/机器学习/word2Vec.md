@@ -1,7 +1,7 @@
 ---
 title: word2Vec
 date: 2019-01-02 18:17:04
-tags: NLP
+tags: [NLP]
 ---
 
 word2Vec

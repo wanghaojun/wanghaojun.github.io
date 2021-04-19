@@ -1,7 +1,7 @@
 ---
 title: hadoop-4
 date: 2018-07-16 08:32:41
-tags: hadoop
+tags: [大数据]
 ---
 Hadoop2 & Yarn  & hive
 

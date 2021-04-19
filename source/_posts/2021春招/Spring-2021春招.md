@@ -1,7 +1,7 @@
 ---
 title: Spring-2021春招
 date: 2021-04-06 17:14:54
-tags: [Spring,面试]
+tags: [面试,java,Spring]
 ---
 
 主要介绍Spring的基本概念、Spring框架、Spring机制与实现、Spring应用相关、Context的初始化流程、Bean的生命周期、Spring Boot相关。

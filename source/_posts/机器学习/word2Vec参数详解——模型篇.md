@@ -1,7 +1,7 @@
 ---
 title: word2Vec参数详解——模型篇
 date: 2020-03-11 09:04:52
-tags: NLP
+tags: [NLP]
 ---
 
 这篇文章是学习Xin Rong的《word2vec Parameter Learning Explained》记录的学习笔记，主要介绍了word2Vec的CBOW模型和Skip-gram模型，以及其模型涉及的推导过程。

@@ -1,7 +1,7 @@
 ---
 title: tensorflow入门
 date: 2019-04-18 15:25:04
-tags: [deeplearning,tensorflow]
+tags: [机器学习,深度学习]
 ---
 本文将从tensorflow的计算模型、数据模型和运行模型三个角度介绍tensorflow框架。<!--more-->
 # 计算模型——计算图
@@ -20,7 +20,7 @@ TensorFlow程序一般分为两个阶段，第一个阶段是定义计算图中�
     #使用a.graph可以获取该张量所属的计算图，因为没有特别指定计算图，
     #所以这个计算图应该等于默认计算图，下面的输出为True
     print(a.graph is tf.get_default_graph())
-    
+
 除了使用默认的计算图之外，TensorFlow还支持使用tf.Graph()函数来生成新的计算图，不同计算图上的张量和运算都不会共享。
     
     import tensorflow as tf
@@ -66,30 +66,30 @@ TensorFlow程序一般分为两个阶段，第一个阶段是定义计算图中�
     sess = tf.Session ()
     sess.run(...)
     sess.close()
-    
+
 这种使用可能会因为程序的异常退出而不执行关闭会话函数，从而导致资源泄露。为了解决资源释放的问题，TensorFlow可以通过Python上下文管理器来使用会话。
     
     with tf.Session() as sess:
     print(sess.run(result))
-    
+
 上文介绍过TensorFlow会自动生成默认的计算图，会话中也有类似的机制，但是需要手动指定默认会话，默认的会话被指定后，可以通过tf.Tensor.eval()函数来计算张量的值。
 
     sess = tf.Session()
     with sess.as_default():
          print(result.eval())
-         
+
 在交互式的环境下，TensorFlow还提供了一种在交互式环境下直接构建默认会话的函数，就是tf.InteractiveSesssion()，使用这个函数会将自动生成的会话注册为默认会话。
 
     sess = tf.InteractiveSession ()
     print(result.eval())
     sess.close()
-  
+
 无论用哪种方法都可以通过ConfigProto Protocol Buffer来配置需要生成的会话。
 
     config=tf.ConfigProto(allow_soft_placement=True, log_device_placement=True)
     sess1 = tf.InteractiveSession(config=config)
     sess2 = tf.Session(config=config)
-    
+
 # 使用TensorFlow实现简单的神经网络
 ## 神经网络参数和TensorFlow变量
 

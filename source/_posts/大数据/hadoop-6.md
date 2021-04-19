@@ -1,7 +1,7 @@
 ---
 title: hadoop-6
 date: 2018-07-18 08:26:56
-tags: hadoop
+tags: [大数据]
 ---
 
 spark：
@@ -22,7 +22,7 @@ spark：
 编程范式：DAG：Transformation + Action
 中间数据：内存中
 Task：以线程的方式维护
- 
+
 ## 类似
 Flink + Beam
 

@@ -1,7 +1,7 @@
 ---
 title: ElGamal公钥密码体系
 date: 2020-09-15 15:19:21
-tags: 密码学
+tags: [笔记,密码学]
 ---
 
 1985年ElGamal提出ElGamal公钥密码体系，它基于离散对数问题（Discrete logarithm problem，DLP）且主要为数字签名的目的而设计，是继RSA之后最著名的数字签名方案。<!--more-->

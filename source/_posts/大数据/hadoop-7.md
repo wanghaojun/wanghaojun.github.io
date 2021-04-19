@@ -1,7 +1,7 @@
 ---
 title: hadoop(7)
 date: 2018-07-19 09:21:17
-tags: hadoop
+tags: [大数据]
 ---
 sqoop
 

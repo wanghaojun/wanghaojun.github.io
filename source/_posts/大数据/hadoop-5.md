@@ -1,7 +1,7 @@
 ---
 title: hadoop-5
 date: 2018-07-17 08:35:10
-tags: hadoop
+tags: [大数据]
 ---
 Spark 支持的语言：Scala java python R
 
@@ -41,7 +41,7 @@ unit = void
 any = 任何
 
 #### 函数定义
-	
+
 	def info (name:String,age:int):unit{
 		println(name+age);
 	}

@@ -1,7 +1,7 @@
 ---
 title: 使用OrderedDict实现LRU算法
 date: 2021-03-19 13:06:49
-tags: [python,算法,面试]
+tags: [算法,python]
 ---
 
 本文主要介绍LRU机制和python中的OrderedDict字典，以及如何使用OrderedDict实现LRU算法。对应leetcode的第 146 题「LRU缓存机制」
