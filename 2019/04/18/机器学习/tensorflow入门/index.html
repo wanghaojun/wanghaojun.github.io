@@ -28,10 +28,10 @@
 <meta property="og:description" content="本文将从tensorflow的计算模型、数据模型和运行模型三个角度介绍tensorflow框架。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-04-18T07:25:04.000Z">
-<meta property="article:modified_time" content="2021-04-05T14:38:06.876Z">
+<meta property="article:modified_time" content="2021-04-19T07:30:43.510Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="deeplearning">
-<meta property="article:tag" content="tensorflow">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="深度学习">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://example.com/2019/04/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/tensorflow%E5%85%A5%E9%97%A8/">
@@ -192,7 +192,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-05 22:38:06" itemprop="dateModified" datetime="2021-04-05T22:38:06+08:00">2021-04-05</time>
+                <time title="修改时间：2021-04-19 15:30:43" itemprop="dateModified" datetime="2021-04-19T15:30:43+08:00">2021-04-19</time>
               </span>
 
           
@@ -253,8 +253,7 @@ print(sess.run(result))</code></pre>
 <p>上文介绍过TensorFlow会自动生成默认的计算图，会话中也有类似的机制，但是需要手动指定默认会话，默认的会话被指定后，可以通过tf.Tensor.eval()函数来计算张量的值。</p>
 <pre><code>sess = tf.Session()
 with sess.as_default():
-     print(result.eval())
-     </code></pre>
+     print(result.eval())</code></pre>
 <p>在交互式的环境下，TensorFlow还提供了一种在交互式环境下直接构建默认会话的函数，就是tf.InteractiveSesssion()，使用这个函数会将自动生成的会话注册为默认会话。</p>
 <pre><code>sess = tf.InteractiveSession ()
 print(result.eval())
@@ -341,8 +340,8 @@ after 5000 training steps,cross entropy on all dateset is 0.00963481
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/deeplearning/" rel="tag"># deeplearning</a>
-              <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
           </div>
 
         
@@ -430,14 +429,14 @@ after 5000 training steps,cross entropy on all dateset is 0.00963481
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-count">51</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
