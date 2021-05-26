@@ -1,5 +1,5 @@
 ---
-title: java垃圾回收算法
+title: jvm-gc
 date: 2021-04-19 19:07:57
 tags: [面试,java]
 ---
