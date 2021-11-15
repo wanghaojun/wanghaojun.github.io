@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文主要介绍了隐私保护技术的基本机制和一些常见的隐私保护方法以及这些方法在机器学习领域的常见应用。隐私保护方法包括数据脱敏、数据匿名化、差分隐私、安全多方计算和同态加密，后两种方法属于密码学方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="隐私保护基本概念">
+<meta property="og:url" content="http://example.com/2020/09/14/%E5%AE%89%E5%85%A8/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/index.html">
+<meta property="og:site_name" content="翡翠森林">
+<meta property="og:description" content="本文主要介绍了隐私保护技术的基本机制和一些常见的隐私保护方法以及这些方法在机器学习领域的常见应用。隐私保护方法包括数据脱敏、数据匿名化、差分隐私、安全多方计算和同态加密，后两种方法属于密码学方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-09-14T01:25:19.000Z">
+<meta property="article:modified_time" content="2021-05-11T08:10:56.695Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="安全多方计算">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/09/14/%E5%AE%89%E5%85%A8/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>隐私保护基本概念 | 翡翠森林</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">翡翠森林</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/09/14/%E5%AE%89%E5%85%A8/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翡翠森林">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          隐私保护基本概念
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-14 09:25:19" itemprop="dateCreated datePublished" datetime="2020-09-14T09:25:19+08:00">2020-09-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-11 16:10:56" itemprop="dateModified" datetime="2021-05-11T16:10:56+08:00">2021-05-11</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍了隐私保护技术的基本机制和一些常见的隐私保护方法以及这些方法在机器学习领域的常见应用。隐私保护方法包括数据脱敏、数据匿名化、差分隐私、安全多方计算和同态加密，后两种方法属于密码学方法。</p>
+<span id="more"></span>
+<h3 id="隐私保护机制">隐私保护机制</h3>
+<p><strong>数据失真</strong>，如随机扰动、随机化回答、阻塞和微聚，主要优点是计算开销小，实现简单。主要缺点是数据失真，严重依賴于数据，不同数据需设计不同的算法。</p>
+<p><strong>数据加密</strong>，如多方安全计算（SMC）、分布式下实现隐私保护的关联规则，挖掘算法、数据匿名化算法等。实现主要优点是数据真实、无缺损，高隐私保护度。主要缺点是计算通信开销大，部署复杂，实际应用难度较高。</p>
+<p><strong>数据匿名化</strong>，如<span class="math inline">\(k\)</span>-匿名，<span class="math inline">\(l\)</span>-多样性。适用于各类数据、众多应用，算法通用性高能保证发布数据的真实性，适合数据共享。存在一定程度的数据缺报，存在一定程度的私泄露，实现最优化的数据匿名开销较大。</p>
+<h3 id="数据脱敏">数据脱敏</h3>
+<p>数据脱敏顾名思义就是对敏感数据进行变形处理，其目的是保护隐私数据等信息的安全，例如机构和企业收集的个人身份信息、手机号码、银行卡信息等敏感数据。数据脱敏的基本原理是通过脱敏算法将敏感数据进行遮蔽、变形，将敏感级别降低后对外发放，或供访问使用。根据不同的使用场景可以分为“静态脱敏”和“动态脱敏”两类技术。</p>
+<p><strong>静态脱敏</strong>直接通过屏蔽、变形、替换、随机、格式保留加密（FPE）和强加密算法（如AES）等多种脱敏算法，针对不同数据类型进行数据掩码扰乱，并可将脱敏后的数据按用户需求，装载至不同环境中。静态脱敏可提供文件至文件，文件至数据库，数据库至数据库，数据库至文件等不同装载方式。导出的数据是以脱敏后的形式存储于外部存贮介质中，实际上已经改变了存储的数据内容。</p>
+<p><strong>动态脱敏</strong>通过准确的解析SQL语句匹配脱敏条件，例如：访问IP、MAC、数据库用户、客户端工具、操作系统用户、主机名、时间、影响行数等，在匹配成功后改写查询SQL或者拦截防护返回脱敏后的数据到应用端，从而实现敏感数据的脱敏。实际上存储于生产库的数据未发生任何变化。</p>
+<h3 id="数据匿名化">数据匿名化</h3>
+<p>匿名技术的核心是通过对数据的处理使数据无法确定到具体的个人，隐匿数据中的身份信息。主要方法有泛化和抑制、分割、聚集和聚类等。常见的基于匿名技术的隐私保护策略是<span class="math inline">\(k\)</span>-匿名和<span class="math inline">\(l\)</span>-多样性。</p>
+<p><strong><span class="math inline">\(k\)</span>-匿名(k-anonymity)</strong> ,给定数据表 ，QI是与T相关联的准标识符，当且仅当在T(QI)中出现的每个值序列在T(QI)中至少出现K次，则T满足<span class="math inline">\(k\)</span>-匿名。 T(QI)表示T表的元组在准标识符QI上的投影。<span class="math inline">\(k\)</span>-匿名的核心思想就是设法切断准标识符与敏感属性之间的一对一关系来保护隐私属性。在一个数据表中，一个记录的准标识符至少有<span class="math inline">\(k-1\)</span>个记录的准标识符与之相同。</p>
+<p><strong><span class="math inline">\(l\)</span>-多样性</strong>是基于降低数据表示粒度以达到匿名保护的隐私保护方法。 这种降低是一个折衷，导致数据管理或挖掘算法的有效性的一些损失，从而提高隐私保护。<span class="math inline">\(l\)</span>-多样性模型是<span class="math inline">\(k\)</span>-匿名模型的扩展，<span class="math inline">\(k\)</span>-匿名使用泛化和抑制降低数据表示的粒度，使得任何给定的记录映射到其所在数据集上至少<span class="math inline">\(k\)</span>条其他记录。具体定义为：<span class="math inline">\(l\)</span>-多样性（<span class="math inline">\(l\)</span>-diversity Principle）给定数据表<span class="math inline">\(T(A_1,A_2,...A_n)\)</span>，QI是与T相关联的准标识符对T进行<span class="math inline">\(k\)</span>-匿名处理后，每个<span class="math inline">\(k\)</span>-匿名等价组中白敏感属性至少包含<span class="math inline">\(l\)</span>表现良好的取值，则满足<span class="math inline">\(l\)</span>-多样性。</p>
+<h3 id="差分隐私">差分隐私</h3>
+<p>差分隐私的任务是提供一种关于输出的概率分布的机制或者协议，允许用户对数据进行一定程度的修改，但不影响总体输出，从而使得攻击者无法知道数据集中关于个人的信息，达到隐私保护的作用。</p>
+<p>差分隐私的定义：设有随机算法<span class="math inline">\(M\)</span>, <span class="math inline">\(P_M\)</span>为<span class="math inline">\(M\)</span>所有可能的输出构成的集合。对于任意两个邻近数据集<span class="math inline">\(D\)</span>和<span class="math inline">\(D&#39;\)</span>以及<span class="math inline">\(P_M\)</span>的任何子集<span class="math inline">\(S_M\)</span>, 若算法<span class="math inline">\(M\)</span>满足 <span class="math display">\[
+\operatorname{Pr}\left[M(D) \in S_{M}\right] \leq \exp (\varepsilon) \times \operatorname{Pr}\left[M\left(D^{\prime}\right) \in S_{M}\right]
+\]</span> 则称算法<span class="math inline">\(M\)</span>提供 ε-差分隐私保护, 其中参数ε 称为隐私保护预算.</p>
+<p>差分隐私最主要的方法是在数据集中添加噪声来实现的，常用的噪音机制包括Laplace机制和指数机制，Laplace 机制适用于连续型数据集，而指数机制适用于离散型数据集。</p>
+<p>在联邦学习中，为了使各方能在各自的分散数据集上进行模型训练，可以使用本地差分隐私（Local Differential Privacy，LDP）。通过使用本地差分隐私，每个输入方将会扰乱自己的数据，然后将易混淆的数据发送至不受信任的服务器。Moments accountant算法是一种差分隐私随机梯度下降方法。该方法通过考虑特定的噪声分布，计算出神经网络模型训练的总体隐私代价。它证明了选择适当规模的噪声和分片阈值可以实现更小的隐私损失。</p>
+<h3 id="安全多方计算">安全多方计算</h3>
+<p>安全多方计算(Secure Multi-Party Computation, SMC)是指在分布式环境下，两个或多个参与者协作计算某个函数，每个参与者输入各自私密的数据，在协议执行完成之后，所有参与者获得所希望的计算结果，而无法得知其他参与者输入信息，从而保护了参与者输入的隐私。</p>
+<p>通常情况下，安全多方计算能够通过三种不同的框架来实现：不经意传输Oblivious Transfer,OT）、秘密共享（ Secret Sharing , SS）和同态加密（ Threshold Homomorphic Encryption,THE）。</p>
+<h4 id="不经意传输"><strong>不经意传输</strong></h4>
+<p><strong>不经意传输</strong>(又称为茫然传输，Oblivious Transfer,OT)是安全多方计算协议的一种基本方法。</p>
+<p><strong>2取1不经意传输协议</strong>：发送方Alice输入信息<span class="math inline">\(m_0,m_1\)</span>，接收方Bob随机选择自己所需信息的索引号<span class="math inline">\(a \in \{0,1\}\)</span>。如果Alice和Bob诚实执行协议后，Bob就能以1/2的概率得到所选择的信息<span class="math inline">\(m\)</span>，但是Bob无法获得 Alice输入的所有信息且Alice无法得知Bob的选择。</p>
+<p>n取k不经意传输协议：发送方Alice输人信息<span class="math inline">\(m_0,m_1,...,m_n\)</span>接收方Bob输入其选择的索引号<span class="math inline">\(a_0,a_1,...a_k \in \{0,1,..,n\}\)</span>如果Alice和Bob诚实执行协议后，Bob就能以<span class="math inline">\(k/n\)</span>的概率得到<span class="math inline">\(m\)</span>，但是Bob无法得到 Alice的其他信息，且Alice无法得知Bob所选择的信息。</p>
+<p>研究者已发表了许多不经意传输的构造方法，例如 Bellare-Micali构造Naro-Pinka构造以及 Hazay-Lindell构造。</p>
+<h4 id="秘密共享">秘密共享</h4>
+<p>秘密共享（也称为秘密分割方法）是指将秘密被拆分为n个碎片，且由n个不同参与者保管其中一份，且个人管的秘密没有可用性。 当有足够数量的秘密碎片就可以重建，但重构秘密的类型可能不同。秘密共享主要包括了算数秘密共享（Arithmetic secret sharing）、Shamir秘密共享和二进制秘密共享（Binary secret sharing）。多数基于安全多方计算的面向隐私保护机器学习的研究都采用了算数秘密共享。</p>
+<p>大多数安全多方计算的隐私保护机器学习方法利用两阶段架构，包括离线阶段和在线阶段。大多数密码操作都在离线阶段执行，在离线阶段生成乘法三元组。之后，于在线阶段使离线阶段生成的乘法三元组对机器学习模型进行训练。</p>
+<h3 id="同态加密">同态加密</h3>
+<p>同态加密技术(Homomorphic Encryption,HE)是指对密文进行加密计算，而产生的结果解密后与对明文进行操作后获得的结果相匹配。同态加密技术也能被用来实现安全多方计算。</p>
+<p>假设存在加密函数<span class="math inline">\(f\)</span>，使得明文<span class="math inline">\(M\)</span> 加密后变成密文<span class="math inline">\(M&#39;\)</span>，明文<span class="math inline">\(N\)</span>加密后变成密文<span class="math inline">\(N&#39;\)</span>，即<span class="math inline">\(f(M)=M&#39;,f(N)=N&#39;\)</span>，存在<span class="math inline">\(f\)</span>的解密函数<span class="math inline">\(f^{-1}\)</span>能够将<span class="math inline">\(f\)</span>加密后的密文解密成加密前的明文。将<span class="math inline">\(M&#39;\)</span>与<span class="math inline">\(N&#39;\)</span>相加得到<span class="math inline">\(P&#39;\)</span>，如果解密函数<span class="math inline">\(f^{-1}\)</span>对<span class="math inline">\(P&#39;\)</span>解密后的结果等于<span class="math inline">\(M\)</span>和<span class="math inline">\(N\)</span>相加的结果，即<span class="math inline">\(f^{-1}(P&#39;)=f^{-1}(M&#39;+N&#39;)=M+N\)</span>，则<span class="math inline">\(f\)</span>是可以进行同态加密的加密函数。</p>
+<p>同态加密可以分为部分同态加密（Partial Homomorphic Encryption，PHE）、些许同态加密（Somewhat Homomorphic Encryption,SHE）以及全同态加密（Fully Homomorphic Encryption,FHE）。</p>
+<p><strong>部分同态加密</strong>是指加密算法只满足某种运算，满足加法的称为加法同态（Additive Homomorphism），满足乘法的称为乘法同态（Multiplication homomorphism）。常见的 RSA 算法对于乘法操作是同态的，Paillier算法则是对加法同态的。</p>
+<p><strong>些许同态加密</strong>方法指一同态加密方法中的一些运算操作（如加法和乘法）只能执行有限次。SHE方法为了安全性，使用了噪声数据，每一次在密文上的操作会增加密文上的噪声量，而乘法操作是增加噪声量的主要手段。当噪声量超过一个上限后，解密操作就不能得出正确结果了。</p>
+<p><strong>全同态加密</strong>方法允许对密文进行无限次数的加法运算和乘法运算操作。目前的FHE建立在SHE的基础上，并通过实现代价高昂的自助法（bootstrap）操作来实现。 Bootstrap操作通过执行解密、密文上的加密操作和对密钥加密来对密文进行重加密，以减少密文在后续计算中的噪声量。由于自助法的代价高昂，FHE方案十分缓慢且在实践中往往不优于传统的安全多方计算方法。</p>
+<p>同态加密的核心是能够直接在密文上做运算，运算结果解密后与明文运算结果相同，这是对用户隐私的最直接和有效的保护手段。在机器学习和深度学习过程中使用同态加密对数据加密然后分析计算，能够很好地解决许多领域要求数据保密、安全的问题。同态加密可以确保在密文上进行计算而不进行解密，从而解密的结果与对明文执行相同计算得到的结果相同。由于目前的同态加密方案仍然存在许多局限，如只支持整数数据，需要固定的乘法深度，不能无限期地进行加法和乘法运算，全同态加密不支持比较和取最大值等操作。因此，现有的同态加密方案不能简单地应用于机器学习以及深度学习中。目前常用的解决策略有两种：①通过安全的多方计算来构造一种适合于基于同态加密的机器学习算法的协议，并通过执行该协议来完成该算法；②寻求原始机器学习算法的近似算法，使其仍然可以使用同时不依赖交互方案，并且满足同态加密方案的数据和操作要求。</p>
+<p>目前，利用加密技术来保护机器学习以及深度学习中的用户敏感数据已经取得较大进展，包括在预测阶段以及训练阶段的数据加密。但是在使用同态加密的过程中存在资源消耗的问题，深度学习本身已经消耗了大量的计算资源，结合同态加密技术将大大增加深度学习的计算量。如何在结合同态加密算法而尽量减少对深度学习性能的影响将是未来主要的研究方向。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AE%89%E5%85%A8%E5%A4%9A%E6%96%B9%E8%AE%A1%E7%AE%97/" rel="tag"># 安全多方计算</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/08/%E5%A4%A7%E6%95%B0%E6%8D%AE/Kafka%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" rel="prev" title="Kafka基本概念">
+      <i class="fa fa-chevron-left"></i> Kafka基本概念
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/14/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%BF%B0/" rel="next" title="联邦学习概述">
+      联邦学习概述 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="nav-number">1.</span> <span class="nav-text">隐私保护机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%84%B1%E6%95%8F"><span class="nav-number">2.</span> <span class="nav-text">数据脱敏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%8C%BF%E5%90%8D%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">数据匿名化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%AE%E5%88%86%E9%9A%90%E7%A7%81"><span class="nav-number">4.</span> <span class="nav-text">差分隐私</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E5%A4%9A%E6%96%B9%E8%AE%A1%E7%AE%97"><span class="nav-number">5.</span> <span class="nav-text">安全多方计算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E7%BB%8F%E6%84%8F%E4%BC%A0%E8%BE%93"><span class="nav-number">5.1.</span> <span class="nav-text">不经意传输</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A7%98%E5%AF%86%E5%85%B1%E4%BA%AB"><span class="nav-number">5.2.</span> <span class="nav-text">秘密共享</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86"><span class="nav-number">6.</span> <span class="nav-text">同态加密</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

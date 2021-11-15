@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="jvm基础知识：类加载过程、">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jvm类加载过程-2021春招">
+<meta property="og:url" content="http://example.com/2021/04/05/2021%E6%98%A5%E6%8B%9B/jvm%E7%B1%BB%E5%8A%A0%E8%BD%BD-2021%E6%98%A5%E6%8B%9B/index.html">
+<meta property="og:site_name" content="翡翠森林">
+<meta property="og:description" content="jvm基础知识：类加载过程、">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img.wanghaojun.cn//other/20210406191947.png">
+<meta property="og:image" content="http://img.wanghaojun.cn//other/20210406193017.png">
+<meta property="article:published_time" content="2021-04-05T06:44:32.000Z">
+<meta property="article:modified_time" content="2021-05-25T12:43:58.925Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img.wanghaojun.cn//other/20210406191947.png">
+
+<link rel="canonical" href="http://example.com/2021/04/05/2021%E6%98%A5%E6%8B%9B/jvm%E7%B1%BB%E5%8A%A0%E8%BD%BD-2021%E6%98%A5%E6%8B%9B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>jvm类加载过程-2021春招 | 翡翠森林</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">翡翠森林</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/05/2021%E6%98%A5%E6%8B%9B/jvm%E7%B1%BB%E5%8A%A0%E8%BD%BD-2021%E6%98%A5%E6%8B%9B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翡翠森林">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          jvm类加载过程-2021春招
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-05 14:44:32" itemprop="dateCreated datePublished" datetime="2021-04-05T14:44:32+08:00">2021-04-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-25 20:43:58" itemprop="dateModified" datetime="2021-05-25T20:43:58+08:00">2021-05-25</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>jvm基础知识：类加载过程、</p>
+<span id="more"></span>
+<h4 id="类加载过程">类加载过程</h4>
+<p>JVM 类加载机制分为五个部分：加载，验证，准备，解析，初始化，</p>
+<p>加载 加载是类加载过程中的一个阶段，这个阶段会在内存中生成一个代表这个类的 java.lang.Class 对象，作为方法区这个类的各种数据的入口。注意这里不一定非得要从一个 Class 文件获取，这里既可以从 ZIP 包中读取（比如从 jar 包和 war 包中读取），也可以在运行 时计算生成（动态代理），也可以由其它文件生成（比如将 JSP 文件转换成对应的 Class 类）。</p>
+<p>验证 这一阶段的主要目的是为了确保 Class 文件的字节流中包含的信息是否符合当前虚拟机的 要求，并且不会危害虚拟机自身的安全。</p>
+<p>准备 准备阶段是正式为类变量分配内存并设置类变量的初始值阶段，即在方法区中分配这些变量 所使用的内存空间。</p>
+<p>初始化 初始化阶段是类加载最后一个阶段，前面的类加载阶段之后，除了在加载阶段可以自定义类 加载器以外，其它操作都由 JVM 主导。到了初始阶段，才开始真正执行类中定义的 Java 程序代 码。</p>
+<h4 id="双亲委派模型">双亲委派模型</h4>
+<p>某个特定的类加载器在接到加载类的请求时，首先将加载任务委托给父类加载器，依次递归， 如果父类加载器可以完成类加载任务，就成功返回；只有父类加载器无法完成此加载任务时，才自己去加载。</p>
+<p>使用双亲委派模型的好处在于 Java 类随着它的类加载器一起具备了一种带有优先级的层次 关系。例如类 java.lang.Object，它存在在 rt.jar 中，无论哪一个类加载器要加载这个类，最终都是委派给处于模型最顶端的 Bootstrap ClassLoader 进行加载，因此Object 类在程序的各种类加载器环境中都是同一个类。相反，如果没有双亲委派模型而是由各个类加载器自行加载 话，如果用户编写了一个 java.lang.Object 的同名类并放在 ClassPath 中，那系统中将会出现多个不同的 Object 类，程序将混乱。因此，如果开发者尝试编写一个与 rt.jar 类库中重名的 Java 类，可以正常编译，但是永远无法被加载运行。</p>
+<h4 id="jvm内存结构">jvm内存结构</h4>
+<p>java虚拟机在jdk8改变了许多，这篇主要介绍java8的内存结构。</p>
+<h5 id="内存结构图">内存结构图：</h5>
+<p><img src="http://img.wanghaojun.cn//other/20210406191947.png" /></p>
+<h5 id="虚拟内存与本地内存">虚拟内存与本地内存：</h5>
+<p>Java虚拟机在执行的时候会把管理的内存分配成不同的区域，这些区域被称为<code>虚拟机内存</code>，同时，对于虚拟机没有直接管理的物理内存，也有一定的利用，这些被利用却不在虚拟机内存数据区的内存，我们称它为<code>本地内存</code>，这两种内存有一定的区别：</p>
+<ol type="1">
+<li>JVM内存</li>
+</ol>
+<p>受虚拟机内存大小的参数控制，当大小超过参数设置的大小时就会报OOM</p>
+<ol start="2" type="1">
+<li>本地内存</li>
+</ol>
+<p>本地内存不受虚拟机内存参数的限制，只受物理内存容量的限制</p>
+<p>虽然不受参数的限制，但是如果内存的占用超出物理内存的大小，同样也会报OOM</p>
+<h5 id="java运行时数据区域">java运行时数据区域</h5>
+<p>java虚拟机在执行过程中会将所管理的内存划分为不同的区域，有的随着线程产生和消失，有的随着java进程产生和消失，根据《Java虚拟机规范》的规定，运行时数据区分为以下几个区域：</p>
+<h6 id="程序计数器program-counter-register">1.程序计数器（Program Counter Register）</h6>
+<p>程序计数器就是当前线程所执行的字节码的行号指示器，通过改变计数器的值，来选取下一行指令，通过他来实现跳转、循环、恢复线程等功能。</p>
+<p>在任何时刻，一个处理器内核只能运行一个线程，多线程是通过线程轮流切换，分配时间来完成的，这就需要有一个标志来记住每个线程执行到了哪里，这里便需要到了程序计数器。</p>
+<p>所以，程序计数器是线程私有的，每个线程都已自己的程序计数器。</p>
+<h6 id="虚拟机栈jvm-stacks">2.虚拟机栈（JVM Stacks）</h6>
+<p><img src="http://img.wanghaojun.cn//other/20210406193017.png" /></p>
+<p>虚拟机栈是<code>线程私有</code>的，随线程生灭。虚拟机栈描述的是线程中的方法的内存模型：</p>
+<ul>
+<li><p>每个方法被执行的时候，都会在虚拟机栈中同步创建一个栈帧（stack frame）</p></li>
+<li><p>每个栈帧的包含如下的内容</p>
+<ul>
+<li>局部变量表</li>
+</ul>
+<p>局部变量表中存储着方法里的java基本数据类型（byte/boolean/char/int/long/double/float/short）以及对象的引用（注：这里的基本数据类型指的是方法内的局部变量）</p>
+<ul>
+<li><p>操作数栈</p></li>
+<li><p>动态连接</p></li>
+<li><p>方法返回地址</p></li>
+</ul></li>
+<li><p>方法被执行时入栈，执行完后出栈</p></li>
+</ul>
+<p>虚拟机栈可能会抛出两种异常：</p>
+<ul>
+<li>如果线程请求的栈深度大于虚拟机所规定的栈深度，则会抛出StackOverFlowError即栈溢出</li>
+<li>如果虚拟机的栈容量可以动态扩展，那么当虚拟机栈申请不到内存时会抛出OutOfMemoryError即OOM内存溢出</li>
+</ul>
+<h6 id="本地方法栈native-method-stacks">3.本地方法栈（Native Method Stacks）</h6>
+<p>本地方法栈与虚拟机栈的作用是相似的,都会抛出OutOfMemoryError和StackOverFlowError，都是线程私有的，主要的区别在于：</p>
+<ul>
+<li>虚拟机栈执行的是java方法</li>
+<li>本地方法栈执行的是native方法(什么是Native方法？)</li>
+</ul>
+<p>本地方法：</p>
+<p>本地方法是由其他语言（如C、C++ 或其他汇编语言）编写，编译成和处理器相关的代码。本地方法保存在动态连接库中，格式是各个平台专用的，运行中的java程序调用本地方法时，虚拟机装载包含这个本地方法的动态库，并调用这个方法。</p>
+<h6 id="java堆java-heap">4.java堆（Java Heap）</h6>
+<p>java堆是JVM内存中最大的一块，由所有线程共享,是由垃圾收集器管理的内存区域，主要存放对象实例，当然由于java虚拟机的发展，堆中也多了许多东西，现在主要有：</p>
+<ul>
+<li><p>对象实例</p>
+<p>类初始化生成的对象</p>
+<p>基本数据类型的数组也是对象实例</p></li>
+<li><p>字符串常量池</p>
+<p>1.字符串常量池原本存放于方法区，jdk7开始放置于堆中。</p>
+<p>2.字符串常量池存储的是string对象的直接引用，而不是直接存放的对象，是一张string table</p></li>
+<li><p>静态变量</p>
+<p>静态变量是有static修饰的变量，jdk7时从方法区迁移至堆中</p></li>
+<li><p>线程分配缓冲区（Thread Local Allocation Buffer）</p>
+<p>1.线程私有，但是不影响java堆的共性</p>
+<p>2.增加线程分配缓冲区是为了提升对象分配时的效率</p></li>
+</ul>
+<p>java堆既可以是固定大小的，也可以是可扩展的（通过参数-Xmx和-Xms设定），如果堆无法扩展或者无法分配内存时也会报OOM。</p>
+<h6 id="方法区method-area">5.方法区（Method Area）</h6>
+<p>方法区绝对是网上所有关于java内存结构文章争论的焦点，因为方法区的实现在java8做了一次大革新，现在我们来讨论一下：</p>
+<p>方法区是所有线程共享的内存，在java8以前是放在JVM内存中的，由永久代实现，受JVM内存大小参数的限制，在java8中移除了永久代的内容，方法区由元空间(Meta Space)实现，并直接放到了本地内存中，不受JVM参数的限制（当然，如果物理内存被占满了，方法区也会报OOM），并且将原来放在方法区的字符串常量池和静态变量都转移到了Java堆中，方法区与其他区域不同的地方在于，方法区在编译期间和类加载完成后的内容有少许不同，不过总的来说分为这两部分：</p>
+<ul>
+<li>类元信息（Klass）
+<ul>
+<li>类元信息在类编译期间放入方法区，里面放置了类的基本信息，包括类的版本、字段、方法、接口以及常量池表（Constant Pool Table）</li>
+<li>常量池表（Constant Pool Table）存储了类在编译期间生成的字面量、符号引用(什么是字面量？什么是符号引用？)，这些信息在类加载完后会被解析到运行时常量池中</li>
+</ul></li>
+<li>运行时常量池（Runtime Constant Pool）
+<ul>
+<li>运行时常量池主要存放在类加载后被解析的字面量与符号引用，但不止这些</li>
+<li>运行时常量池具备动态性，可以添加数据，比较多的使用就是String类的intern()方法</li>
+</ul></li>
+</ul>
+<h5 id="直接内存">直接内存</h5>
+<p>直接内存位于本地内存，不属于JVM内存，但是也会在物理内存耗尽的时候报OOM,所以也讲一下。</p>
+<p>在jdk1.4中加入了NIO（New Input/Putput）类，引入了一种基于通道（channel）与缓冲区（buffer）的新IO方式，它可以使用native函数直接分配堆外内存，然后通过存储在java堆中的DirectByteBuffer对象作为这块内存的引用进行操作，这样可以在一些场景下大大提高IO性能，避免了在java堆和native堆来回复制数据。</p>
+<h5 id="常见问题">常见问题</h5>
+<p><strong>什么是Native方法？</strong></p>
+<p>由于java是一门高级语言，离硬件底层比较远，有时候无法操作底层的资源，于是，java添加了native关键字，被native关键字修饰的方法可以用其他语言重写，这样，我们就可以写一个本地方法，然后用C语言重写，这样来操作底层资源。当然，使用了native方法会导致系统的可移植性不高，这是需要注意的。</p>
+<p><strong>成员变量、局部变量、类变量分别存储在内存的什么地方？</strong></p>
+<p>类变量</p>
+<ul>
+<li>类变量是用static修饰符修饰，定义在方法外的变量，随着java进程产生和销毁</li>
+<li>在java8之前把静态变量存放于方法区，在java8时存放在堆中</li>
+</ul>
+<p>成员变量</p>
+<ul>
+<li>成员变量是定义在类中，但是没有static修饰符修饰的变量，随着类的实例产生和销毁，是类实例的一部分</li>
+<li>由于是实例的一部分，在类初始化的时候，从运行时常量池取出直接引用或者值，与初始化的对象一起放入堆中</li>
+</ul>
+<p>局部变量</p>
+<ul>
+<li>局部变量是定义在类的方法中的变量</li>
+<li>在所在方法被调用时放入虚拟机栈的栈帧中，方法执行结束后从虚拟机栈中弹出，所以存放在虚拟机栈中</li>
+</ul>
+<p><strong>由final修饰的常量存放在哪里？</strong></p>
+<p>final关键字并不影响在内存中的位置。</p>
+<p><strong>常量池、运行时常量池、字符串常量池有什么关系？有什么区别？</strong></p>
+<p>类常量池与运行时常量池都存储在方法区，而字符串常量池在jdk7时就已经从方法区迁移到了java堆中。</p>
+<p>在类编译过程中，会把类元信息放到方法区，类元信息的其中一部分便是类常量池，主要存放字面量和符号引用，而字面量的一部分便是文本字符，在类加载时将字面量和符号引用解析为直接引用存储在运行时常量池；对于文本字符来说，它们会在解析时查找字符串常量池，查出这个文本字符对应的字符串对象的直接引用，将直接引用存储在运行时常量池；字符串常量池存储的是字符串对象的引用，而不是字符串本身。</p>
+<p><strong>什么是字面量、符号引用？</strong></p>
+<p>字面量</p>
+<ul>
+<li>java代码在编译过程中是无法构建引用的，字面量就是在编译时对于数据的一种表示:</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这个1便是字面量</span></span><br><span class="line"><span class="keyword">int</span> a=<span class="number">1</span>;</span><br><span class="line"><span class="comment">// iloveu便是字面量</span></span><br><span class="line">String b=<span class="string">&quot;iloveu&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>符号引用</p>
+<ul>
+<li>由于在编译过程中并不知道每个类的地址，因为可能这个类还没有加载，所以如果你在一个类中引用了另一个类，那么你完全无法知道他的内存地址，那怎么办，我们只能用他的类名作为符号引用，在类加载完后用这个符号引用去获取他的内存地址。</li>
+<li>例子：我在com.demo.Solution类中引用了com.test.Quest，那么我会把com.test.Quest作为符号引用存到类常量池，等类加载完后，拿着这个引用去方法区找这个类的内存地址。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/05/2021%E6%98%A5%E6%8B%9B/java%E5%9F%BA%E7%A1%80-2021%E6%98%A5%E6%8B%9B/" rel="prev" title="java基础-2021春招">
+      <i class="fa fa-chevron-left"></i> java基础-2021春招
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/06/2021%E6%98%A5%E6%8B%9B/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95-2021%E6%98%A5%E6%8B%9B/" rel="next" title="数据库索引-2021春招">
+      数据库索引-2021春招 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">类加载过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">双亲委派模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jvm%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">jvm内存结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%9B%BE"><span class="nav-number">3.1.</span> <span class="nav-text">内存结构图：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E4%B8%8E%E6%9C%AC%E5%9C%B0%E5%86%85%E5%AD%98"><span class="nav-number">3.2.</span> <span class="nav-text">虚拟内存与本地内存：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#java%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F"><span class="nav-number">3.3.</span> <span class="nav-text">java运行时数据区域</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8program-counter-register"><span class="nav-number">3.3.1.</span> <span class="nav-text">1.程序计数器（Program Counter Register）</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88jvm-stacks"><span class="nav-number">3.3.2.</span> <span class="nav-text">2.虚拟机栈（JVM Stacks）</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88native-method-stacks"><span class="nav-number">3.3.3.</span> <span class="nav-text">3.本地方法栈（Native Method Stacks）</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#java%E5%A0%86java-heap"><span class="nav-number">3.3.4.</span> <span class="nav-text">4.java堆（Java Heap）</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E5%8C%BAmethod-area"><span class="nav-number">3.3.5.</span> <span class="nav-text">5.方法区（Method Area）</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98"><span class="nav-number">3.4.</span> <span class="nav-text">直接内存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">3.5.</span> <span class="nav-text">常见问题</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文主要从联邦学习背景、定义、分类和框架这些角度简单的介绍联邦学习。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="联邦学习概述">
+<meta property="og:url" content="http://example.com/2020/09/14/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="翡翠森林">
+<meta property="og:description" content="本文主要从联邦学习背景、定义、分类和框架这些角度简单的介绍联邦学习。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img.wanghaojun.cn//img/20200914095353.png">
+<meta property="og:image" content="http://img.wanghaojun.cn//img/20200914095855.png">
+<meta property="article:published_time" content="2020-09-14T01:47:40.000Z">
+<meta property="article:modified_time" content="2021-04-19T07:28:11.020Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="联邦学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img.wanghaojun.cn//img/20200914095353.png">
+
+<link rel="canonical" href="http://example.com/2020/09/14/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%BF%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>联邦学习概述 | 翡翠森林</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">翡翠森林</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/09/14/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翡翠森林">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          联邦学习概述
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-14 09:47:40" itemprop="dateCreated datePublished" datetime="2020-09-14T09:47:40+08:00">2020-09-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-19 15:28:11" itemprop="dateModified" datetime="2021-04-19T15:28:11+08:00">2021-04-19</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要从联邦学习背景、定义、分类和框架这些角度简单的介绍联邦学习。<span id="more"></span></p>
+<h3 id="联邦学习背景">联邦学习背景</h3>
+<p>现阶段人工智能（AI）面临的一些问题：</p>
+<ul>
+<li>现实的数据质量是非常差的，例如聊天数据中有很多噪音；</li>
+<li>数据标签，收集是比较困难的，很多场景中的数据是没有标签的；</li>
+<li>数据是分散的，同时数据源之间存在着难以打破的壁垒。一般情况下人工智能的 所需要的数据会涉及多个领域，例如在基于人工智能的产品推荐服务中，产品销 售方拥有产品的数据、用户购买商品的数据，但是没有用户购买能力和支付习惯 的数据。在大多数行业中，数据是以孤岛的形式存在的，由于行业竞争、隐私安 全、行政手续复杂等问题，在现实中想要将分散在各地、各个机构的数据进行整 合几乎是不可能的，或者说所需的成本是巨大的。</li>
+</ul>
+<p>数据的隐私保护问题：</p>
+<p>随着大数据的进一步发展，重视数据隐私和安全已经成为了世界性的趋势。各 国都在加强对数据安全和隐私的保护，欧盟2018年施行了法案《通用数据保护条 例》(General Data Protection Regulation , GDPR)。同样，中国在2017年起实施 的《中华人民共和国网络安全法》和《中华人民共和国民法总则》中也指出网络 运营者不得泄露、篡改、毁坏其收集的个人信息，并且与第三方进行数据交易时 需确保拟定的合同明确约定拟交易数据的范囯和数据保护义务。</p>
+<p>这给人工智能领域带来了前所未有的挑战，研究界和企业界目前的情况是收集 数据的一方通常不是使用数据的一方，如A方收集数据，转移到B方清洗，再转移 到C方建模，最后将模型卖给D方使用。这种数据在实体间转移，交换和交易的形 式违反了GDPR，并可能遭到法律严厉的惩罚。</p>
+<p>联邦学习是：</p>
+<ul>
+<li>各方数据都保留在本地，不泄露隐私也不违反法规；</li>
+<li>多个参与者联合数据建立虚拟的共有模型，并且共同获益的体系；</li>
+<li>在联邦学习的体系下，各个参与者的身份和地位平等；</li>
+<li>联邦学习的建模效果和将整个数据集放在一处建模的效果相同，或相差不 大（在各个数据的用户对齐（user alignment）或特征（ feature alignment）对齐的条件下）；</li>
+<li>迁移学习是在用户或特征不对齐的情况下，也可以在数据间通过交换加密 参数达到知识迁移的效果。 联邦学习使多个参与方在保护数据隐私、满足合法合规要求的前提下继续进行机器学习，解决数据孤岛问题。</li>
+</ul>
+<h3 id="联邦学习定义">联邦学习定义</h3>
+<p>举例来说，假设有两个不同的企业A和B，它们拥有不同的数据。比如，企业A有用户特征数据； 企业B有产品特征数据和标注数据。这两个企业按照上述GDPR准则是不能粗暴地把双方数据加以合 并的，因为数据的原始提供者，即他们各自的用户并没有机会来同意这样做。假设双方各自建立一 个任务模型，每个任务可以是分类或预测，而这些任务也已经在获得数据时有各自用户的认可。但是，由于数据不完整（例如企业A缺少标签数据，企业B缺少特征数据），或者数据不充分（数据量 不足以建立好的模型），那么，在各端的模型有可能无法建立或效果并不理想。</p>
+<p>联邦学习是要解决这个问题：它希望做到各个企业的自有数据不出本地，而联邦系统可以通过 加密机制下的参数交换方式，即在不违反数据隐私法规情况下，建立一个虚拟的共有模型。这个虚 拟模型就好像大家把数据聚合在一起建立的最优模型一样。但是在建立虚拟模型的时候，数据本身 不移动，也不泄露隐私和影响数据合规。这样，建好的模型在各自的区域仅为本地的目标服务。在 这样一个联邦机制下，各个参与者的身份和地位相同，而联邦系统帮助大家建立了“共同富裕”的 策略。这就是为什么这个体系叫做“联邦学习”。</p>
+<p>联邦学习（Federated Learning）是一种机器学习技术，可在拥有 本地数据样本的多个分散边缘设备或服务器之间训练算法，而无需交换其数据样本。 这种方法与传统的集中式机器学习技术不同，传统的集中式机器学习技术将所有数据样本都上传到一个服务器。</p>
+<p>联邦学习使多个参与者可以构建通用的，健壮的机器学习模型而无 需共享数据，从而解决了诸如数据隐私，数据安全性，数据访问权以及 对异构数据的访问之类的关键问题。</p>
+<p><img src="http://img.wanghaojun.cn//img/20200914095353.png" /></p>
+<h4 id="联邦学习与差分隐私理论的区别">联邦学习与差分隐私理论的区别</h4>
+<p>联邦学习的特点使其可以被用来保护用户数据的隐私，但是它和大数据、数据挖掘 领域中常用的隐私保护理论如差分隐私保护理论（ Differential Privacy）、k匿名 （ k-Anonymity）和l多样化（l-Diversity）等方法还是有较大的差别的。首先，联邦学习与传统隐私保护方法的原理不同，联邦学习通过加密机制下的参数交换方式保护用户数据隐私，加密手段包括同态加密等。与差分隐私理论不同，其数据和模型本身 不会进行传输，因此在数据层面上不存在泄露的可能，也不违反更严格的数据保护法 案如GDPR等。而差分隐私理论、k匿名和l多样化等方法是通过在数据里加噪音，或者釆用概括化的方法模糊某些敏感属性，直到第三方不能区分个体为止，从而以较高 的概率使数据无法被还原，以此来保护用户隐私。</p>
+<h4 id="联邦学习与分布式机器学习的区别">联邦学习与分布式机器学习的区别</h4>
+<p>橫向联邦学习中多方联合训练的方式与分布式机器学习（ Distributed Machine Learning） 有部分相似的地方。</p>
+<p>分布式机器学习涵盖了多个方面，包括把机器学习中的训练数据分布式存储、计算仼务分 布式运行、模型结果分布式发布等，参数服务器（ Parameter Server）是分布式机器学习中 一个典型的例子。</p>
+<p>参数服务器作为加速机器学习模型训练过程的一种工具，它将数据存储在 分布式的工作节点上，通过一个中心式的调度节点调配数据分布和分配计算资源，以便更髙 效的获得最终的训练模型。 而对于联邦学习而言，首先在于横向联邦学习中的工作节点代表的是模型训练的数据拥有 方，其对本地的数据具有完全的自治权限，可以自主决定何时加入联邦学习进行建模，相对 地在参数服务器中，中心节点始终占据着主导地位，因此联邦学习面对的是一个更复杂的学 习环境；其次，联邦学习则强调模型训练过程中对数据拥有方的数据隐私保护，是一种应对 数据隐私保护的有效措施，能够更好地应对未来愈加严格的数据隐私和数据安全监管环境。</p>
+<h4 id="联邦学习与联邦数据库的关系">联邦学习与联邦数据库的关系</h4>
+<p>联邦数据库系统（ Federated Database System）是将多个不同的单元数据库进 行集成，并对集成后的整体进行管理的系统。它的提出是为了实现对多个独立的数据 库进行相互操作。联邦数据库系统对单元数据库往往釆用分布式存储的方式，并且在 实际中各个单元数据库中的数据是异构的，因此，它和联邦学习在数据的类型与存储 方式上有很多相似之处。</p>
+<p>但是，联邦数据库系统在各个单元数据库交互的过程中不涉及任何隐私保护机制， 所有单元数据库对管理系统都是完全可见的。此外，联邦数据库系统的工作重心在包 括插入、删除、查找、合并等各种数据库基本操作上面，而联邦学习的目的是在保护 数据隐私的前提下对各个数据建立一个联合模型，使数据中蕴含的各种模式与规律更 好地为我们服务。</p>
+<h4 id="联邦学习与区块链的关系">联邦学习与区块链的关系</h4>
+<p>区块链与联邦学习都是一种去中心化的网络，区块链是一种完全P2P（ peer to peer）的网络结构，在联邦学习中，第三方会承担汇聚模型、管理等功能。</p>
+<p>联邦学习与区块链中，均涉及到密码学、加密算法等基础技术。根据技术的不同， 区块链技术使用的加密算法包括哈希算法，非对称加密等；联邦学习中使用同态加密等。</p>
+<p>从数据角度上看，区块链上通过加密的方式在各个节点上记录了完整的数据，而联邦学习中，各方的数据均仅保留在本地。</p>
+<p>从奖励机制上看，区块链中，不同节点之间通过竞争记账来获得奖励。在联邦学习 中，多个参与方通过共同学习，提高模型训练结果，依据每一方的贡献来分配奖励</p>
+<h4 id="联邦学习与多方安全计算的关系">联邦学习与多方安全计算的关系</h4>
+<p>在联邦学习中，用户的隐私与安全是重中之重。为了保护用户隐私，防止联邦学习应用被 恶意方攻击，多方安全计算技术可以在联邦学习中被应用，成为联邦学习技术框架中的一部分。学术界已经展开利用多方安全计算来增强联邦学习的安全性的研究。</p>
+<ul>
+<li>McMahan指出，联邦学习可以通过差分隐私，多方安全计算，或它们的结合等技术来提供 更强的安全保障。</li>
+<li>Donawitz指出，联邦学习中，可以利用多方安全计算以安全的方式计算来自用户设备的模 型参数更新的总和。</li>
+<li>Truell提出了一种利用差分隐私和多方安全计算来保护隐私的联邦学习方法。</li>
+<li>Liu提出将加性同态加密（AHE）应用于神经网络的多方计算。</li>
+<li>微众银行提出的开源联邦学习框架FATE中包含了多方安全计算的相关算子，方便应用方对 多方安全计算进行高效的开发。</li>
+</ul>
+<h3 id="联邦学习分类">联邦学习分类</h3>
+<p>考虑有多个数据拥有方，每个数据拥有方各自所持有的数据集可以用一个矩阵来表示。矩阵 的每一行代表一个用户，每一列代表一种用户特征。同时，某些数据集可能还包含标签数据。如 果要对用户行为建立预测模型，就必须要有标签数据。我们可以把用户特征叫做Ⅹ，把标签特征 叫做Y。具体而言，以包含两个数据拥有方的联邦学习为例，数据分布可以分为下三种情况：</p>
+<ul>
+<li>两个数据集的用户特征(X1,X2,…)重叠部分较大，而用户(U1,U2,…)重叠部分较小；</li>
+<li>两个数据集的用户(U1,U2,…)重叠部分较大，而用户特征(X1,X2,…)重叠部分较小;</li>
+<li>两个数据集的用户(U1,U2,…)与用户特征重叠(X1,X2,…)部分都比较小。</li>
+</ul>
+<p>为了应对以上三种数据分布情况，联邦学习分为横向联邦学习、纵向联邦学习和联邦迁移学习。</p>
+<p><img src="http://img.wanghaojun.cn//img/20200914095855.png" /></p>
+<h4 id="横向联邦学习horizontal-federated-learning">横向联邦学习（Horizontal Federated Learning）</h4>
+<p>在两个数据集的用户特征重叠较多而用户重叠较少的情况下，我们把数据集 按照横向（即用户维度）切分，并取出双方用户特征相同而用户不完全相同的那 部分数据进行训练。这种方法叫做横向联邦学习。比如有两家不同地区银行，它 们的用户群体分别来自各自所在的地区，相互的交集很小。但是，它们的业务很相似，因此，记录的用户特征是相同的。此时，就可以使用横向联邦学习来构建 联合模型。 Google在2017年提出了一个针对安卓手机模型更新的数据联合建模方案：在单个用户使用安卓手机时，不断在本地更新模型参数并将参数上传到安卓云上，从而使特征维度相同的各数据拥有方建立联合模型的一种联邦学习方案。</p>
+<h4 id="纵向联邦学习vertical-federated-learning">纵向联邦学习（Vertical Federated Learning）</h4>
+<p>在两个数据集的用户重叠较多而用户特征重叠较少的情况下，我们把数据集 按照纵向（即特征维度）切分，并取出双方用户相同而用户特征不完全相同的那 部分数据进行训练。这种方法叫做纵向联邦学习。比如有两个不同机构，一家是 某地的银行，另一家是同一个地方的电商。它们的用户群体很有可能包含该地的 大部分居民，因此用户的交集较大。但是，由于银行记录的都是用户的收支行为 与信用评级，而电商则保有用户的浏览与购买历史，因此它们的用户特征交集较 小。纵向联邦学习就是将这些不同特征在加密的状态下加以聚合，以增强模型能 力的联邦学习。目前，逻辑回归模型，树型结构模型和神经网络模型等众多机器 学习模型已经逐渐被证实能够建立在这个联邦体系上。</p>
+<h4 id="迁移联邦学习-federated-transfer-learning">迁移联邦学习 （Federated Transfer Learning）</h4>
+<p>在两个数据集的用户与用户特征重叠都较少的情况下，我们不对数据进行切 分，而可以利用迁移学习来克服数据或标签不足的情况，这种方法叫作联邦迁移学习。 比如有两个不同机构，一家是位于中国的银行，另一家是位于美国的电商。 由于受到地域限制，这两家机构的用户群体交集很小。同时，由于机构类型的不同，二者的数据特征也只有小部分重合。在这种情况下，要想进行有效的联邦学习，就必须引入迁移学习，来解决单边数据规模小和标签样本少的问题，从而提升模型的效果。</p>
+<h4 id="联邦学习框架">联邦学习框架</h4>
+<p>谷歌开源的 Tensor Flow Federated框架，截止2019年12月已 发布至0.11版本，较好地支持横向联邦学习。其中，可以通过 Federated Learning（ FL）API，与 Tensorflow/ Keras交互，完 成分类、回归等任务。用户也可以通过其提供的 Federated Core （FC）AP，通过在强类型函数编程环境中将 TensorFlow与分布 式通信运算符相结合，简洁地表达新的联合算法。</p>
+<p>2019年2月，微众银行开源FATE开源项目，截止2019年12月发布 FATE V1.2版本，覆盖橫向联邦学习，纵向联邦学习，联邦迁移学习， 得到了社区内广泛的关注与应用。同时，FATE提供20多个联邦学习算 法组件，涵盖LR,GBDT,DNN等主流算法，覆盖常规商业应用场景建模 需求。尤其值得注意的是，FATE提供了一站式联邦模型服努解决方案， 涵盖联邦特征工程，联邦机器学习模型训练，联邦模型评估，联邦在线 推理，相比其他开源框架，在工业应用上有显著的优势。</p>
+<p>Open Minded开源的Pysyft框架，较好地支持横向联邦学习。该框架同时支持 Tensorflow, Keras, torch，为使用人员快速上手提供了较多的选择。 Pysyft提供 了安全加密算子，数值运算算子，及联邦学习算法，用户也可以高效搭建自己的联 邦学习算法。</p>
+<p>2019年11月，百度宣布开源其联邦学习框架 PaddlefL. Paddle开源框架中包 含了 DiffieHellman等安全算子，及LR等机器学习算法。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 联邦学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/14/%E5%AE%89%E5%85%A8/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" rel="prev" title="隐私保护基本概念">
+      <i class="fa fa-chevron-left"></i> 隐私保护基本概念
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/14/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E6%9E%B6%E6%9E%84/" rel="next" title="联邦学习架构">
+      联邦学习架构 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">联邦学习背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E5%AE%9A%E4%B9%89"><span class="nav-number">2.</span> <span class="nav-text">联邦学习定义</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E5%B7%AE%E5%88%86%E9%9A%90%E7%A7%81%E7%90%86%E8%AE%BA%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.1.</span> <span class="nav-text">联邦学习与差分隐私理论的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.2.</span> <span class="nav-text">联邦学习与分布式机器学习的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E8%81%94%E9%82%A6%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.3.</span> <span class="nav-text">联邦学习与联邦数据库的关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E5%8C%BA%E5%9D%97%E9%93%BE%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.4.</span> <span class="nav-text">联邦学习与区块链的关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E5%A4%9A%E6%96%B9%E5%AE%89%E5%85%A8%E8%AE%A1%E7%AE%97%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.5.</span> <span class="nav-text">联邦学习与多方安全计算的关系</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E5%88%86%E7%B1%BB"><span class="nav-number">3.</span> <span class="nav-text">联邦学习分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%AA%E5%90%91%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0horizontal-federated-learning"><span class="nav-number">3.1.</span> <span class="nav-text">横向联邦学习（Horizontal Federated Learning）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%B5%E5%90%91%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0vertical-federated-learning"><span class="nav-number">3.2.</span> <span class="nav-text">纵向联邦学习（Vertical Federated Learning）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%81%E7%A7%BB%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0-federated-transfer-learning"><span class="nav-number">3.3.</span> <span class="nav-text">迁移联邦学习 （Federated Transfer Learning）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6"><span class="nav-number">3.4.</span> <span class="nav-text">联邦学习框架</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

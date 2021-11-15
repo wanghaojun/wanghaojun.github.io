@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="长短期记忆（英语：Long Short-Term Memory，LSTM）是一种时间递归神经网络（RNN），论文首次发表于1997年。由于独特的设计结构，LSTM适合于处理和预测时间序列中间隔和延迟非常长的重要事件。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="长短期记忆">
+<meta property="og:url" content="http://example.com/2018/11/26/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%95%BF%E7%9F%AD%E6%9C%9F%E8%AE%B0%E5%BF%86/index.html">
+<meta property="og:site_name" content="翡翠森林">
+<meta property="og:description" content="长短期记忆（英语：Long Short-Term Memory，LSTM）是一种时间递归神经网络（RNN），论文首次发表于1997年。由于独特的设计结构，LSTM适合于处理和预测时间序列中间隔和延迟非常长的重要事件。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/RNN-rolled.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/RNN-unrolled.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-SimpleRNN.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-chain.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-SimpleRNN.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-focus-f.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-focus-i.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/LSTM3-focus-o.png">
+<meta property="article:published_time" content="2018-11-26T02:25:00.000Z">
+<meta property="article:modified_time" content="2021-04-19T07:33:09.790Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img.wanghaojun.cn/img/RNN-rolled.png">
+
+<link rel="canonical" href="http://example.com/2018/11/26/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%95%BF%E7%9F%AD%E6%9C%9F%E8%AE%B0%E5%BF%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>长短期记忆 | 翡翠森林</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">翡翠森林</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/11/26/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%95%BF%E7%9F%AD%E6%9C%9F%E8%AE%B0%E5%BF%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翡翠森林">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          长短期记忆
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-11-26 10:25:00" itemprop="dateCreated datePublished" datetime="2018-11-26T10:25:00+08:00">2018-11-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-19 15:33:09" itemprop="dateModified" datetime="2021-04-19T15:33:09+08:00">2021-04-19</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>长短期记忆（英语：Long Short-Term Memory，LSTM）是一种时间递归神经网络（RNN），论文首次发表于1997年。由于独特的设计结构，LSTM适合于处理和预测时间序列中间隔和延迟非常长的重要事件。 <span id="more"></span> # 递归神经网络 递归神经网络包含了一种循环，这种循环可以长时间的保存信息。 <img src="http://img.wanghaojun.cn/img/RNN-rolled.png" /> 在上图中，一块循环网络A将一个输入 <span class="math inline">\(x_{t}\)</span> ，并输出一个<span class="math inline">\(h_{t}\)</span>,一个循环允许信息从网络的一个步骤传递到另一个步骤。 这些循环让RNN看起来有些神秘，但是如果你多想一下，这与普通的循环神经网络并没有很大的不同，可以将循环神经网路看作是同一网络的多个副本，每一个副本都将信息传递给后继者，如果我们把循环展开 <img src="http://img.wanghaojun.cn/img/RNN-unrolled.png" /> 这种类似链的性质表明，递归神经网络与序列和列表密切相关。它们是用于此类数据的神经网络和自然架构。 这种网络结构被证实非常有用，在过去的数年中，将RNN应用于各种问题取得了令人难以置信的成功：语音识别，语音建模，翻译，图像字幕等等。 这些成功的关键在于LSTM，这是一种非常特殊的RNN结构，对于许多任务而言，它比标准版本要好用的多，几乎所有的RNN神经网络都是用它们实现的。 # 长期依赖的问题 RNN的吸引力在于它能够将以前的信息连接到当前的任务，比如说使用先前的视频帧来理解现在的视频帧。如果RNN可以做到这一点，它们将非常有用。 有时，我们为了执行当前的任务需要查看最近的信息。举个例子，一个语言模型尝试通过前一个单词来预测下一个单词，如果我们尝试预测“the clouds are in sky”最后一个单词，我们不需要任何其他的内容，很明显下一个单词是sky。在这个例子中，相关信息和地点之间的间隙很小，RNN可以学习使用过去的信息。 但是，在一些情况下，我们需要更多的内容。尝试预测句子“I grew up in France...I speak fluent French”。最近的信息表明下一个单词可能是一个语言的名字，但是，如果我们继续缩小范围到哪一种语言，我们需要从前面获取“France”这个信息。相关信息和需要的点之间的间隙可能是非常大的。 不幸的是，随着间隙变大，RNN也不能学习去连接这些信息。 理论上，RNN绝对可以解决这种“长期依赖”的问题，一个人可以通过认真挑选参数的方式来解决这类问题。然而，在实践中，RNN似乎无法学习它们。Hochreiter（德国）和Bengio等人对该问题进行了深入探讨，它们找到了一些为什么很难学习的根本原因。 幸运的是，LSTM并没有这样的问题。 # LSTM网络 长端期记忆网络，通常被叫做“LSTM”，是RNN的一种特殊形式，能够像学习长期依赖，它们由Hochreiter和Schmidhuber介绍，并在以后的工作中被许多人提炼和推广。它们在各种各样的问题上表现的非常好，现在被广泛使用。 LSTM旨在避免长期依赖性的问题，长时间记住信息是它们的默认行为，而不是它们难以学习的东西。 所有的递归神经网络都有神经网络重复模块链的形式。在标准的RNN中，重复模块有非常简单的结构，比如说一个的单一的tanh（激活函数）层。 <img src="http://img.wanghaojun.cn/img/LSTM3-SimpleRNN.png" /> LSTM也有这种链式结构，但是重复模块是一个不同的结构。LSTM有四个，而不是一个神经网络层，通过一种特殊的方式进行交互。 <img src="http://img.wanghaojun.cn/img/LSTM3-chain.png" /> 在上图中，每一行都携带一个完整的向量，从一个节点的输出到其他节点的输入。粉色圆圈表示逐点运算，如矢量加法，而黄色框表示神经网络层。行合并表示连接，而行分叉表示其内容被复制，副本将转移到不同的位置。 # LSTM的核心思想 LSTM的关键是cell state（细胞状态），一条水平线贯穿整个图的顶部。 细胞状态类似于传送带，它之间沿整个链运行，只有一些微小的线性相互作用，信息很容易沿着它不变地流动。 <img src="http://img.wanghaojun.cn/img/LSTM3-SimpleRNN.png" /> LSTM拥有添加或删除信息到细胞状态的能力，由一种叫做门的结构进行调节。门是一种可选择通过信息的方式。它们由sigmoid 神经网络层和逐点乘法运算组成。sigmoid层输出0到1之间的数字，描述每个组件应该通过多少。值为零意味着“不让任何东西通过”，而值为1则意味着“让一切都通过”。 LSTM具有三个这样的门，用于保护和控制细胞状态。 # LSTM的具体过程 LSTM的第一步决定我们将从细胞状态中抛弃哪些信息，这个决定由一个叫做“forget gate layer（遗忘门层）”的sigmoid层完成。它会将查看<span class="math inline">\(h_{t-1}\)</span>和<span class="math inline">\(x_t\)</span>，然后对于细胞状态<span class="math inline">\(C_{t-1}\)</span>中的每个值输出一个0与1之间的数，1代表“完全保留这个”，而0代表“完全摆脱这个”。 我们回到语言模型的例子，尝试在先前的单词的基础上预测下一个单词。在这个问题中，细胞状态可能包含当前主题的性别，所以就可以使用正确的代词。当我们看到一个新的主题时，就会忘记旧主题的性别。 <img src="http://img.wanghaojun.cn/img/LSTM3-focus-f.png" /> 下一步是确定我们将在单元状态中存储哪些新的信息。这包含两部分，首先，一个叫“输入门”的sigmoid层决定我们要更新哪些值。接下来，一个tanh层创造新的候选值的向量，<span class="math inline">\({\vec{C_t}}\)</span>，可能会添加到状态。在下一步中，我们将结合这两个来进行状态更新。 在我们的语言模型的例子中，我们想要将新主题的性别添加到细胞状态，以替换我们忘记的旧主题。 <img src="http://img.wanghaojun.cn/img/LSTM3-focus-i.png" /> 最后，我们需要决定我们要输出的内容。此输出将基于我们的单元状态，但将是过滤版本。首先，我们通过一个sigmoid层来决定细胞状态的哪一部分将被输出。然后，我们将单元状态通过tanh（将值推到-1和1之间）并将其乘以sigmoid门的输出，这样我们只输出我们决定的部分。 对于语言模型示例，由于它只是看到一个主题，它可能想要输出与动词相关的信息，以防接下来会发生什么。例如，它可能输出主语是单数还是复数，以便我们知道动词应该用什么形式。 <img src="http://img.wanghaojun.cn/img/LSTM3-focus-o.png" /></p>
+<p>本文转自 http://colah.github.io/posts/2015-08-Understanding-LSTMs/</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/10/23/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="prev" title="服务器开发环境搭建">
+      <i class="fa fa-chevron-left"></i> 服务器开发环境搭建
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/11/26/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5/" rel="next" title="深度学习相关概念">
+      深度学习相关概念 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

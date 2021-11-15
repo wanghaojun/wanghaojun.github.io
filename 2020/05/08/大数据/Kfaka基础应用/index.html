@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="这篇文章主要介绍了基于Kafka环境，利用真实的用户行为日志数据来实现大数据平台的增量数据采集过程。是我正在学习的大数据课程中的一个实验。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka基础应用">
+<meta property="og:url" content="http://example.com/2020/05/08/%E5%A4%A7%E6%95%B0%E6%8D%AE/Kfaka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8/index.html">
+<meta property="og:site_name" content="翡翠森林">
+<meta property="og:description" content="这篇文章主要介绍了基于Kafka环境，利用真实的用户行为日志数据来实现大数据平台的增量数据采集过程。是我正在学习的大数据课程中的一个实验。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img.wanghaojun.cn//img/20200422102844.png">
+<meta property="article:published_time" content="2020-05-08T00:31:03.000Z">
+<meta property="article:modified_time" content="2021-04-19T07:29:46.587Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="大数据">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img.wanghaojun.cn//img/20200422102844.png">
+
+<link rel="canonical" href="http://example.com/2020/05/08/%E5%A4%A7%E6%95%B0%E6%8D%AE/Kfaka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Kafka基础应用 | 翡翠森林</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">翡翠森林</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/05/08/%E5%A4%A7%E6%95%B0%E6%8D%AE/Kfaka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翡翠森林">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kafka基础应用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-08 08:31:03" itemprop="dateCreated datePublished" datetime="2020-05-08T08:31:03+08:00">2020-05-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-19 15:29:46" itemprop="dateModified" datetime="2021-04-19T15:29:46+08:00">2021-04-19</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这篇文章主要介绍了基于Kafka环境，利用真实的用户行为日志数据来实现大数据平台的增量数据采集过程。是我正在学习的大数据课程中的一个实验。<span id="more"></span></p>
+<p>本文主要有以下内容：</p>
+<ul>
+<li>在win10环境下的Kafka的基本环境搭建</li>
+<li>kafka-clients实现简单的生产者和消费者</li>
+<li>使用maven+spring-boot+spring-data-jpa+spring-kafka 实现大数据平台的增量数据采集</li>
+</ul>
+<h2 id="kafka环境搭建win10">1.kafka环境搭建（win10）</h2>
+<p>这一部分我主要参照了kafka的中文文档：http://kafka.apachecn.org/quickstart.html</p>
+<p>下载代码并压缩，下载地址：http://kafka.apachecn.org/downloads.html</p>
+<p>下载kafka后就可以参照Kafka的中文文档进行基本的kafka操作了，创建一个topic，然后发送消息，启动consumer来消费消息，设置多代理集群，尝试使用kafka connect来导入/导出数据，官方文档写的非常详细，这里我就不再照搬一遍了。</p>
+<p>完成kafka官方文档中的QuickStart之后，相信你对Kafka有了简单的认识和了解，接下来就尝试使用Kafka的API来完成基本的消费者和生产者操作吧。</p>
+<p>Kafka有四个核心的API:</p>
+<ul>
+<li>The <a target="_blank" rel="noopener" href="http://kafka.apachecn.org/documentation.html#producerapi">Producer API</a> 允许一个应用程序发布一串流式的数据到一个或者多个Kafka topic。</li>
+<li>The <a target="_blank" rel="noopener" href="http://kafka.apachecn.org/documentation.html#consumerapi">Consumer API</a> 允许一个应用程序订阅一个或多个 topic ，并且对发布给他们的流式数据进行处理。</li>
+<li>The <a target="_blank" rel="noopener" href="http://kafka.apachecn.org/documentation/streams">Streams API</a> 允许一个应用程序作为一个<em>流处理器</em>，消费一个或者多个topic产生的输入流，然后生产一个输出流到一个或多个topic中去，在输入输出流中进行有效的转换。</li>
+<li>The <a target="_blank" rel="noopener" href="http://kafka.apachecn.org/documentation.html#connect">Connector API</a> 允许构建并运行可重用的生产者或者消费者，将Kafka topics连接到已存在的应用程序或者数据系统。比如，连接到一个关系型数据库，捕捉表（table）的所有变更内容。</li>
+</ul>
+<h2 id="实现简单的生产者消费者">2.实现简单的生产者消费者</h2>
+<p>这一阶段，我们将使用Kafka的java客户端来使用Kafka的API实现简单的生产者和消费者。</p>
+<p>首先，要启动zookeeper和kafka环境，具体过程在上一节的kafka的中文文档中有介绍。</p>
+<p>接下来直接上代码：</p>
+<p>需要在pom.xml中添加以下依赖，注意，我是用的kafka-clients的版本是2.2.0。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.kafka<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>kafka-clients<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>slf4j-simple<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.7.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>生产者代码，ProducerTest.java:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> producer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.common.serialization.StringSerializer;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProducerTest</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> KafkaProducer&lt;String,String&gt; producer;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String topic;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">ProducerTest</span><span class="params">(String topicName)</span> </span>&#123;</span><br><span class="line">        Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">        properties.put(<span class="string">&quot;bootstrap.servers&quot;</span>, <span class="string">&quot;localhost:9092&quot;</span>);</span><br><span class="line">        properties.put(<span class="string">&quot;acks&quot;</span>,<span class="string">&quot;all&quot;</span>);</span><br><span class="line">        properties.put(<span class="string">&quot;retries&quot;</span>,<span class="number">0</span>);</span><br><span class="line">        properties.put(<span class="string">&quot;batch.size&quot;</span>,<span class="number">16384</span>);</span><br><span class="line">        properties.put(<span class="string">&quot;linger.ms&quot;</span>,<span class="string">&quot;1&quot;</span>);</span><br><span class="line">        properties.put(<span class="string">&quot;buffer.memory&quot;</span>,<span class="number">33554432</span>);</span><br><span class="line">        properties.put(<span class="string">&quot;key.serializer&quot;</span>, StringSerializer.class.getName());</span><br><span class="line">        properties.put(<span class="string">&quot;value.serializer&quot;</span>, StringSerializer.class.getName());</span><br><span class="line">        <span class="keyword">this</span>.producer = <span class="keyword">new</span> KafkaProducer&lt;String, String&gt;(properties);</span><br><span class="line">        <span class="keyword">this</span>.topic = topicName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> no = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (;;)&#123;</span><br><span class="line">                String msg = <span class="string">&quot;this is &quot;</span> + no + <span class="string">&quot;   messages&quot;</span>;</span><br><span class="line">                    ProducerRecord&lt;String,String&gt; record = <span class="keyword">new</span> ProducerRecord&lt;String, String&gt;(topic,Integer.toString(no),msg);</span><br><span class="line">                    producer.send(record);</span><br><span class="line">                    <span class="keyword">if</span> (no % <span class="number">100</span> == <span class="number">0</span>)&#123;</span><br><span class="line">                        System.out.println(msg);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span> (no == <span class="number">1000</span>)&#123;</span><br><span class="line">                        System.out.println(<span class="string">&quot;finish&quot;</span>);</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    no ++;</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">            producer.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ProducerTest producerTest = <span class="keyword">new</span> ProducerTest(<span class="string">&quot;testtopic&quot;</span>);</span><br><span class="line">        Thread thread = <span class="keyword">new</span> Thread(producerTest);</span><br><span class="line">        thread.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>参数说明：</p>
+<ul>
+<li>bootstrap.servers： broker的地址</li>
+<li>acks：指定必须要有多少个分区的副本接收到该消息，服务端才会向生产者发送响应，可选值为：0,1,2，…，all</li>
+<li>retries：生产者向kafka发送消息可能会发生错误，有的是临时性的错误，比如网络突然阻塞了一会儿，有的不是临时的错误，比如“消息太大了”，对于出现的临时错误，可以通过重试机制来重新发送</li>
+<li>batch.size：生产者在发送消息时，可以将即将发往同一个分区的消息放在一个批次里，然后将这个批次整体进行发送，这样可以节约网络带宽，提升性能。该参数就是用来规约一个批次的大小的。但是生产者并不是说要等到一个批次装满之后，才会发送，不是这样的，有时候半满，甚至只有一个消息的时候，也可能会发送，具体怎么选择，我们不知道，但是不是说非要等装满才发。因此，如果把该参数调的比较大的话，是不会造成消息发送延迟的，但是会占用比较大的内存。但是如果设置的太小，会造成消息发送次数增加，会有额外的IO开销。</li>
+<li>linger.ms：生产者在发送一个批次之前，可以适当的等一小会，这样可以让更多的消息加入到该批次。这样会造成延时增加，但是降低了IO开销，增加了吞吐量</li>
+<li>buffer.memory：生产者的内存缓冲区大小。如果生产者发送消息的速度 &gt; 消息发送到kafka的速度，那么消息就会在缓冲区堆积，导致缓冲区不足。这个时候，send()方法要么阻塞，要么抛出异常。</li>
+<li>key.serializer：关键字的序列化方式</li>
+<li>value.serializer：消息值的序列化方式</li>
+</ul>
+<p>消费者代码，ConsumerTest.java:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> consumer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.common.serialization.StringDeserializer;</span><br><span class="line"><span class="keyword">import</span> java.time.Duration;</span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsumerTest</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> KafkaConsumer&lt;String,String&gt; consumer;</span><br><span class="line">    <span class="keyword">private</span> ConsumerRecords&lt;String,String&gt; msgList;</span><br><span class="line">    <span class="keyword">private</span> String topic;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String groupId = <span class="string">&quot;groupA&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConsumerTest</span><span class="params">(String topicName)</span> </span>&#123;</span><br><span class="line">        Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">        properties.put(<span class="string">&quot;bootstrap.servers&quot;</span>,<span class="string">&quot;localhost:9092&quot;</span>);</span><br><span class="line">        properties.put(<span class="string">&quot;group.id&quot;</span>,groupId);</span><br><span class="line">        properties.put(<span class="string">&quot;enable.auto.commit&quot;</span>,<span class="string">&quot;true&quot;</span>);</span><br><span class="line">        properties.put(<span class="string">&quot;auto.commit.interval.ms&quot;</span>, <span class="string">&quot;1000&quot;</span>);</span><br><span class="line">        properties.put(<span class="string">&quot;session.timeout.ms&quot;</span>,<span class="string">&quot;30000&quot;</span>);</span><br><span class="line">        properties.put(<span class="string">&quot;max.poll.records&quot;</span>, <span class="number">1000</span>);</span><br><span class="line">        properties.put(<span class="string">&quot;key.deserializer&quot;</span>, StringDeserializer.class.getName());</span><br><span class="line">        properties.put(<span class="string">&quot;value.deserializer&quot;</span>, StringDeserializer.class.getName());</span><br><span class="line">        <span class="keyword">this</span>.consumer = <span class="keyword">new</span> KafkaConsumer&lt;String, String&gt;(properties);</span><br><span class="line">        <span class="keyword">this</span>.topic = topicName;</span><br><span class="line">        <span class="keyword">this</span>.consumer.subscribe(Arrays.asList(topicName));</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;--------开始消费------------&quot;</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>)&#123;</span><br><span class="line">                msgList = consumer.poll(Duration.ofMillis(<span class="number">100</span>));</span><br><span class="line">                <span class="keyword">if</span> (msgList !=<span class="keyword">null</span> &amp;&amp; msgList.count()&gt;<span class="number">0</span>)&#123;</span><br><span class="line"><span class="comment">//                    System.out.println(&quot;11111111111111&quot;);</span></span><br><span class="line">                    <span class="keyword">int</span> no = <span class="number">1</span>;</span><br><span class="line">                    <span class="keyword">for</span> (ConsumerRecord&lt;String,String&gt; record : msgList)&#123;</span><br><span class="line">                        <span class="keyword">if</span> (no % <span class="number">100</span> == <span class="number">0</span>)&#123;</span><br><span class="line">                            System.out.println(no+<span class="string">&quot;===receive key:&quot;</span>+record.key()+<span class="string">&quot;===value:&quot;</span>+record.value());</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">if</span> (no == msgList.count())&#123;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        no ++;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">            consumer.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ConsumerTest consumerTest = <span class="keyword">new</span> ConsumerTest(<span class="string">&quot;testtopic&quot;</span>);</span><br><span class="line">        Thread thread = <span class="keyword">new</span> Thread(consumerTest);</span><br><span class="line">        thread.start();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>参数介绍：</p>
+<ul>
+<li>bootstrap.servers ：broker集群地址</li>
+<li>group.id ：消费者隶属的消费者组名称</li>
+<li>enable.auto.commit ：boolean 类型，配置是否开启自动提交消费位移的功能，默认开启</li>
+<li>auto.commit.interval.ms ：当enbale.auto.commit参数设置为 true 时才生效，表示开启自动提交消费位移功能时自动提交消费位移的时间间隔</li>
+<li>session.timeout.ms ： 响应超时时间</li>
+<li>max.poll.records ： 这个参数用来配置 Consumer 在一次拉取请求中拉取的最大消息数，默认值为500（条）。如果消息的大小都比较小，则可以适当调大这个参数值来提升一定的消费速度。</li>
+<li>key.deserializer：关键字的反序列化方式</li>
+<li>value.deserializer：消息值的序列化方式</li>
+</ul>
+<h2 id="spring-bootkafka">3.spring-boot+Kafka</h2>
+<p>由于我之前接触过spring-boot，无意之中发现kafka已经可以整合到spring中了，考虑到spring-data-jpa操作数据库也比较方便快捷，于是打算以maven+spring-boot+spring-data-jpa+spring-kafka来实现整个实验，开始学习使用spring-kafka。</p>
+<p>全部源码可以从github上获取：https://github.com/wanghaojun/kafka_homework2</p>
+<p>数据集获取：http://insis.bjtu.edu.cn/file/Datasets_1.zip</p>
+<p>项目开发过程：</p>
+<ol type="1">
+<li>设计存储结构化日志数据的MySQL关系表；</li>
+</ol>
+<p>由于在项目中使用了spring-data-jpa，可以自动构建mysql表，所以这里只展示项目建立的model：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wanghaojun.springkafka.model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.persistence.*;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="meta">@Table(name = &quot;record&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Record</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue(strategy = GenerationType.IDENTITY)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String userId;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String articalId;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String type;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String time;</span><br><span class="line">    <span class="comment">// 新增属性，描述记录产自哪个生产者</span></span><br><span class="line">    <span class="keyword">private</span> String producerName;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Record</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getProducerName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> producerName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setProducerName</span><span class="params">(String producerName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.producerName = producerName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getUserId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> userId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUserId</span><span class="params">(String userId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.userId = userId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getArticalId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> articalId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setArticalId</span><span class="params">(String articalId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.articalId = articalId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> type;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setType</span><span class="params">(String type)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.type = type;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getTime</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> time;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTime</span><span class="params">(String time)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.time = time;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>生产的Table：</p>
+<p><img src="http://img.wanghaojun.cn//img/20200422102844.png" /></p>
+<ol start="2" type="1">
+<li>根据原始数据和创建的Kafka话题，设计并实现三种不同类型的模拟日志抓取的Kafka生产者；</li>
+</ol>
+<p>（1）首先实现数据集处理的组件：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wanghaojun.springkafka.component;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.wanghaojun.springkafka.dto.RecordDto;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Value;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Comparator;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 数据集组件类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DataSet</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;file.path&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String filePath;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;file.sort-path&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String sortPath;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 文件读取方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> num 读取行数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> ArrayList&lt;String&gt;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ArrayList&lt;String&gt; <span class="title">readFromFile</span><span class="params">(<span class="keyword">int</span> num)</span>  </span>&#123;</span><br><span class="line">        File file = <span class="keyword">new</span> File(filePath);</span><br><span class="line">        ArrayList&lt;String&gt; text = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        String line;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            BufferedReader in = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> FileReader(file));</span><br><span class="line">            <span class="keyword">if</span> (num==-<span class="number">1</span>)&#123;</span><br><span class="line">                <span class="keyword">while</span> ((line = in.readLine())!= <span class="keyword">null</span>)&#123;</span><br><span class="line">                    text.add(line);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">while</span> ((line = in.readLine())!= <span class="keyword">null</span> &amp;&amp; num!=<span class="number">0</span>)&#123;</span><br><span class="line">                    text.add(line);</span><br><span class="line">                    num--;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> text;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 按照时间顺序排序</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">()</span></span>&#123;</span><br><span class="line">        ArrayList&lt;String&gt; text = readFromFile(-<span class="number">1</span>);</span><br><span class="line">        text.sort((s, t1) -&gt; &#123;</span><br><span class="line">            String s1 = s.split(<span class="string">&quot;\\001&quot;</span>)[<span class="number">3</span>];</span><br><span class="line">            String s2 = t1.split(<span class="string">&quot;\\001&quot;</span>)[<span class="number">3</span>];</span><br><span class="line">            <span class="keyword">return</span> s1.compareTo(s2);</span><br><span class="line">        &#125;);</span><br><span class="line">        File file = <span class="keyword">new</span> File(sortPath);</span><br><span class="line">        Writer writer = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            writer = <span class="keyword">new</span> FileWriter(file);</span><br><span class="line">            <span class="keyword">for</span> (String line: text)&#123;</span><br><span class="line">                writer.write(line+<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (writer != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    writer.close();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;sort and write to file finish!!!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将spring转为RecordDto类的对象</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> arrayList 字符数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> ArrayList&lt;RecordDto&gt;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ArrayList&lt;RecordDto&gt; <span class="title">toRecordDto</span><span class="params">(ArrayList&lt;String&gt; arrayList)</span> </span>&#123;</span><br><span class="line">        ArrayList&lt;RecordDto&gt; recordDtos = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (String a:arrayList)&#123;</span><br><span class="line">            String[] line = a.split(<span class="string">&quot;\\001&quot;</span>);</span><br><span class="line">            RecordDto recordDto = <span class="keyword">new</span> RecordDto();</span><br><span class="line">            recordDto.setUserId(line[<span class="number">0</span>]);</span><br><span class="line">            recordDto.setType(line[<span class="number">1</span>]);</span><br><span class="line">            recordDto.setArticalId(line[<span class="number">2</span>]);</span><br><span class="line">            recordDto.setTime(line[<span class="number">3</span>]);</span><br><span class="line">            recordDtos.add(recordDto);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> recordDtos;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将日期转为时间戳</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> date 日期</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 时间戳</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Long <span class="title">dateToTimeStamp</span><span class="params">(String date)</span>  </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            SimpleDateFormat simpleDateFormat = <span class="keyword">new</span> SimpleDateFormat(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> (simpleDateFormat.parse(date).getTime()/<span class="number">1000</span>);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Long.valueOf(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>（2）构建一个Test 对数据集进行排序：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DatasetTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> DataSet dataSet;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">sortTest</span><span class="params">()</span></span>&#123;</span><br><span class="line">        dataSet.sort();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>（3）构建生产者的组件类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wanghaojun.springkafka.component;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.KafkaProducer;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.kafka.core.KafkaTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Producer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> DataSet dataSet;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String topic = <span class="string">&quot;Record&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> KafkaTemplate&lt;String, String&gt; template;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 小时级生产者 一小时的数据发送一次</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> num 发送次数 ，-1为发送数据集中的所有内容</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> time 消息跨越时间，比如小时级生产者每次发送一个小时的数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> name 生产者名称</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendMsgSec</span><span class="params">(<span class="keyword">int</span> num,<span class="keyword">int</span> time,String name)</span></span>&#123;</span><br><span class="line">        ArrayList&lt;String&gt; text = dataSet.readFromFile(num*<span class="number">500</span>);</span><br><span class="line">        <span class="comment">// 发送记录数</span></span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 发送次数</span></span><br><span class="line">        <span class="keyword">int</span> c=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> ((i &lt; num) &amp;&amp; (c &lt; text.size()) )&#123;</span><br><span class="line">            Long temp =dataSet.dateToTimeStamp(text.get(c).split(<span class="string">&quot;\001&quot;</span>)[<span class="number">3</span>]) + time;</span><br><span class="line">            StringBuilder sendMsg = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">            <span class="keyword">while</span> ( (c&lt;text.size()) &amp;&amp;  (temp &gt;= dataSet.dateToTimeStamp(text.get(c).split(<span class="string">&quot;\001&quot;</span>)[<span class="number">3</span>])) )&#123;</span><br><span class="line">                sendMsg.append(text.get(c)).append(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">                c++;</span><br><span class="line">            &#125;</span><br><span class="line">            i++;</span><br><span class="line"><span class="comment">//            System.out.println(sendMsg.toString()+name);</span></span><br><span class="line">            template.send(topic,sendMsg.toString()+name);</span><br><span class="line">            <span class="keyword">try</span>&#123;</span><br><span class="line">                Thread.sleep(<span class="number">5000</span>);</span><br><span class="line">            &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 秒级生产者 一条记录发送一次</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> num 发送次数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> name 生产者名称</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendMsgLine</span><span class="params">(<span class="keyword">int</span> num,String name)</span>  </span>&#123;</span><br><span class="line">        ArrayList&lt;String&gt; text = dataSet.readFromFile(num);</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; text.size())&#123;</span><br><span class="line">            template.send(topic, text.get(i) + <span class="string">&quot;\n&quot;</span> + name);</span><br><span class="line">            <span class="keyword">try</span>&#123;</span><br><span class="line">                Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">            &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>（4）构建controller部分，在访问某个API时触发生产者，开始生产数据：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wanghaojun.springkafka.controller;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.wanghaojun.springkafka.component.Customer;</span><br><span class="line"><span class="keyword">import</span> com.wanghaojun.springkafka.component.Producer;</span><br><span class="line"><span class="keyword">import</span> com.wanghaojun.springkafka.model.Record;</span><br><span class="line"><span class="keyword">import</span> com.wanghaojun.springkafka.repository.RecordRepository;</span><br><span class="line"><span class="keyword">import</span> net.bytebuddy.asm.Advice;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">KafkaController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RecordRepository recordRepository;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> Producer producer;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> Customer customer;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查看当前数据库中所有数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Iterable&lt;Record&gt; Json</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Iterable&lt;Record&gt; <span class="title">getRecords</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> recordRepository.findAll();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查看当前数据库中数据数目</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 数据数目</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/count&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">count</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> recordRepository.count();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 秒级生产者1</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> num 产生数据，-1为全部</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Object</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/produce1&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">produce1</span><span class="params">(<span class="keyword">int</span> num)</span></span>&#123;</span><br><span class="line">        producer.sendMsgLine(num,<span class="string">&quot;producer1&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String(<span class="string">&quot;produce &quot;</span>+num+<span class="string">&quot; message&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 小时级生产者，每次生产1小时数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> num 发送次数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Object</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/producehour&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">produceHour</span><span class="params">(<span class="keyword">int</span> num)</span></span>&#123;</span><br><span class="line">        producer.sendMsgSec(num,<span class="number">3600</span>,<span class="string">&quot;producehour&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String(<span class="string">&quot;produce &quot;</span>+num+<span class="string">&quot; message&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 秒级生产者2</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> num 产生数据，-1为全部</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Object</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/produce2&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">produce2</span><span class="params">(<span class="keyword">int</span> num)</span></span>&#123;</span><br><span class="line">        producer.sendMsgLine(num,<span class="string">&quot;producer2&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String(<span class="string">&quot;produce &quot;</span>+num+<span class="string">&quot; message&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="3" type="1">
+<li>根据Kafka中存储日志数据的话题中的数据量情况，设计并实现日志解析与结构化数据存储的Kafka消费者；</li>
+</ol>
+<p>消费者代码实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wanghaojun.springkafka.component;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.wanghaojun.springkafka.dto.RecordDto;</span><br><span class="line"><span class="keyword">import</span> com.wanghaojun.springkafka.model.Record;</span><br><span class="line"><span class="keyword">import</span> com.wanghaojun.springkafka.repository.RecordRepository;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecord;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Value;</span><br><span class="line"><span class="keyword">import</span> org.springframework.kafka.annotation.KafkaListener;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Iterator;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Customer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RecordRepository recordRepository;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 监听Mytopic主题</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> cr 收到的消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@KafkaListener(topics = &quot;MyTopic&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">listen</span><span class="params">(ConsumerRecord&lt;?, ?&gt; cr)</span> </span>&#123;</span><br><span class="line"><span class="comment">//       System.out.println(&quot;receive a message&quot;);</span></span><br><span class="line">        <span class="keyword">this</span>.custome(cr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 消费数据 把数据存入服务器端的mysql数据库</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> cr  待消费 的数据</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">custome</span><span class="params">(ConsumerRecord&lt;?, ?&gt; cr)</span></span>&#123;</span><br><span class="line">        ArrayList&lt;Record&gt; records = <span class="keyword">new</span> ArrayList&lt;Record&gt;();</span><br><span class="line">        String  value  = (String) cr.value();</span><br><span class="line">        String[] lines = value.split(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">        String name = lines[lines.length-<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> l = lines.length -<span class="number">1</span> ;</span><br><span class="line"><span class="comment">//        System.out.println(lines.length);</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ;i&lt;l ; i++)&#123;</span><br><span class="line">            Record record = <span class="keyword">new</span> Record();</span><br><span class="line">            record.setUserId(lines[i].split(<span class="string">&quot;\\001&quot;</span>)[<span class="number">0</span>]);</span><br><span class="line">            record.setType(lines[i].split(<span class="string">&quot;\\001&quot;</span>)[<span class="number">1</span>]);</span><br><span class="line">            record.setArticalId(lines[i].split(<span class="string">&quot;\\001&quot;</span>)[<span class="number">2</span>]);</span><br><span class="line">            record.setTime(lines[i].split(<span class="string">&quot;\\001&quot;</span>)[<span class="number">3</span>]);</span><br><span class="line">            record.setProducerName(name);</span><br><span class="line">            records.add(record);</span><br><span class="line">        &#125;</span><br><span class="line">        recordRepository.saveAll(records);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>项目的依赖文件pom.xml和spring-boot配置文件application.yml可以去GitHub的代码仓库查看。</p>
+<h2 id="参考文献">参考文献</h2>
+<p>http://kafka.apachecn.org/intro.html</p>
+<p>https://blog.csdn.net/Shannon076/article/details/81259652</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/word2Vec%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E6%A8%A1%E5%9E%8B%E7%AF%87/" rel="prev" title="word2Vec参数详解——模型篇">
+      <i class="fa fa-chevron-left"></i> word2Vec参数详解——模型篇
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/08/%E5%A4%A7%E6%95%B0%E6%8D%AE/Kafka%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" rel="next" title="Kafka基本概念">
+      Kafka基本概念 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#kafka%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BAwin10"><span class="nav-number">1.</span> <span class="nav-text">1.kafka环境搭建（win10）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E7%9A%84%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85"><span class="nav-number">2.</span> <span class="nav-text">2.实现简单的生产者消费者</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spring-bootkafka"><span class="nav-number">3.</span> <span class="nav-text">3.spring-boot+Kafka</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

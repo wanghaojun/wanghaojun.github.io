@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MEMORY NETWORK ## 介绍 记忆网络将一个推理模块和一个长期记忆模块相结合，并学习如何组合使用这两个模块。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记忆网络">
+<meta property="og:url" content="http://example.com/2019/01/02/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%AE%B0%E5%BF%86%E7%BD%91%E7%BB%9C/index.html">
+<meta property="og:site_name" content="翡翠森林">
+<meta property="og:description" content="MEMORY NETWORK ## 介绍 记忆网络将一个推理模块和一个长期记忆模块相结合，并学习如何组合使用这两个模块。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/20181219090752.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/20181219094102.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/20181219095831.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/20181219143443.png">
+<meta property="og:image" content="http://img.wanghaojun.cn/img/20181219151049.png">
+<meta property="article:published_time" content="2019-01-02T10:07:59.000Z">
+<meta property="article:modified_time" content="2021-04-19T07:32:27.354Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img.wanghaojun.cn/img/20181219090752.png">
+
+<link rel="canonical" href="http://example.com/2019/01/02/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%AE%B0%E5%BF%86%E7%BD%91%E7%BB%9C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>记忆网络 | 翡翠森林</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">翡翠森林</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2019/01/02/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%AE%B0%E5%BF%86%E7%BD%91%E7%BB%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翡翠森林">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          记忆网络
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-01-02 18:07:59" itemprop="dateCreated datePublished" datetime="2019-01-02T18:07:59+08:00">2019-01-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-19 15:32:27" itemprop="dateModified" datetime="2021-04-19T15:32:27+08:00">2021-04-19</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>MEMORY NETWORK ## 介绍 记忆网络将一个推理模块和一个长期记忆模块相结合，并学习如何组合使用这两个模块。 <span id="more"></span> 在考虑给予一些事实和故事，并基于此回答问题的任务中，常规的语言模型，比如说RNN可以用来在读入一个单词流后预测下一个单词，但是，他们的记忆(由隐藏的状态和权重编码)通常太小，而且没有足够的划分来准确地记住过去的事实(知识被压缩成密集的向量)。众所周知，RNN在执行记忆的时候有很大的困难，比如说一个简单的复制任务：将刚刚读入的序列输出。其他任务的情况也类似，例如在视觉和听觉领域，观看电影并回答有关电影的问题需要长时间的记忆。 在这种情况下，我们引入一类叫记忆网络的模型来尝试纠正这个问题。其核心思想是将机器学习中开发的用于推理的成功学习策略与可读可写的记忆组件相结合。然后对模型进行培训，学习如何有效地使用内存组件。 ## 记忆网络 一个记忆网络包括一个记忆m（一系列对象，索引是<span class="math inline">\(m_i\)</span>）,和四个组件I，G，O和R： * I:(input feature map，输入特征映射)——将输入转化为内部特征表示 * G:(generalization,泛化)——根据新输入更新旧的记忆，我们称之为泛化，因为在这个阶段网络有机会压缩和泛化它的内存以供将来使用。 * O:(output feature map，输入特征映射)——根据新的输入和现在的记忆状态产生一个新的输出(在特征表示空间中)。 * R:(response,响应)——将输出转化为相应的响应格式，比如说一个文本响应或者一个动作。</p>
+<p>给一个输入x（一个输入根据粒度不同可以是字符，单词或者句子），模型的流程是： 1.将x转为为内部特征表示<span class="math inline">\(I(x)\)</span> 2.根据新的输入更新<span class="math inline">\(m_i\)</span>:<span class="math inline">\(m_i=G(m_i,I(x),m)\)</span> 3.根据新的输入和记忆计算输出特征<span class="math inline">\(o\)</span>:<span class="math inline">\(o=O(I(x),m)\)</span> 4.最后将输出特征<span class="math inline">\(o\)</span>转化为最终的响应格式:<span class="math inline">\(r=R(o)\)</span> 这个处理过程在训练期间和测试期间都会存在，如果这些阶段之间存在区别，即在测试时也存储内存，但是I、G、O和R的模型参数没有更新。组件I、G、O和R可以潜在地使用机器学习中的任何现有思想，例如，使用模型(SVMs、决策树等)。 I组件：可以使用标准的预处理过程，比如说：输入文本的语法分析，引用和实体分解。它可以将输入编码为内部特征表示，比如说将文本转化为一个稀疏或者密集的特征向量。 G组件：G组件最简单的形式是将<span class="math inline">\(I(x)\)</span>存到内存的“槽”中。 <span class="math inline">\(m_{H(x)}=I(x)\)</span><br />
+<span class="math inline">\(H(x)\)</span>是选择槽的函数。G更新<span class="math inline">\(m\)</span>的索引<span class="math inline">\(H(x)\)</span>，但是其他部分的记忆是不会被改变的。更加复杂的G的变体可能是根据当前输入<span class="math inline">\(x\)</span>更新和返回以前的记忆(可能是所有的记忆)。如果输入时字符级别或者是单词级别，可以将输入聚集成组，把组分割成数据块，把每个数据块存到一个数据“槽”中。 如果记忆很大(例如，考虑Freebase或Wikipedia)，则需要组织内存。这可以通过刚才描述的槽选择函数<span class="math inline">\(H(x)\)</span>来实现:例如，可以设计或训练它来按实体或主题存储内存。因此，为了在规模上提高效率，G(和O)不需要对所有内存进行操作:它们只能对检索到的候选内存子集进行操作(只对正确主题的内存进行操作)。 如果内存满了，<span class="math inline">\(H(x)\)</span>也可以实现“遗忘”的过程选择替换哪个内存，例如，可以对每块内存的效用打分，然后覆盖分数最少的那个。 O和R组件：O组件通常负责从内存中读取数据并执行推理，例如，计算执行良好响应所需的相关记忆。R组件根据O的输出产生最终的响应。例如，在答题的过程中，O找到了相关的记忆，然后R给出了答案的实际措辞，R可能是一个RNN，以O的输出为条件。我们的假设是如果没有这些记忆的先决条件，RNN的表现会很差。 ## A MEMNN IMPLEMENTATION FOR TEXT 记忆网络的一种特殊实现是组件都是神经网络，我们把这种叫做记忆神经网络(MemNNs)。 ### 基本模型 在我们的基本架构中，I模块接受输入文本。让我们先假设这是一句话:事实的陈述或系统要回答的问题(稍后我们将考虑基于单词的输入序列)。文本使用原始的方式存储在下一个内存槽中，<span class="math inline">\(S(x)\)</span>返回下一个空的内存槽N：<span class="math inline">\(m_N=x\)</span>,<span class="math inline">\(N = N+1\)</span>。所以G模块只会使用新的内存，旧的内存不会被更新。 推理的核心在于O和R模块。O模块基于x产生k个相关特性，我们假设k=2，但是一般情况下，k的值会非常大。当k=1时，使用对每个相关记忆评分的方式来获得最相关的记忆： <span class="math inline">\(o_1=O_1(x,m)=max [S_O(x,m_i)]\)</span> $ i=1,...,N$ <span class="math inline">\(s_O\)</span>是对句子x和<span class="math inline">\(m_i\)</span>匹配程度进行评分的函数。对于k = 2的情况，我们在前面的迭代中找到了第一个相关记忆，然后找到第二个相关记忆。 <span class="math inline">\(o_2=O_2(x,m)=max [S_O([x,m_{o1}],m_i)]\)</span> $ i=1,...,N$ 第二个相关记忆<span class="math inline">\(m_{o2}\)</span>要同时考虑与原始输入和第一个相关记忆的关系。最终的输出是<span class="math inline">\([x,m_{o1},m_{o2}]\)</span>，这是R模块的输入。 最后，R需要产生一个文本响应R，最简单的响应是返回<span class="math inline">\(m_{o_k}\)</span>，即输出我们检索到的先前说出的句子。要执行真正的句子生成，可以使用RNN。在实验中，我们还考虑了一种易于评估折衷的方法，通过对文本响应进行排序，将它们限制为单个单词(在模型所看到的所有单词中)： <span class="math inline">\(r=argmax_{w\in W}S_R([x,m_{o1},m_{o2}],w)\)</span> <span class="math inline">\(W\)</span>是字典中所有单词的集合，<span class="math inline">\(S_R\)</span>是评分函数。</p>
+<pre><code>Joe went to the kitchen. Fred went to the kitchen. Joe picked up the milk.
+Joe travelled to the office. Joe left the milk. Joe went to the bathroom.
+Where is the milk now? A: office
+Where is Joe? A: bathroom
+Where was Joe before the office? A: kitchen</code></pre>
+<p>在上述例子中，为了回答问题x=“Where is the milk now?”，O模块首先给所有的记忆打分，包括以前见过的所有句子，根据x找出最相关的事实，在这个例子中是<span class="math inline">\(m_{o1}\)</span>=“Joe left the milk”，然后，会基于<span class="math inline">\([x,m_{o1}]\)</span>再次检索记忆来发现第二个相关事实，<span class="math inline">\(m_{o2}\)</span>=“Joe travelled to the office”。最终，R模块会基于<span class="math inline">\([x,m_{o1},m_{o2}]\)</span>评分单词，给出输出r=”office“。 在我们的实验中，得分函数<span class="math inline">\(s_O\)</span>和<span class="math inline">\(s_R\)</span>具有相同的形式，即嵌入模型:</p>
+<p><img src="http://img.wanghaojun.cn/img/20181219090752.png" /></p>
+<p>U是一个n*D的矩阵，D是特征数，n是嵌入维度。<span class="math inline">\(\Phi_x\)</span>和<span class="math inline">\(\Phi_y\)</span>的任务是将原始的文本转化为D维度的特征空间，最简单的特征空间是选择一组单词表示，我们选择D=3|W|作为<span class="math inline">\(S_O\)</span>，字典中每个单词有三个表示，一个是<span class="math inline">\(\Phi_y\)</span>,两个是<span class="math inline">\(\Phi_x\)</span>,输入参数来自于真实输入x，还是来自相关记忆，这样我们可以在模型中将他们区分开。同样的，我们使用D=3|W|作为<span class="math inline">\(S_R\)</span>，<span class="math inline">\(S_O\)</span>和<span class="math inline">\(S_R\)</span>使用不同的权重矩阵<span class="math inline">\(U_O\)</span>和<span class="math inline">\(U_R\)</span>。 我们使用完全的监督式训练，我们给出输入和希望的输出，并且在测试集中标注出相关的句子，这意味着在测试中我们知道最佳选择。然后以边际排序损失和随机梯度下降法(SGD)进行训练。对于一个给定的问题x和正确的响应r，以及相关句子<span class="math inline">\(m_{O1}\)</span>和<span class="math inline">\(m_{O2}\)</span>(k=2)，最小化的模型参数<span class="math inline">\(U_O\)</span>和<span class="math inline">\(U_R\)</span>如下：</p>
+<p><img src="http://img.wanghaojun.cn/img/20181219094102.png" /></p>
+<p><span class="math inline">\(\overline{f}\)</span>、<span class="math inline">\(\overline{f}&#39;\)</span>和<span class="math inline">\(\overline{r}\)</span>是除了正确的之外，其他所有选择，<span class="math inline">\(\gamma\)</span>是偏移向量。每一步都是对<span class="math inline">\(\overline{f}\)</span>、<span class="math inline">\(\overline{f}&#39;\)</span>和<span class="math inline">\(\overline{r}\)</span>进行取样，而不是计算训练样本的和。 ### 输入序列是单词 当输序列是单词而不是句子的时候，因为单词没有被分割成陈述句和问题，因此我们需要一个分割函数。这个函数会将尚未分段的最后一个单词序列作为输入，并查找断点。当句子被分割完写入记忆之后，就可以想之前那样对其进行处理。分割函数和之前的组件类似，使用一个嵌入模型。 <img src="http://img.wanghaojun.cn/img/20181219095831.png" /> <span class="math inline">\(W_{seg}\)</span>是一个向量（有效地确定了线性分类器在嵌入空间中的参数），c是输入单词的序列，如果seg(c)&gt;<span class="math inline">\(\gamma\)</span>，这个序列就会被认为是一段。使用这种方式的话，MemNN在写入阶段就会有一个学习组件。我们认为这个分段器是概念的第一个证明:当然，可以设计更复杂的东西。 ### 使用哈希来进行更高效的记忆 如果我们需要存储的记忆非常大，需要花费过高的代价在计算<span class="math inline">\(S_O\)</span>和<span class="math inline">\(S_R\)</span>上。我们可以使用哈希的方式来加速这个过程：使用哈希将输入I(x)放到一个或者多个存储桶中，这样只需要对同一个存储桶中的记忆<span class="math inline">\(m_i\)</span>进行打分。我们通过两种方式来使用哈希：(i)通过哈希单词，(ii)通过单词嵌入的聚类。对于方法(i)我们构造许多装有词典中单词的桶，当输入一个句子时，我们将它散列到所有与它的单词相对应的桶中。这种方法的问题是只有<span class="math inline">\(m_i\)</span>从I(x)分享到至少一个单词时才会被考虑。方法(ii)尝试使用聚类的方式来解决这个问题。在训练完<span class="math inline">\(U_O\)</span>之后，我们使用K-means来对单词进行聚类<span class="math inline">\((U_O)_i\)</span>，然后得到K个存储桶，然后，我们将一个给定的句子散列到其单个单词所属的所有桶中。由于单词与同义词的向量相近，它们聚在一起，因此我们也会为这些相似的记忆评分。输入和内存之间的精确单词匹配仍然按照定义进行评分，选择K来进行速度和精度的权衡。 ### 写入时间建模 我们可以将我们的模型扩展到考虑记忆被写入的时间。当在回答既定事实的问题，类似于“What is the capital of France?”的时候不是很重要，但是在回答一个关于故事的问题时很重要。一种直接的实现方式是为<span class="math inline">\(\Phi_x\)</span>和<span class="math inline">\(\Phi_y\)</span>添加额外的特征，能让j成为一个给定记忆<span class="math inline">\(m_j\)</span>的索引，而j是按照时间进行排序的。然而，这需要处理绝对时间而不是相对时间。根据经验，我们在以下过程中取得了更大的成功:不给输入打分，而是像上面那样让候选对与s配对，学习关于三元组的函数<span class="math inline">\(S_{O_t}(x,y,y&#39;)\)</span>： <img src="http://img.wanghaojun.cn/img/20181219143443.png" /> <span class="math inline">\(\Phi_{t}(x,y,y&#39;)\)</span>使用三个值为1或者0的特征，x是否比y老，x是否比y'老，y是否比y’老（这意味着我们把所有的<span class="math inline">\(\Phi\)</span>植入的维度扩展了三倍，当我们没有使用时，这些维度的值为0）。现在，如果<span class="math inline">\(\Phi_{t}(x,y,y&#39;)\)</span>&gt;0,模型就会更倾向于y，而不是y'；如果<span class="math inline">\(\Phi_{t}(x,y,y&#39;)\)</span>&lt;0，模型就会更倾向于y’，而不是y。将上文中计算<span class="math inline">\(S_O\)</span>和<span class="math inline">\(S_R\)</span>的过程中的<span class="math inline">\(argmax\)</span>替换为记忆上的循环，<span class="math inline">\(i=1,...,N\)</span> ，每步只保留赢的那个(y或者y’),并且总是把胜者与下一个记忆<span class="math inline">\(m_i\)</span>相比较。如果去掉了时间特征，这个过程相当于以前的argmax。 ### 为之前未见过的单词建模 即使对于阅读了大量文本的人来说，新词也是不断被引入的。比如说，当《指环王》中第一次出现“Boromir” 的时候。我们如何让机器学习模型来处理这样的事呢？可能的方法是使用语言模型:根据相邻单词，预测单词应该是什么，并且假设新单词与之相近。我们使用了这种方法，把它放入了<span class="math inline">\(S_O\)</span>和<span class="math inline">\(S_R\)</span>中，而不是单独的一部。 具体地，对于我们见过的每个单词，我们都会存储与之共同出现的一系列单词，一部分是与上文相关的，一部分是下文相关的。任何没有见过的单词都能被这些特征所表示。我们将特征表示D从3|W|扩展到5|W|。我们的模型在训练中使用一种“dropout”的技术来学习处理新单词:d%的时间里，我们假装以前没有见过一个单词，因此没有n维的单词嵌入，而是用上下文来表示它. ### 精确匹配和未见过的单词 由于维数较低，嵌入模型不能有效地进行精确的词匹配。一种解决方式是使用这样的函数来对一对x，y进行打分：</p>
+<p><img src="http://img.wanghaojun.cn/img/20181219151049.png" /></p>
+<p>这意味着将”bag of words“的匹配分数加到学习的嵌入式分数中（使用一个混合参数<span class="math inline">\(\gamma\)</span>）。我们提出的另一种相关的方法是保持在n维的嵌入空间中，但是用匹配特征来扩展特征表示D。匹配特征表示一个单词是否同时出现在x和y中。我们使用原先的函数进行打分，<span class="math inline">\(\Phi_y\)</span>是基于x的，如果y中的一些单词匹配到了x中的一些单词，我们把匹配特征的值设为1.通过对上下文词使用匹配特征，可以对没见过的词进行类似建模。这样就得到了一个特征空间D=8|W|。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/11/26/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95/" rel="prev" title="反向传播算法">
+      <i class="fa fa-chevron-left"></i> 反向传播算法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/01/02/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/word2Vec/" rel="next" title="word2Vec">
+      word2Vec <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

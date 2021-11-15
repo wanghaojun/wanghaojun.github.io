@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="反向传播（英语：Backpropagation，缩写为BP）是“误差反向传播”的简称，是一种与最优化方法（如梯度下降法）结合使用的，用来训练人工神经网络的常见方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="反向传播算法">
+<meta property="og:url" content="http://example.com/2018/11/26/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="翡翠森林">
+<meta property="og:description" content="反向传播（英语：Backpropagation，缩写为BP）是“误差反向传播”的简称，是一种与最优化方法（如梯度下降法）结合使用的，用来训练人工神经网络的常见方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-11-26T02:31:34.000Z">
+<meta property="article:modified_time" content="2021-04-19T07:31:49.712Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2018/11/26/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>反向传播算法 | 翡翠森林</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">翡翠森林</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/11/26/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翡翠森林">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          反向传播算法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-11-26 10:31:34" itemprop="dateCreated datePublished" datetime="2018-11-26T10:31:34+08:00">2018-11-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-19 15:31:49" itemprop="dateModified" datetime="2021-04-19T15:31:49+08:00">2021-04-19</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>反向传播（英语：Backpropagation，缩写为BP）是“误差反向传播”的简称，是一种与最优化方法（如梯度下降法）结合使用的，用来训练人工神经网络的常见方法。<span id="more"></span>该方法对网络中所有权重计算损失函数的梯度。这个梯度会反馈给最优化方法，用来更新权值以最小化损失函数。 反向传播要求有对每个输入值想得到的已知输出，来计算损失函数梯度。因此，它通常被认为是一种监督式学习方法，虽然它也用在一些无监督网络（如自动编码器）中。它是多层前馈网络的Delta规则的推广，可以用链式法则对每层迭代计算梯度。反向传播要求人工神经元（或“节点”）的激励函数可微。 # 动机 任何监督式学习算法的目标是找到一个能把一组输入最好地映射到其正确的输出的函数。例如一个简单的分类任务，其中输入是动物的图像，正确的输出将是动物的名称。一些输入和输出模式可以很容易地通过单层神经网络（如感知器）学习。但是这些单层的感知机不能学习一些比较简单的模式，例如那些非线性可分的模式。例如，人可以通过识别动物的图像的某些特征进行分类，例如肢的数目，皮肤的纹理（无论是毛皮，羽毛，鳞片等），该动物的体型，以及种种其他特征。但是，单层神经网络必须仅仅使用图像中的像素的强度来学习一个输出一个标签函数。因为它被限制为仅具有一个层，所以没有办法从输入中学习到任何抽象特征。多层的网络克服了这一限制，因为它可以创建内部表示，并在每一层学习不同的特征。 第一层可能负责从图像的单个像素的输入学习线条的走向。第二层可能就会结合第一层所学并学习识别简单形状（如圆形）。每升高一层就学习越来越多的抽象特征，如上文提到的用来图像分类。每一层都是从它下方的层中找到模式，就是这种能力创建了独立于为多层网络提供能量的外界输入的内部表达形式。 反向传播算法的发展的目标和动机是找到一种训练的多层神经网络的方法，于是它可以学习合适的内部表达来让它学习任意的输入到输出的映射。 # 结构 反向传播算法（BP 算法）主要由两个阶段组成：激励传播与权重更新。 第1阶段：激励传播 每次迭代中的传播环节包含两步： * （前向传播阶段）将训练输入送入网络以获得激励响应； * （反向传播阶段）将激励响应同训练输入对应的目标输出求差，从而获得隐层和输出层的响应误差。 第2阶段：权重更新 对于每个突触上的权重，按照以下步骤进行更新： * 将输入激励和响应误差相乘，从而获得权重的梯度； * 将这个梯度乘上一个比例并取反后加到权重上。 这个比例（百分比）将会影响到训练过程的速度和效果，因此成为“训练因子”。梯度的方向指明了误差扩大的方向，因此在更新权重的时候需要对其取反，从而减小权重引起的误差。 第 1 和第 2 阶段可以反复循环迭代，直到网络对输入的响应达到满意的预定的目标范围为止。 # 算法 初始化网络权值（通常是小的随机值） do forEach 训练样本 ex prediction = neural-net-output(network, ex) // 正向传递 actual = teacher-output(ex) 计算输出单元的误差 (prediction - actual) 计算 <span class="math inline">\({\Delta w_{h}}\)</span>对于所有隐藏层到输出层的权值 // 反向传递 计算 <span class="math inline">\({\displaystyle \Delta w_{i}}\)</span>对于所有输入层到隐藏层的权值 // 继续反向传递 更新网络权值 // 输入层不会被误差估计改变 until 所有样本正确分类或满足其他停止标准 return 该网络 # 梯度下降法 梯度下降法背后的直观感受可以用假设情境进行说明。一个被卡在山上的人正在试图下山（即试图找到极小值）。大雾使得能见度非常低。因此，下山的道路是看不见的，所以他必须利用局部信息来找到极小值。他可以使用梯度下降法，该方法涉及到察看在他当前位置山的陡峭程度，然后沿着负陡度（即下坡）最大的方向前进。如果他要找到山顶（即极大值）的话，他需要沿着正陡度（即上坡）最大的方向前进。使用此方法，他会最终找到下山的路。不过，要假设山的陡度不能通过简单地观察得到，而需要复杂的工具测量，而这个工具此人恰好有。需要相当长的一段时间用仪器测量山的陡峭度，因此如果他想在日落之前下山，就需要最小化仪器的使用率。问题就在于怎样选取他测量山的陡峭度的频率才不致偏离路线。 在这个类比中，此人代表反向传播算法，而下山路径表示能使误差最小化的权重集合。山的陡度表示误差曲面在该点的斜率。他要前行的方向对应于误差曲面在该点的梯度。用来测量陡峭度的工具是微分（误差曲面的斜率可以通过对平方误差函数在该点求导数计算出来）。他在两次测量之间前行的距离（与测量频率成正比）是算法的学习速率。参见限制一节中对此类型“爬山”算法的限制的讨论。 # 学习模式 有可供选择的三种学习模式(Mode)：在线，批量和随机。在在线和随机学习，每次传播后被立即做一个权重的更新。在批量学习模式，权重更新前有许多传播发生。在线学习被用于提供新的型态(pattern)的连续流的动态环境。随机学习和批量学习都使用静态型态(pattern)的一个训练集合。随机学习以一个随机的顺序经过数据集合，以减少陷入局部极小值的机会。随机学习也比批量学习更快，因为权重在每次传播后被立即更新。然而批量学习将产生一个更加稳定下降到一个局部最小值，因为每次更新都是基于所有型态被进行的。 # 限制 * 结果可能会收敛到极值。如果有只有一个极小值，梯度下降的“爬山”策略一定可以起作用。然而，往往是误差曲面有许多局部最小值和最大值。如果梯度下降的起始点恰好介于局部最大值和局部最小值之间，则沿着梯度下降最大的方向会到达局部最小值。 * 梯度下降法可以找到局部最小值，而不是全局最小值。 * 从反向传播学习获得的收敛很慢。 * 在反向传播学习的收敛性不能保证。 * 然而，收敛到全局最小值据说使用自适应终止条件得到保证。 * 反向传播学习不需要输入向量的标准化（normalization）；然而，标准化可提高性能。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/11/26/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="prev" title="卷积神经网络">
+      <i class="fa fa-chevron-left"></i> 卷积神经网络
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/01/02/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%AE%B0%E5%BF%86%E7%BD%91%E7%BB%9C/" rel="next" title="记忆网络">
+      记忆网络 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

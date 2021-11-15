@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="AOP（Aspect Orient Programming），指面向方面（切面）编程，作为面向对象的一种补充， 用于处理系统中分布于各个模块的横切关注点，比如事务管理、日志、缓存等等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring AOP-2021春招">
+<meta property="og:url" content="http://example.com/2021/04/07/2021%E6%98%A5%E6%8B%9B/AOP-2021%E6%98%A5%E6%8B%9B/index.html">
+<meta property="og:site_name" content="翡翠森林">
+<meta property="og:description" content="AOP（Aspect Orient Programming），指面向方面（切面）编程，作为面向对象的一种补充， 用于处理系统中分布于各个模块的横切关注点，比如事务管理、日志、缓存等等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-04-07T08:38:48.000Z">
+<meta property="article:modified_time" content="2021-04-20T11:44:10.740Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="Spring">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/04/07/2021%E6%98%A5%E6%8B%9B/AOP-2021%E6%98%A5%E6%8B%9B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Spring AOP-2021春招 | 翡翠森林</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">翡翠森林</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/07/2021%E6%98%A5%E6%8B%9B/AOP-2021%E6%98%A5%E6%8B%9B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翡翠森林">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Spring AOP-2021春招
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-07 16:38:48" itemprop="dateCreated datePublished" datetime="2021-04-07T16:38:48+08:00">2021-04-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-20 19:44:10" itemprop="dateModified" datetime="2021-04-20T19:44:10+08:00">2021-04-20</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>AOP（Aspect Orient Programming），指面向方面（切面）编程，作为面向对象的一种补充， 用于处理系统中分布于各个模块的横切关注点，比如事务管理、日志、缓存等等。</p>
+<span id="more"></span>
+<h4 id="应用场景">应用场景</h4>
+<p>Authentication 权限 ，Caching 缓存 ，Context passing 内容传递 ，Error handling 错 误处理 ，Lazy loading 懒加载 ，Debugging 调试 ，logging, tracing, profiling and monitoring 记录跟踪 优化 校准，Performance optimization 性能优化 ，Persistence 持久化 ，Resource pooling 资源池 ，Synchronization 同步，Transactions 事务。</p>
+<h4 id="原理">原理</h4>
+<p>AOP 实现的关键在于 AOP 框架自动创建的 AOP 代理，AOP 代理主要分为静态代理和动态代理，静态代理的代表 为 AspectJ；而动态代理则以 Spring AOP 为代表。通常使用 AspectJ 的编译时增强实现 AOP， AspectJ 是静态代理的增强，所谓的静态代理就是 AOP 框架会在编译阶段生成 AOP 代理类，因此 也称为编译时增强。</p>
+<p>Spring AOP 中的动态代理主要有两种方式，JDK 动态代理和 CGLIB 动态代理。JDK 动态代理 通过反射来接收被代理的类，并且要求被代理的类必须实现一个接口。JDK 动态代理的核心是 InvocationHandler 接口和 Proxy 类。</p>
+<p>如果目标类没有实现接口，那么 Spring AOP 会选择使用 CGLIB 来动态代理目标类。CGLIB （Code Generation Library），是一个代码生成的类库，可以在运行时动态的生成某个类的子类， 注意，CGLIB 是通过继承的方式做的动态代理，因此如果某个类被标记为 final，那么它是无法 使用 CGLIB 做动态代理的。</p>
+<h4 id="概念">概念</h4>
+<ol type="a">
+<li><p><strong>连接点（Joinpoint）</strong>：程序执行的某个特定位置（如：某个方法调用前、调用后，方法 抛出异常后）。一个类或一段程序代码拥有一些具有边界性质的特定点，这些代码中的特定点就 是连接点。Spring 仅支持方法的连接点。</p></li>
+<li><p><strong>切点（Pointcut）</strong>：如果连接点相当于数据中的记录，那么切点相当于查询条件，一个切点 可以匹配多个连接点。Spring AOP 的规则解析引擎负责解析切点所设定的查询条件，找到对应的连接点。</p></li>
+<li><p><strong>增强（Advice）</strong>：增强是织入到目标类连接点上的一段程序代码。Spring 提供的增强接口都 是带方位名的，如：BeforeAdvice、AfterReturningAdvice、ThrowsAdvice 等。</p></li>
+<li><p><strong>引介（Introduction）</strong>：引介是一种特殊的增强，它为类添加一些属性和方法。这样，即使 一个业务类原本没有实现某个接口，通过引介功能，可以动态的未该业务类添加接口的实现逻辑， 让业务类成为这个接口的实现类。</p></li>
+<li><p><strong>织入（Weaving）</strong>：织入是将增强添加到目标类具体连接点上的过程，AOP 有三种织入方式： ①编译期织入：需要特殊的 Java 编译期（例如 AspectJ 的 ajc）；②装载期织入：要求使用特 殊的类加载器，在装载类的时候对类进行增强；③运行时织入：在运行时为目标类生成代理实现 增强。Spring 采用了动态代理的方式实现了运行时织入，而 AspectJ 采用了编译期织入和装载 期织入的方式。</p></li>
+<li><p><strong>切面（Aspect）</strong>：切面是由切点和增强（引介）组成的，它包括了对横切关注功能的定义， 也包括了对连接点的定义。</p></li>
+</ol>
+<h4 id="实现">实现</h4>
+<h5 id="依赖">依赖</h5>
+<p>pom.xml里面添加依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-aop<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>spring-boot-starter-aop包含了aspectjweaver，并且版本是较新的版本。</p>
+<h5 id="切面定义">切面定义</h5>
+<p>Spring采用@AspectJ注解对POJO进行标注，该注解表明该类不仅仅是一个POJO，还是一个切面。切面是切点和通知的结合，那么定义一个切面就需要编写切点和通知。在代码中，只需要添加@Aspect注解即可。</p>
+<h5 id="切点">切点</h5>
+<p>切点是通过@Pointcut注解和切点表达式定义的。</p>
+<p><span class="citation" data-cites="Pointcut注解可以在一个切面内定义可重用的切点">@Pointcut注解可以在一个切面内定义可重用的切点</span>。</p>
+<blockquote>
+<p>execution：用于匹配方法执行的连接点；</p>
+<p>within<strong>：</strong>用于匹配指定类型内的方法执行；</p>
+<p>this<strong>：</strong>用于匹配当前<strong>AOP</strong>代理对象类型的执行方法；注意是<strong>AOP</strong>代理对象的类型匹配，这样就可能包括引入接口也类型匹配；</p>
+<p>target<strong>：</strong>用于匹配当前目标对象类型的执行方法；注意是目标对象的类型匹配，这样就不包括引入接口也类型匹配；</p>
+<p>args<strong>：</strong>用于匹配当前执行的方法传入的参数为指定类型的执行方法；</p>
+<p><span class="citation" data-cites="within">@within</span><strong>：</strong>用于匹配所以持有指定注解类型内的方法；</p>
+<p><span class="citation" data-cites="target">@target</span><strong>：</strong>用于匹配当前目标对象类型的执行方法，其中目标对象持有指定的注解；</p>
+<p><span class="citation" data-cites="args">@args</span><strong>：</strong>用于匹配当前执行的方法传入的参数持有指定注解的执行；</p>
+<p><span class="citation" data-cites="annotation">@annotation</span><strong>：</strong>用于匹配当前执行方法持有指定注解的方法；</p>
+<p>bean<strong>：</strong>Spring AOP<strong>扩展的，</strong>AspectJ<strong>没有对于指示符，用于匹配特定名称的</strong>Bean**对象的执行方法；</p>
+<p>reference pointcut：<strong>表示引用其他命名切入点，只有</strong>@ApectJ<strong>风格支持，</strong>Schema<strong>风格不支持。</strong></p>
+</blockquote>
+<p>由于Spring切面粒度最小是达到方法级别，而execution表达式可以用于明确指定方法返回类型，类名，方法名和参数名等与方法相关的部件，并且实际中，大部分需要使用AOP的业务场景也只需要达到方法级别即可，因而execution表达式的使用是最为广泛的。</p>
+<p>execution表达式的语法:</p>
+<p>* 匹配任何数量字符；</p>
+<p>.. 匹配任何数量字符的重复，如在类型模式中匹配任何数量子包；而在方法参数模式中匹配任何数量参数。</p>
+<p>+ 匹配指定类型的子类型；仅能作为后缀放在类型模式后边。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">注解？ 修饰符? 返回值类型 类型声明?方法名(参数列表) 异常列表？ </span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>注解：</strong>可选，方法上持有的注解，如@Deprecated；</li>
+<li><strong>修饰符：</strong>可选，如public、protected；</li>
+<li><strong>返回值类型：</strong>必填，可以是任何类型模式；“*”表示所有类型；</li>
+<li><strong>类型声明：</strong>可选，可以是任何类型模式；</li>
+<li><strong>方法名：</strong>必填，可以使用“*”进行模式匹配；</li>
+<li><strong>参数列表：</strong>“()”表示方法没有任何参数；“(..)”表示匹配接受任意个参数的方法，“(..,java.lang.String)”表示匹配接受java.lang.String类型的参数结束，且其前边可以接受有任意个参数的方法；“(java.lang.String,..)” 表示匹配接受java.lang.String类型的参数开始，且其后边可以接受任意个参数的方法；“(*,java.lang.String)” 表示匹配接受java.lang.String类型的参数结束，且其前边接受有一个任意类型参数的方法；</li>
+<li><strong>异常列表：</strong>可选，以“throws 异常全限定名列表”声明，异常全限定名列表如有多个以“，”分割，如throws java.lang.IllegalArgumentException, java.lang.ArrayIndexOutOfBoundsException。</li>
+</ul>
+<h5 id="定义advice">定义advice</h5>
+<p>前置通知（<span class="citation" data-cites="Before">@Before</span>）：在目标方法调用之前调用通知</p>
+<p>后置通知（<span class="citation" data-cites="After">@After</span>）：在目标方法完成之后调用通知</p>
+<p>环绕通知（<span class="citation" data-cites="Around">@Around</span>）：在被通知的方法调用之前和调用之后执行自定义的方法，环绕通知需要携带 ProceedingJoinPoint 类型的参数，且环绕通知必须有返回值, 返回值即为目标方法的返回值。</p>
+<p>返回通知（<span class="citation" data-cites="AfterReturning">@AfterReturning</span>）：在目标方法成功执行之后调用通知</p>
+<p>异常通知（<span class="citation" data-cites="AfterThrowing">@AfterThrowing</span>）：在目标方法抛出异常之后调用通知</p>
+<h5 id="demo">demo</h5>
+<p><a target="_blank" rel="noopener" href="https://github.com/wanghaojun/spring-guide/tree/main/rest-service/src/main/java/com/example/aop">github</a></p>
+<p>controller：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.aop.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/aop&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AopController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;hello aop&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String(<span class="string">&quot;hello aop&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello1&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">hello1</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;hello1 aop&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String(<span class="string">&quot;hello1 aop&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>AopAdvice</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.aop.advice;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.aspectj.lang.ProceedingJoinPoint;</span><br><span class="line"><span class="keyword">import</span> org.aspectj.lang.annotation.*;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Aspect</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AopAdvice</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Pointcut(&quot;execution (* com.example.aop.controller.*.*(..))&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span>  <span class="title">pointCut</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Before(&quot;pointCut()&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">beforeAdvice</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;beforeAdvice...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@After(&quot;pointCut()&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterAdvice</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;afterAdvice...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Around(&quot;pointCut()&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">aroundAdvice</span><span class="params">(ProceedingJoinPoint proceedingJoinPoint)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        String methodName = proceedingJoinPoint.getSignature().getName();</span><br><span class="line">        System.out.println(methodName + <span class="string">&quot;before&quot;</span>);</span><br><span class="line">        Object res = <span class="keyword">new</span> Object();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            res =  proceedingJoinPoint.proceed();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">            t.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(methodName + <span class="string">&quot;after&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="总结">总结</h4>
+<p>总算对Spring Aop有了一点认识和了解，<span class="citation" data-cites="PointCut和">@PointCut和</span><span class="citation" data-cites="Around这两个注解还需要细细了解">@Around这两个注解还需要细细了解</span>。</p>
+<h4 id="参考资料">参考资料</h4>
+<p>https://zhuanlan.zhihu.com/p/163420637</p>
+<p>http://sishuok.com/forum/posts/list/281.html</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/Spring/" rel="tag"># Spring</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/07/2021%E6%98%A5%E6%8B%9B/java%E5%A4%9A%E7%BA%BF%E7%A8%8B-2021%E6%98%A5%E6%8B%9B/" rel="prev" title="java多线程-2021春招">
+      <i class="fa fa-chevron-left"></i> java多线程-2021春招
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/17/2021%E6%98%A5%E6%8B%9B/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80-2021%E6%98%A5%E6%8B%9B/" rel="next" title="数据库基础">
+      数据库基础 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">3.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96"><span class="nav-number">4.1.</span> <span class="nav-text">依赖</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%87%E9%9D%A2%E5%AE%9A%E4%B9%89"><span class="nav-number">4.2.</span> <span class="nav-text">切面定义</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%87%E7%82%B9"><span class="nav-number">4.3.</span> <span class="nav-text">切点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89advice"><span class="nav-number">4.4.</span> <span class="nav-text">定义advice</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#demo"><span class="nav-number">4.5.</span> <span class="nav-text">demo</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

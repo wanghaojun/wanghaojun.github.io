@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="这篇文章是学习Xin Rong的《word2vec Parameter Learning Explained》记录的学习笔记，主要介绍了word2Vec的CBOW模型和Skip-gram模型，以及其模型涉及的推导过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="word2Vec参数详解——模型篇">
+<meta property="og:url" content="http://example.com/2020/03/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/word2Vec%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E6%A8%A1%E5%9E%8B%E7%AF%87/index.html">
+<meta property="og:site_name" content="翡翠森林">
+<meta property="og:description" content="这篇文章是学习Xin Rong的《word2vec Parameter Learning Explained》记录的学习笔记，主要介绍了word2Vec的CBOW模型和Skip-gram模型，以及其模型涉及的推导过程。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img.wanghaojun.cn//img/20200306094756.png">
+<meta property="og:image" content="http://img.wanghaojun.cn//img/20200310095823.png">
+<meta property="og:image" content="http://img.wanghaojun.cn//img/20200310154042.png">
+<meta property="article:published_time" content="2020-03-11T01:04:52.000Z">
+<meta property="article:modified_time" content="2021-04-19T07:31:18.315Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="NLP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img.wanghaojun.cn//img/20200306094756.png">
+
+<link rel="canonical" href="http://example.com/2020/03/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/word2Vec%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E6%A8%A1%E5%9E%8B%E7%AF%87/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>word2Vec参数详解——模型篇 | 翡翠森林</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">翡翠森林</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/03/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/word2Vec%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E6%A8%A1%E5%9E%8B%E7%AF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翡翠森林">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          word2Vec参数详解——模型篇
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-11 09:04:52" itemprop="dateCreated datePublished" datetime="2020-03-11T09:04:52+08:00">2020-03-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-19 15:31:18" itemprop="dateModified" datetime="2021-04-19T15:31:18+08:00">2021-04-19</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这篇文章是学习Xin Rong的《word2vec Parameter Learning Explained》记录的学习笔记，主要介绍了word2Vec的CBOW模型和Skip-gram模型，以及其模型涉及的推导过程。</p>
+<span id="more"></span>
+<h2 id="continuous-bag-of-word-model">1.Continuous Bag-Of-Word Model</h2>
+<h3 id="one-word-context">1.1 one-word context</h3>
+<p>首先介绍最简单的CBOW模型，假设每个上下文只考虑一个单词，即模型在一个给定的上下文单词的基础上预测一个单词，类似于一个双连词模型。</p>
+<p>图1给出了简化上下文环境下的网络模型，在我们的环境中，词汇表的大小为V，隐藏层的大小为N，邻近的两个层是全连接的。输入是one-hot向量，即对于一个给定的上下文单词，对于长度为V的向量<span class="math inline">\(\{x_1,...x_v\}\)</span>，只有该单词对应的<span class="math inline">\(x_k\)</span>是1，其余都是0。</p>
+<figure>
+<img src="http://img.wanghaojun.cn//img/20200306094756.png" alt="" /><figcaption>图一 上下文只有一个单词的简单的CBOW模型</figcaption>
+</figure>
+<center>
+图1 上下文只有一个单词的简单的CBOW模型
+</center>
+<p>输入层和输出层之间的权重向量可以表示为一个<span class="math inline">\(V \times N\)</span>的向量<span class="math inline">\(W\)</span>，每一行<span class="math inline">\(W\)</span>都是一个N维的表示向量<span class="math inline">\(v_w\)</span>，正式的来说，W的第i行就是<span class="math inline">\(v_w^T\)</span>，给定一个上下文（一个单词），假设<span class="math inline">\(x_k=1,\quad x_{k&#39;}=0 \quad for \quad k&#39; \neq k\)</span>,那么有 <span class="math display">\[
+\mathbf{h}=\mathbf{W}^{T} \mathbf{x}=\mathbf{W}_{(k,)}^{T}:=\mathbf{v}_{w_{I}}^{T}
+\tag{1}
+\]</span> 本质上来说，是将W的第K行复制给h，<span class="math inline">\(v_{w_I}\)</span>就是输入单词<span class="math inline">\(w_I\)</span>的向量表示。这意味着隐含层单元的激活函数是简单的线性函数(即直接将其加权的输入和传递给下一层)。</p>
+<p>对于隐藏层到输出层，有一个不同的权重矩阵<span class="math inline">\(W&#39;=\{w&#39;_{ij}\}\)</span>，这是一个<span class="math inline">\(N \times V\)</span>的矩阵，使用这些权重，可以计算词汇表中每个单词的分数<span class="math inline">\(u_j\)</span>， <span class="math display">\[
+u_j={v&#39;_{w_j}}^T h
+\tag{2}
+\]</span> <span class="math inline">\(v&#39;_{w_j}\)</span>是矩阵<span class="math inline">\(W&#39;\)</span>的第j列，然后使用softmax，一个对数线性分类模型，得到单词的后验分布，这是一个多项分布。 <span class="math display">\[
+p\left(w_{j} | w_{I}\right)=y_{j}=\frac{\exp \left(u_{j}\right)}{\sum_{j^{\prime}=1}^{V} \exp \left(u_{j^{\prime}}\right)}
+\tag{3}
+\]</span> <span class="math inline">\(y_j\)</span>是输出层中第j个单元的输出。 <span class="math display">\[
+p\left(w_{j} | w_{I}\right)=\frac{\exp \left({\mathbf{v}&#39;_{w_j}}^T\mathbf{v}_{w_{I}}\right)}{\sum_{j^{\prime}=1}^{V} \exp \left({\mathbf{v}&#39;_{w_{j&#39;}}}^T \mathbf{v}_{w_{I}}\right)}
+\tag{4}
+\]</span> 注意，<span class="math inline">\(v_w\)</span>和<span class="math inline">\(v_w&#39;\)</span>都是单词w的表示，<span class="math inline">\(v_w\)</span>来自于W的行，这是从输入层到隐藏层的权重矩阵；<span class="math inline">\(v_w&#39;\)</span>来自于<span class="math inline">\(W&#39;\)</span>的列，这是从隐藏层到输出层的权重矩阵，在接下来的分析中，我们把<span class="math inline">\(v_w\)</span>叫做w的“输入向量”，<span class="math inline">\(v_w&#39;\)</span>叫做w的“输出向量”。</p>
+<p><strong>从隐藏层到输出层的权重更新公式</strong></p>
+<p>虽然实际的计算是不切实际的(下面会解释)，但进行推导是为了在不使用任何技巧的情况下深入了解这个原始模型。</p>
+<p>训练的目的是使实际的输出单词<span class="math inline">\(w_O\)</span>的条件概率最大化，在给定输入的上下文单词<span class="math inline">\(w_I\)</span>的情况下。 <span class="math display">\[
+\begin{aligned} \max p\left(w_{O} | w_{I}\right)  &amp;= \max y_{j^{*}} \\ &amp;=\max \log y_{j^{*}} \\ &amp;=u_{j^{*}}-\log \sum_{j^{\prime}=1}^{V} \exp \left(u_{j^{\prime}}\right):=-E \end{aligned}
+\tag{5}
+\]</span> <span class="math inline">\(E=-logp(w_O|w_I)\)</span>是损失函数（希望最小化E）,j*是输出层实际输出单词的索引，注意，这个损失函数可以理解为两个概率分布之间交叉熵的一个特例。</p>
+<p>现在，让我们推导隐藏层和输出层之间的权值的更新方程。对E对第j个单元的输入<span class="math inline">\(u_j\)</span>求导，得到 <span class="math display">\[
+\frac{\partial E}{\partial u_{j}}=y_{j}-t_{j}:=e_{j}
+\tag{6}
+\]</span> <span class="math inline">\(t_j=1(j=j^*)\)</span>，当第j个单元是真实的输出单词时，<span class="math inline">\(t_j=1\)</span>,否则<span class="math inline">\(t_j=0\)</span>，注意这只是输出层的预测误差<span class="math inline">\(e_j\)</span>。接下来，对<span class="math inline">\(w_{ij}&#39;\)</span>求导来得到从隐藏层到输出层的权重。 <span class="math display">\[
+\frac{\partial E}{\partial w_{i j}^{\prime}}=\frac{\partial E}{\partial u_{j}} \cdot \frac{\partial u_{j}}{\partial w_{i j}^{\prime}}=e_{j} \cdot h_{i}
+\tag{7}
+\]</span> 因此，利用随机梯度下降法，我们得到了隐式的权值更新方程。 <span class="math display">\[
+w_{i j}^{\prime}(\mathrm{new})=w_{i j}^{\prime}(\mathrm{old})-\eta \cdot e_{j} \cdot h_{i}\tag{8}
+\]</span> 或者 <span class="math display">\[
+\mathbf{v}_{w_{j}}^{\prime}(\text { new })=\mathbf{v}_{w_{j}}^{\prime}(\text { old })-\eta \cdot e_{j} \cdot \mathbf{h} \quad \text { for } j=1,2, \cdots, V\tag{9}
+\]</span> <span class="math inline">\(\eta&gt;0\)</span>是学习率，<span class="math inline">\(e_j=y_j-t_j\)</span>,<span class="math inline">\(h_i\)</span>是第i个隐藏层，<span class="math inline">\(v_{w_j}&#39;\)</span>是<span class="math inline">\(w_j\)</span>的输出向量。注意，这个更新方程意味着我们必须遍历词汇表中所有可能的单词，检查它的输出可能性<span class="math inline">\(y_j\)</span>，然后比较<span class="math inline">\(y_j\)</span>与其渴望的输出<span class="math inline">\(t_j（0 || 1）\)</span>。如果<span class="math inline">\(y_j&gt;t_j\)</span>（高估）,那么需要按比例的从<span class="math inline">\(v_{w_j}&#39;\)</span>中减去h，可以使<span class="math inline">\(v_{w_j}&#39;\)</span>远离<span class="math inline">\(v_{w_I}\)</span>;如果<span class="math inline">\(y_j&gt;t_j\)</span>（低估，只有当<span class="math inline">\(t_j=1,i.e.,w_j=w_o\)</span>的时候是正确的），将h按比例加到<span class="math inline">\(v_{w_o}&#39;\)</span>上，使其接近<span class="math inline">\(v_{w_I}\)</span>。如果<span class="math inline">\(y_j\)</span>接近<span class="math inline">\(t_j\)</span>，那么就导致权重更新变得非常小。</p>
+<p><strong>从输入层到隐藏层的权重更新公式</strong></p>
+<p>把E对隐含层的输出求导，得到 <span class="math display">\[
+\frac{\partial E}{\partial h_{i}}=\sum_{j=1}^{V} \frac{\partial E}{\partial u_{j}} \cdot \frac{\partial u_{j}}{\partial h_{i}}=\sum_{j=1}^{V} e_{j} \cdot w_{i j}^{\prime}:=\mathrm{EH}_{i}
+\tag{10}
+\]</span> <span class="math inline">\(h_i\)</span>是隐藏层第i个单元的输出。<span class="math inline">\(u_j\)</span>在公式（2）中定义，是输出层第j个单元的输入，<span class="math inline">\(e_j=y_j-t_j\)</span>是输出层第j个单词的预测误差。<span class="math inline">\(EH\)</span>，一个N维的向量，是词汇表中所有单词的输出向量之和，根据预测误差加权。</p>
+<p>接下来，求E关于W的导数，回想一下，隐含层对输入层的值执行线性计算，展开公式（1）的向量符号，可以得到： <span class="math display">\[
+h_{i}=\sum_{k=1}^{V} x_{k} \cdot w_{k i}
+\tag{11}
+\]</span> 然后我们可以计算E关于W中某个元素的导数： <span class="math display">\[
+\frac{\partial E}{\partial w_{k i}}=\frac{\partial E}{\partial h_{i}} \cdot \frac{\partial h_{i}}{\partial w_{k i}}=\mathrm{EH}_{i} \cdot x_{k}
+\tag{12}
+\]</span> 这等价于向量x和EH的张量积： <span class="math display">\[
+\frac{\partial E}{\partial \mathbf{W}}=\mathbf{x} \otimes \mathrm{EH}=\mathbf{x} \mathrm{EH}^{T}
+\tag{13}
+\]</span> 由于向量x中只有一个元素非0，所以这个式子只有一行不为0，其值为<span class="math inline">\(EH^T\)</span>，一个N维的向量。于是，W的更新公式为: <span class="math display">\[
+\mathbf{v}_{w_{I}}^{(\text {new })}=\mathbf{v}_{w_{I}}^{(\text {old })}-\eta \mathrm{EH}^{T}\tag{14}
+\]</span> <span class="math inline">\(v_{w_I}\)</span>是W中的一行，是唯一的一个上下文单词的“输入向量”，也是W中唯一导数不为0的一行，W中的其余行的值都保持不变，因为导数为0。</p>
+<p>直观的来看，因为向量<span class="math inline">\(EH\)</span>是词汇表中所有单词的输出向量的和，由预测误差<span class="math inline">\(e_j=y_j-t_j\)</span>来加权，我们可以把公式（14）理解为将词汇表中每个单词的输出向量的一部分加到上下文向量的输入向量上去。如果，在输出层，一个单词<span class="math inline">\(w_j\)</span>是输出单词的概率被高估了（$y_j &gt; t_j <span class="math inline">\(），那么上下文单词\)</span>w_I<span class="math inline">\(的输入向量就会远离\)</span>w_j<span class="math inline">\(的输出向量；相反的，如果\)</span>w_j<span class="math inline">\(是输出单词的概率被低估了（\)</span>y_j &lt; t_j <span class="math inline">\(），那么输入向量\)</span>w_I<span class="math inline">\(就会更加接近输出向量\)</span>w_j<span class="math inline">\(，如果\)</span>w_j<span class="math inline">\(的概率被准确的预测了，那么它只会对输入向量\)</span>w_I<span class="math inline">\(产生细微的影响。\)</span>w_I$的输入向量的移动是由词汇表中所有向量的预测误差决定的，预测误差越大，单词对上下文单词输入向量的影响越明显。</p>
+<p>当我们通过训练语料库生成的上下文-目标词对迭代地更新模型参数时，对向量的影响将会累积。我们可以想象一个单词w的输出向量被与w由共同成分的邻居的输入向量来来回回的“拖动”，就好像w的向量和它的邻居的向量之间有物理弦一样。类似地，一个输入向量也可以被认为是被许多输出向量拖拽的。这种解释可以让我们想起重力，或者力指向的图形布局。每个虚拟字符串的平衡长度与相关单词对之间的相似程度以及学习速度有关。经过多次迭代，输入和输出向量的相对位置将最终稳定下来。</p>
+<h3 id="multi-word-context">1.2 Multi-word context</h3>
+<p>接下来介绍使用多个单词作为上下文的CBOW模型。当计算隐藏层的输出的时候，不是直接复制输入上下文单词的输入向量，CBOW模型计算岭输入上下文单词的向量平均值，然后使用输入层到隐藏层的权重向量和平均向量的产物作为输出。 <span class="math display">\[
+\begin{aligned}
+\mathbf{h} &amp;=\frac{1}{C} \mathbf{W}^{T}\left(\mathbf{x}_{1}+\mathbf{x}_{2}+\cdots+\mathbf{x}_{C}\right) \\
+&amp;=\frac{1}{C}\left(\mathbf{v}_{w_{1}}+\mathbf{v}_{w_{2}}+\cdots+\mathbf{v}_{w_{C}}\right)^{T}
+\end{aligned}
+\tag{15}
+\]</span> C是上下文单词的数目，<span class="math inline">\(w_1,...,w_2\)</span>是上下文单词，<span class="math inline">\(v_w\)</span>是单词<span class="math inline">\(w\)</span>的输入向量。损失函数是： <span class="math display">\[
+\begin{aligned}
+E&amp;= =-\log p\left(w_{O} | w_{I, 1}, \cdots, w_{I, C}\right)\\
+&amp;=-u_{j^{*}}+\log \sum_{j^{\prime}=1}^{V} \exp \left(u_{j^{\prime}}\right)\\
+&amp;=-{\mathbf{v}_{w_{O}}^{&#39;}}^T \cdot \mathbf{h} + \log \sum_{j&#39;=1}^{V} \exp \left({\mathbf{v}_{w_{j}}^{\prime}}^{T} \cdot \mathbf{h}\right)
+\end{aligned}
+\tag{16}
+\]</span> 如下图所示</p>
+<p><img src="http://img.wanghaojun.cn//img/20200310095823.png" /></p>
+<center>
+图2 连续的词袋模型
+</center>
+<p>从隐藏层到输出层的权重更新公式与单个上下文单词的模型是一样的，把公式(8)复制下来： <span class="math display">\[
+w_{i j}^{\prime}(\mathrm{new})=w_{i j}^{\prime}(\mathrm{old})-\eta \cdot e_{j} \cdot h_{i}\tag{17}
+\]</span> 注意，对于每一次训练，都要把这个公式应用到从隐藏层到输出层的向量矩阵的每个元素上。</p>
+<p>从输入层到隐藏层的权重更新公式类似于公式(14)，除了现在需要把下面这个公式应用到上下文中的每个<span class="math inline">\(w_{I,c}\)</span>上。 <span class="math display">\[
+\mathbf{v}_{w_{I,c}}^{(\text {new })}=\mathbf{v}_{w_{I,c}}^{(\text {old })}-\frac{1}{C} \eta \mathrm{EH}^{T}\tag{18}
+\]</span> <span class="math inline">\(v_{w_{I,c}}\)</span>是上下文单词的第c个输入向量，<span class="math inline">\(\eta\)</span>是正向学习率，<span class="math inline">\(EH\)</span>可以从公式(10)得出。这个更新公式的直接理解是和公式(14)一样的。</p>
+<h2 id="skip-gram-model">2 skip-Gram Model</h2>
+<p>图3展示了skip-gram模型的过程，这是CBOW模型相反的一种方式，目标词是输入层，而上下文单词在输出层。</p>
+<p><img src="http://img.wanghaojun.cn//img/20200310154042.png" /></p>
+<center>
+图3 skip-gram模型
+</center>
+<p>这里仍然使用<span class="math inline">\(v_{w_I}\)</span>作为输入层唯一的一个单词向量，因此隐藏层的计算过程和公式(1)是一样的，即<span class="math inline">\(\mathbf{h}\)</span>只是从输入层到隐藏层的权重矩阵W的与输入单词<span class="math inline">\(w_I\)</span>有关的一行的简单的复制。 <span class="math display">\[
+\mathbf{h}=\mathbf{W}^{T} \mathbf{x}=\mathbf{W}_{(k,)}^{T}:=\mathbf{v}_{w_{I}}^{T}
+\tag{19}
+\]</span> 在输出层，这里不是输出一个多项分布，而是输出C个多项分布，每个输出的计算过程使用相同的隐藏层到输出层的矩阵：</p>
+<p><span class="math display">\[
+p\left(w_{c, j}=w_{O, c} | w_{I}\right)=y_{c, j}=\frac{\exp \left(u_{c, j}\right)}{\sum_{j^{\prime}=1}^{V} \exp \left(u_{j^{\prime}}\right)}
+\tag{20}
+\]</span> <span class="math inline">\(w_{c,j}\)</span>是输出层第c组的第j个单词，<span class="math inline">\(w_{O,c}\)</span>是上下文中第c个实际输出的单词，<span class="math inline">\(w_I\)</span>是唯一的输入向量；<span class="math inline">\(y_{c,j}\)</span>是第c组第j个单元的输出；<span class="math inline">\(u_{c,j}\)</span>是输出层第c组第j个单元的输入。因为输出层共享相同的权重，因此</p>
+<p><span class="math display">\[
+u_{c, j}=u_{j}={\mathbf{v}_{w_{j}}^{\prime}}^{T} \cdot \mathbf{h}, \text { for } c=1,2, \cdots, C\tag{21}
+\]</span> <span class="math inline">\(\mathbf{v}_{w_{j}}^{\prime}\)</span>是词汇表中第j个单词$w_j <span class="math inline">\(的输出向量，也是隐藏层到输出层的向量矩阵\)</span>W'$的一列。</p>
+<p>参数更新方程的推导与单词上下文模型的推导区别不是很大。损失函数变成了： <span class="math display">\[
+\begin{aligned}
+E &amp;=-\log p\left(w_{O, 1}, w_{O, 2}, \cdots, w_{O, C} | w_{I}\right) \\
+&amp;=-\log \prod_{c=1}^{C} \frac{\exp \left(u_{c, j_{c}^{*}}\right)}{\sum_{j^{\prime}=1}^{V} \exp \left(u_{j^{\prime}}\right)} \\
+&amp;=-\sum_{c=1}^{C} u_{j_{c}^{*}}+C \cdot \log \sum_{j^{\prime}=1}^{V} \exp \left(u_{j^{\prime}}\right)
+\end{aligned}
+\tag{22}
+\]</span> <span class="math inline">\(j_c^*\)</span>是上下文单词的第c个单词在词汇表中的索引。</p>
+<p>计算E关于每组输出层的每个单元的输入的导数，可以得到： <span class="math display">\[
+\frac{\partial E}{\partial u_{c, j}}=y_{c, j}-t_{c, j}:=e_{c, j}\tag{23}
+\]</span> 这是每个单元的预测误差，类似于公式(6)，这里定义了一个维度为V的向量<span class="math inline">\(EI={EI_1,...EI_V}\)</span>作为所有上下文单词的预测误差之和。 <span class="math display">\[
+EI_j=\sum_{c=1}^{C}e_{c,j}\tag{24}
+\]</span> 接下来，计算E关于隐藏层到输出层的矩阵<span class="math inline">\(\mathbf{W&#39;}\)</span>的导数，得到： <span class="math display">\[
+\frac{\partial E}{\partial w_{i j}^{\prime}}=\sum_{c=1}^{C} \frac{\partial E}{\partial u_{c, j}} \cdot \frac{\partial u_{c, j}}{\partial w_{i j}^{\prime}}=\mathrm{EI}_{j} \cdot h_{i}\tag{25}
+\]</span> 因此，得到了从隐藏层到输出层的矩阵<span class="math inline">\(\mathbf{W&#39;}\)</span>的更新公式： <span class="math display">\[
+\boldsymbol{w}_{i j}^{\prime}(\text { new })=w_{i j}^{\prime}(\text { old })-\eta \cdot \mathrm{EI}_{j} \cdot h_{i}\tag{26}
+\]</span> 或者： <span class="math display">\[
+\mathbf{v}_{w_{j}}^{\prime}(\text { new })=\mathbf{v}_{w_{j}}^{\prime}(\text { old })-\eta \cdot EI_{j} \cdot \mathbf{h} \quad \text { for } j=1,2, \cdots, V\tag{27}
+\]</span> 这个公示的直观理解类似于公式(9)，唯一不同的是，预测误差是对输出层中所有上下文单词的总和。注意，对于每一次训练，都要把这个公式应用到从隐藏层到输出层的向量矩阵的每个元素上。</p>
+<p>从输入层到隐藏层的矩阵的更新公式的推导类似于公式(10)和(14)，不同的是，需要把预测误差<span class="math inline">\(e_j\)</span>替换为<span class="math inline">\(EI_j\)</span>,可以直接给出更新公式： <span class="math display">\[
+\mathbf{v}_{w_{I}}^{(\text {new })}=\mathbf{v}_{w_{I}}^{(\text {old })}-\eta \mathrm{EH}^{T}\tag{28}
+\]</span> EH是一个N维的向量，每个元素定义为： <span class="math display">\[
+EH_i = \sum_{j=1}^{V}EI_j \cdot w&#39;_{ij}\tag{29}
+\]</span> 公式(28)的理解与公式(14)是一样的。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/05/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BA%8C%E5%88%86%E7%B1%BB%E7%9A%84%E5%87%86%E7%A1%AE%E5%BA%A6%E8%AE%A1%E7%AE%97/" rel="prev" title="二分类的准确度计算">
+      <i class="fa fa-chevron-left"></i> 二分类的准确度计算
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/08/%E5%A4%A7%E6%95%B0%E6%8D%AE/Kfaka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8/" rel="next" title="Kafka基础应用">
+      Kafka基础应用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#continuous-bag-of-word-model"><span class="nav-number">1.</span> <span class="nav-text">1.Continuous Bag-Of-Word Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#one-word-context"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 one-word context</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multi-word-context"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Multi-word context</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#skip-gram-model"><span class="nav-number">2.</span> <span class="nav-text">2 skip-Gram Model</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

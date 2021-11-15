@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="主要记录一下阅读两个白皮书的收获。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="隐私计算白皮书">
+<meta property="og:url" content="http://example.com/2021/04/19/%E9%9A%90%E7%A7%81%E8%AE%A1%E7%AE%97%E7%99%BD%E7%9A%AE%E4%B9%A6/index.html">
+<meta property="og:site_name" content="翡翠森林">
+<meta property="og:description" content="主要记录一下阅读两个白皮书的收获。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img.wanghaojun.cn//other/20210419101929.png">
+<meta property="og:image" content="http://img.wanghaojun.cn//other/20210419134454.png">
+<meta property="og:image" content="http://img.wanghaojun.cn//other/20210419134530.png">
+<meta property="og:image" content="http://img.wanghaojun.cn//other/20210419134616.png">
+<meta property="og:image" content="http://img.wanghaojun.cn//other/20210419134802.png">
+<meta property="og:image" content="http://img.wanghaojun.cn//other/20210419144409.png">
+<meta property="og:image" content="http://img.wanghaojun.cn//other/20210419150641.png">
+<meta property="article:published_time" content="2021-04-19T07:18:32.000Z">
+<meta property="article:modified_time" content="2021-04-19T07:27:40.129Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="隐私保护">
+<meta property="article:tag" content="联邦学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img.wanghaojun.cn//other/20210419101929.png">
+
+<link rel="canonical" href="http://example.com/2021/04/19/%E9%9A%90%E7%A7%81%E8%AE%A1%E7%AE%97%E7%99%BD%E7%9A%AE%E4%B9%A6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>隐私计算白皮书 | 翡翠森林</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">翡翠森林</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/19/%E9%9A%90%E7%A7%81%E8%AE%A1%E7%AE%97%E7%99%BD%E7%9A%AE%E4%B9%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翡翠森林">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          隐私计算白皮书
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-04-19 15:18:32 / 修改时间：15:27:40" itemprop="dateCreated datePublished" datetime="2021-04-19T15:18:32+08:00">2021-04-19</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>主要记录一下阅读两个白皮书的收获。</p>
+<span id="more"></span>
+<p>两个关于隐私计算的白皮书：</p>
+<p>腾讯：https://mp.weixin.qq.com/s/4-ey1BTuSghhmHr7Xk8V5Q</p>
+<p>中国信通院：http://www.caict.ac.cn/kxyj/qwfb/ztbg/202011/t20201110_361696.htm</p>
+<h3 id="腾讯隐私计算白皮书-2021">腾讯隐私计算白皮书-2021</h3>
+<p><img src="http://img.wanghaojun.cn//other/20210419101929.png" /></p>
+<p>隐私计算（Privacy Computing）是一种由两个或多个参与方联合计算 的技术和系统，参与方在不泄露各自数据的前提下通过协作对他们的数据 进行联合机器学习和联合分析。隐私计算的参与方既可以是同一机构的不 同部门，也可以是不同的机构。在隐私计算框架下，参与方的数据明文不出 本地，在保护数据安全的同时实现多源数据跨域合作，可以破解数据保护 与融合应用难题。常见的实现隐私计算的技术路径包括联邦学习、安全多方计算、可信计算等，此外区块链也是隐私计算的重要补充。</p>
+<h4 id="技术趋势">技术趋势</h4>
+<p><strong>联邦学习</strong></p>
+<p><strong>一方面，联邦学习需要支持更加多样化的深度学习模型</strong>，如广告领域常用的双塔模型、点击率预估模型、自然语言处 理模型等，尤其支持多方联邦神经网络模型的训练，并提供高效的、安全的、 无损的联邦模型训练协议，从而实现基于深度学习的联合建模。</p>
+<p><strong>另一方面，联邦学习需要支持海量数据的深度学习模型训练</strong>，在计算机视觉、自然语言处 理、广告等领域需要通过海量数据来训练深度学习模型，但受限于目前联邦 学习的技术缺陷，需要通过增加联合计算的并行度，优化多方对接的接口等 方式实现对海量数据处理的支持。</p>
+<p>联邦学习与其他隐私计算技术深度融合，加速向<strong>平台化演进</strong>。</p>
+<p>一方面，单一的隐私保护技术不能满足对联邦学习的安全性、效率、性能的要求、以及应对多样化的应用场景，联邦学习将与安全多方计算、区块链、可信计算等技术进行深入融合，并通过使用硬件加速技术，进一步提高联邦学习系统的安全性和交付效率，保证联邦训练的模型与集中训练的模型有相同的性能。</p>
+<p>另一方面，通过技术融合，联邦学习产品将会向通用型平台化发展，丰富服务模式，满足多样化的用户需求。按需提供数据安全保护服务和全栈的联合建模和联合分析功能，将成为联邦学习产品适应多样化业务场景的演进方向</p>
+<p><strong>安全多方计算</strong></p>
+<p><strong>安全多方计算与其他隐私计算技术融合应用成为主流趋势。</strong>由于安全多 方计算需要消耗大量的计算和通信资源，目前应用更加适用于小规模数据 量，并且应用主要是聚焦相对简单的统计、查询等类型的计算，而基于安全多 方计算的联合建模框架只能支持相对简单的机器学习模型，如逻辑回归模型 等。其主流的应用主要以安全技术的形式融合在其他隐私计算解决方案中， 例如与联邦学习的结合，在样本对齐阶段通过隐私集合求交来实现参与方公 共样本ID的发现；在联邦模型训练阶段，可以通过同态加密、秘密分享享等技 术来实现对中间技术结果或转化结果的保护。</p>
+<p><strong>安全多方计算产品的计算和通信效率提升呈现两大路径。</strong>安全多方计算 需要用到相对复杂的密码学运算，其计算和通信开销会超过实际应用能承受 的范围，导致无法实现在大规模数据上的应用。提升其计算和通信效率是当 下技术演进的主流方向，主要呈现两大技术路径。一是聚焦<strong>减少算法的计算量和安全协议的消息交互量</strong>，通过压缩算法、采样、抽样等方式减少计算和通信开销，从而实现计算和通信效率的提升。二是通过新的密码学技术和设计新的算法协议，<strong>结合硬件加速技术（如GPU、FPGA、ASIC加速）和专有算法实现硬件来加速计算量较大的环节和步骤</strong>，进一步实现计算效率的提升。</p>
+<p><strong>可信计算</strong></p>
+<p>平台化和容器化是未来可信计算与云平台融合的关键路径。</p>
+<p>可信计算的易用性提升是产品化应用的重要方向。</p>
+<p>底层硬件架构的灵活切换是未来丰富可信计算应用场景的重要条件。</p>
+<p><strong>隐私计算融合区块链</strong></p>
+<p><strong>区块链可以保障隐私计算任务数据端到端的隐私性。</strong>通过区块链加密算 法技术，用户无法获取网络中的交易信息，验证节点只能验证交易的有效性 而无法获取具体的交易信息，从而保证交易数据隐私，并且可按用户、业务、 交易对象等不同层次实现数据和账户的隐私保护设置，最大程度上保护数据 的隐私性。</p>
+<p><strong>区块链可以保障隐私计算中数据全生命周期的安全性。</strong>区块链技术采用 分布式数据存储方式，所有区块链上的节点都存储着一份完整的数据，任何 单个节点想修改这些数据，其他节点都可以用自己保存的备份来证伪，从而 保证数据不被随便地篡改或者是被删除。此外，区块链中所使用的非对称加 密、哈希加密技术能够有效保障数据安全，防止泄露。</p>
+<p><strong>区块链可以保障隐私计算过程的可追溯性。</strong>数据申请、授权、计算结果全 过程链上进行记录与存储，链上记录的信息可通过其它参与方对数据进行签 名确认的方式，进一步提高数据可信度，同时可通过对哈希值的验证匹配，实 现信息篡改的快速识别。基于链上数据的记录与认证，可通过智能合约，实现 按照唯一标识对链上相关数据进行关联，构建数据的可追溯性。</p>
+<h4 id="隐私计算应用">隐私计算应用</h4>
+<p>金融：隐私计算助力银行联合建模，提升反欺诈模型水平。</p>
+<p><img src="http://img.wanghaojun.cn//other/20210419134454.png" /></p>
+<p>医疗：隐私计算有效助力医学影像识别、疾病筛查、AI辅助诊疗、智能问诊咨询 等。</p>
+<p><img src="http://img.wanghaojun.cn//other/20210419134530.png" /></p>
+<p>政务：基于隐私计算助力政府数据开放，实现精准施策。</p>
+<p><img src="http://img.wanghaojun.cn//other/20210419134616.png" /></p>
+<p>广告：联邦学习助力广告程序化交易联合建模，提升广告主投放效果和用户体验。</p>
+<p><img src="http://img.wanghaojun.cn//other/20210419134802.png" /></p>
+<p>总结</p>
+<p>这篇白皮书主要将隐私计算划分为三大流派：联邦学习、安全多方计算和可信计算，并与区块链技术结合在一起。文章介绍的各个技术的发展趋势很有价值，隐私计算主要应用到了金融、医疗、政务和广告等行业，并给出了应用示例的模型图。</p>
+<h3 id="隐私保护计算报告-信通院2020">隐私保护计算报告-信通院2020</h3>
+<h4 id="隐私保护计算">隐私保护计算</h4>
+<p><strong>概念</strong></p>
+<p>隐私保护计算（Privacy-Preserving Computation）近年来被提出， 是指在提供隐私保护的前提下，实现数据价值挖掘的技术体系。面对数据计算的参与方或其他意图窃取信息的攻击者，隐私保护计算技 术能够实现数据处于加密状态或非透明（Opaque）状态下的计算，以达到各参与方隐私保护的目的。隐私保护计算并不是一种单一的技 术，它是一套包含人工智能、密码学、数据科学等众多领域交叉融合 的跨学科技术体系。隐私保护计算能够保证满足数据隐私安全的基础上，实现数据“价值”和“知识”的流动与共享，真正做到“数据可用不可见”。</p>
+<p><strong>架构</strong></p>
+<p><img src="http://img.wanghaojun.cn//other/20210419144409.png" /></p>
+<p>数据方是指为执行隐私保 护计算过程提供数据的组织或个人；</p>
+<p>计算方是指为执行隐私保护计算 过程提供算力的组织或个人；</p>
+<p>结果方是指接收隐私保护计算结果的组 织或个人。</p>
+<p>根据图 1，隐私保护计算过程中主要存在 7 个隐私风险点：</p>
+<p>1)数据在数据方的静态存储风险；</p>
+<p>2)数据从数据方传输至计算方的传输风险；</p>
+<p>3)数据在计算方<strong>计算时的隐私风险</strong>；</p>
+<p>4)数据在计算方<strong>计算后的隐私风险</strong>；</p>
+<p>5)计算结果在计算方的静态存储风险；</p>
+<p>6)计算结果从计算方传输至结果方的传输风险；</p>
+<p>7)计算结果在结果方的静态存储风险。</p>
+<p>隐私保护计算的目标是在完成计算任务的基础上，实现数据计算 过程和数据计算结果的隐私保护。数据计算过程的隐私保护指参与方 在整个计算的过程中难以得到除计算结果之外的额外信息。数据计算 结果的隐私保护指参与方难以基于计算结果逆推原始输入数据和隐 私信息。</p>
+<h4 id="隐私保护计算关键技术">隐私保护计算关键技术</h4>
+<ul>
+<li>联邦学习</li>
+<li>安全多方计算
+<ul>
+<li>秘密分享</li>
+<li>不经意传输</li>
+<li>混淆电路</li>
+</ul></li>
+<li>机密计算
+<ul>
+<li>TrustZone</li>
+<li>Intel SGX</li>
+<li>开源框架
+<ul>
+<li>Rust SGX SDK</li>
+<li>Asylo</li>
+<li>libOS</li>
+</ul></li>
+</ul></li>
+<li>差分隐私</li>
+<li>同态加密
+<ul>
+<li>部分同态</li>
+<li>全同态</li>
+</ul></li>
+</ul>
+<p><img src="http://img.wanghaojun.cn//other/20210419150641.png" /></p>
+<h4 id="应用案例">应用案例</h4>
+<p>金融</p>
+<p>医疗</p>
+<p>政务</p>
+<h4 id="总结">总结</h4>
+<p>关于隐私计算的架构很有意思，隐私保护技术的介绍也非常详细，需要抽时间整理一遍。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4/" rel="tag"># 隐私保护</a>
+              <a href="/tags/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 联邦学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/17/2021%E6%98%A5%E6%8B%9B/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80-2021%E6%98%A5%E6%8B%9B/" rel="prev" title="数据库基础">
+      <i class="fa fa-chevron-left"></i> 数据库基础
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/19/2021%E6%98%A5%E6%8B%9B/jvm-gc/" rel="next" title="jvm-gc">
+      jvm-gc <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%85%BE%E8%AE%AF%E9%9A%90%E7%A7%81%E8%AE%A1%E7%AE%97%E7%99%BD%E7%9A%AE%E4%B9%A6-2021"><span class="nav-number">1.</span> <span class="nav-text">腾讯隐私计算白皮书-2021</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E8%B6%8B%E5%8A%BF"><span class="nav-number">1.1.</span> <span class="nav-text">技术趋势</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9A%90%E7%A7%81%E8%AE%A1%E7%AE%97%E5%BA%94%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">隐私计算应用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E8%AE%A1%E7%AE%97%E6%8A%A5%E5%91%8A-%E4%BF%A1%E9%80%9A%E9%99%A22020"><span class="nav-number">2.</span> <span class="nav-text">隐私保护计算报告-信通院2020</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E8%AE%A1%E7%AE%97"><span class="nav-number">2.1.</span> <span class="nav-text">隐私保护计算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E8%AE%A1%E7%AE%97%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF"><span class="nav-number">2.2.</span> <span class="nav-text">隐私保护计算关键技术</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="nav-number">2.3.</span> <span class="nav-text">应用案例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.4.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

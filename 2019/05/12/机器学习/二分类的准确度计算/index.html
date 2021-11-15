@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="二分类的作为机器学习分类问题中最简单的类型，其模型预测结果和真实结果只能为0或者1，可以说为True或者False，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二分类的准确度计算">
+<meta property="og:url" content="http://example.com/2019/05/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BA%8C%E5%88%86%E7%B1%BB%E7%9A%84%E5%87%86%E7%A1%AE%E5%BA%A6%E8%AE%A1%E7%AE%97/index.html">
+<meta property="og:site_name" content="翡翠森林">
+<meta property="og:description" content="二分类的作为机器学习分类问题中最简单的类型，其模型预测结果和真实结果只能为0或者1，可以说为True或者False，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-05-12T04:37:51.000Z">
+<meta property="article:modified_time" content="2021-04-19T07:31:35.849Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2019/05/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BA%8C%E5%88%86%E7%B1%BB%E7%9A%84%E5%87%86%E7%A1%AE%E5%BA%A6%E8%AE%A1%E7%AE%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>二分类的准确度计算 | 翡翠森林</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">翡翠森林</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2019/05/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BA%8C%E5%88%86%E7%B1%BB%E7%9A%84%E5%87%86%E7%A1%AE%E5%BA%A6%E8%AE%A1%E7%AE%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翡翠森林">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          二分类的准确度计算
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-05-12 12:37:51" itemprop="dateCreated datePublished" datetime="2019-05-12T12:37:51+08:00">2019-05-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-19 15:31:35" itemprop="dateModified" datetime="2021-04-19T15:31:35+08:00">2021-04-19</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>二分类的作为机器学习分类问题中最简单的类型，其模型预测结果和真实结果只能为0或者1，可以说为True或者False，<span id="more"></span>可以将二分类模型的预测结果进行进一步的细致分类，可以分为以下四种： TP：True Positive ，预测值与真实值相符，而且预测值为1的预测结果，即1：1 TN：True Negative，预测值与真实值相符，而且预测值为0的预测结果，即0：0 FP: False Positive，预测值与真实值不符，而且预测值为1的预测结果，即1：0 FN：False Negative，预测值与真实值不符，而且预测值为0的预测结果，即0：1 True 或者False表示的是预测值与真实值是否相等，Positive和Negative表示预测的结果。 从这四个基本的分类可以延伸出以下评价指标： * 准确率（Accuracy），模型判断正确的数据占数据集的比例 <span class="math display">\[Acc = \frac{TP+TN}{TP+TN+FP+FN}\]</span> * 召回率(Recall),模型判断出的正例占整个数据集正例的比例，等于true positive rate（TPR),sensitivity <span class="math display">\[TPR=recall = \frac{TP}{TP+FN}\]</span> * 精确率(Precision)，模型判断正确的正例占模型所有判断的所有整理的比例 ，或者叫positive pretictive value(PPV) <span class="math display">\[PPV = Precision = \frac{TP}{TP+FP}\]</span> * False postive rate: <span class="math display">\[FPR=\frac{FP}{FP+TN}\]</span> * True Negative rate(specificity): <span class="math display">\[TNR = \frac{TN}{FP+TN} = 1-FPR\]</span> * False Negative rate: <span class="math display">\[FNR = \frac{FN}{TP+FN} = 1-TPR\]</span></p>
+<p>以下是TP，TN，FP，FN的tensorflow代码实现：</p>
+<pre><code>def build_accuracy(logits,targets):
+# logits,targets的模拟值
+# logits = tf.constant([[0,1]]*64+[[1,0]]*64,tf.int64)
+# targets = tf.constant([[0,1]]*32+[[1,0]]*32+[[0,1]]*16+[[1,0]]*48,tf.int64)
+# 取每行最大的元素的下标，如果最大值下标为1，则为正例，为0，则为反例
+pretictions = tf.argmax(logits,1)
+targets = tf.argmax(targets,1)
+ones = tf.ones_like(pretictions)
+zeros = tf.zeros_like(pretictions)
+TN = tf.reduce_sum(
+    tf.cast(
+        tf.logical_and(
+            tf.equal(pretictions,zeros),
+            tf.equal(targets,zeros)
+        ),
+        &#39;float32&#39;
+    )
+)
+TP = tf.reduce_sum(
+    tf.cast(
+        tf.logical_and(
+            tf.equal(pretictions,ones),
+            tf.equal(targets,ones)
+        ),
+        &#39;float32&#39;
+    )
+)
+FN = tf.reduce_sum(
+    tf.cast(
+        tf.logical_and(
+            tf.equal(pretictions,zeros),
+            tf.equal(targets,ones)
+        ),
+        &#39;float32&#39;
+    )
+)
+FP = tf.reduce_sum(
+    tf.cast(
+        tf.logical_and(
+            tf.equal(pretictions,ones),
+            tf.equal(targets,zeros)
+        ),
+        &#39;float32&#39;
+    )
+)
+return TN,TP,FN,FP</code></pre>
+<p>下面是numpy版本的：</p>
+<pre><code>def build_accuracy(predictions,targets):
+# 模拟数据
+# preditions = [0]*16+[1]*16+[0]*16+[1]*16
+# targets = [0]*32+[1]*32
+ones = np.ones_like(predictions)
+zeros = np.zeros_like(targets)
+TN = np.sum(
+        np.logical_and(
+            np.equal(predictions, zeros),
+            np.equal(targets, zeros)
+        ).astype(np.float)
+    )
+TP = np.sum(
+        np.logical_and(
+            np.equal(predictions, ones),
+            np.equal(targets, ones)
+        ).astype(np.float)
+    )
+FN = np.sum(
+        np.logical_and(
+            np.equal(predictions, zeros),
+            np.equal(targets, ones)
+        ).astype(np.float)
+    )
+FP = np.sum(
+        np.logical_and(
+            np.equal(predictions, ones),
+            np.equal(targets, zeros)
+        ).astype(np.float)
+    )
+return TN,TP,FN,FP</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/04/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/tensorflow%E5%85%A5%E9%97%A8/" rel="prev" title="tensorflow入门">
+      <i class="fa fa-chevron-left"></i> tensorflow入门
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/word2Vec%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E6%A8%A1%E5%9E%8B%E7%AF%87/" rel="next" title="word2Vec参数详解——模型篇">
+      word2Vec参数详解——模型篇 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
