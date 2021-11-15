@@ -28,8 +28,8 @@
 <meta property="og:description" content="本文将从tensorflow的计算模型、数据模型和运行模型三个角度介绍tensorflow框架。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-04-18T07:25:04.000Z">
-<meta property="article:modified_time" content="2021-04-19T07:30:43.510Z">
-<meta property="article:author" content="John Doe">
+<meta property="article:modified_time" content="2021-04-19T07:30:44.000Z">
+<meta property="article:author" content="翡翠森林">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="深度学习">
 <meta name="twitter:card" content="summary">
@@ -166,7 +166,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="翡翠森林">
       <meta itemprop="description" content="">
     </span>
 
@@ -192,7 +192,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-19 15:30:43" itemprop="dateModified" datetime="2021-04-19T15:30:43+08:00">2021-04-19</time>
+                <time title="修改时间：2021-04-19 15:30:44" itemprop="dateModified" datetime="2021-04-19T15:30:44+08:00">2021-04-19</time>
               </span>
 
           
@@ -243,7 +243,7 @@ print (result)
 输出：
 Tensor(&quot;add:0&quot;, shape=(2,), dtype=float32)
 &#39;&#39;&#39;&#39;</code></pre>
-<p>从上面代码可以看出张量和Numpy中的数组是不同的，TensorFlow的计算结果不是一个具体的数字，而是一个张量的结构，从代码的运行结果可以看出，张量主要保存三个属性：名字(name)，维度(shape)，类型(type). 张量的名字不仅是一个张量的唯一标识符，它同样给出了这个张量是如何计算出来的。张量和计算图上的节点是对应的，这样张量的命名就可以通过"node:src_output"来给出，node为节点名称，src_output表示当前向量来自第几个节点的输出。"add:0"就表示是计算节点"add"输出的第一个结果。 张量的第二个属性是维度，这个属性描述了张量的维度信息，上面代码中的result的维度是(2,)表示是一个一维数组，长度为2. 张量的第三个属性是类型，每个张量会有一个唯一的类型。TensorFlow会对所有参与运算的张量进行检车，发现类型不匹配时会报错。TensorFlow支持14种不同的类型，主要包括了实数(tf.float32,tf.float64)，整数(tf.int8,tf.int16,tf.int32,tf.int64,tf.unit8)，布尔型(tf.bool)和复数(tf.complex64,tf.complex128) ## 使用 张量的使用一般可以归结为两大类，一类是对中间计算结果的引用。可以提高代码的可读性。另一类是当计算图完成构造后，通过张量来获得计算结果，也就是得到真实的数字。 #运行模型——会话 会话(session)拥有并管理TensorFlow程序运行时的所有资源，当计算完成时需要关闭会话来帮助系统回收资源，否则就可能会出现资源泄露的问题，会话的使用方式一般有两种，第一种需要明确调用会话生成和关闭函数：</p>
+<p>从上面代码可以看出张量和Numpy中的数组是不同的，TensorFlow的计算结果不是一个具体的数字，而是一个张量的结构，从代码的运行结果可以看出，张量主要保存三个属性：名字(name)，维度(shape)，类型(type). 张量的名字不仅是一个张量的唯一标识符，它同样给出了这个张量是如何计算出来的。张量和计算图上的节点是对应的，这样张量的命名就可以通过&quot;node:src_output&quot;来给出，node为节点名称，src_output表示当前向量来自第几个节点的输出。&quot;add:0&quot;就表示是计算节点&quot;add&quot;输出的第一个结果。 张量的第二个属性是维度，这个属性描述了张量的维度信息，上面代码中的result的维度是(2,)表示是一个一维数组，长度为2. 张量的第三个属性是类型，每个张量会有一个唯一的类型。TensorFlow会对所有参与运算的张量进行检车，发现类型不匹配时会报错。TensorFlow支持14种不同的类型，主要包括了实数(tf.float32,tf.float64)，整数(tf.int8,tf.int16,tf.int32,tf.int64,tf.unit8)，布尔型(tf.bool)和复数(tf.complex64,tf.complex128) ## 使用 张量的使用一般可以归结为两大类，一类是对中间计算结果的引用。可以提高代码的可读性。另一类是当计算图完成构造后，通过张量来获得计算结果，也就是得到真实的数字。 #运行模型——会话 会话(session)拥有并管理TensorFlow程序运行时的所有资源，当计算完成时需要关闭会话来帮助系统回收资源，否则就可能会出现资源泄露的问题，会话的使用方式一般有两种，第一种需要明确调用会话生成和关闭函数：</p>
 <pre><code>sess = tf.Session ()
 sess.run(...)
 sess.close()</code></pre>
@@ -421,7 +421,7 @@ after 5000 training steps,cross entropy on all dateset is 0.00963481
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">John Doe</p>
+  <p class="site-author-name" itemprop="name">翡翠森林</p>
   <div class="site-description" itemprop="description"></div>
 </div>
 <div class="site-state-wrap motion-element">
@@ -429,14 +429,14 @@ after 5000 training steps,cross entropy on all dateset is 0.00963481
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-count">58</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -467,7 +467,7 @@ after 5000 training steps,cross entropy on all dateset is 0.00963481
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">John Doe</span>
+  <span class="author" itemprop="copyrightHolder">翡翠森林</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>

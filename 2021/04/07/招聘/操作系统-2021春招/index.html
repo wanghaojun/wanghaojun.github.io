@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="主要内容：线程与进程 操作系统I&#x2F;O、常用命令、">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统-2021春招">
+<meta property="og:url" content="http://example.com/2021/04/07/%E6%8B%9B%E8%81%98/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2021%E6%98%A5%E6%8B%9B/index.html">
+<meta property="og:site_name" content="翡翠森林">
+<meta property="og:description" content="主要内容：线程与进程 操作系统I&#x2F;O、常用命令、">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img.wanghaojun.cn//other/20210329093238.png">
+<meta property="article:published_time" content="2021-04-07T05:24:23.000Z">
+<meta property="article:modified_time" content="2021-05-25T07:39:00.000Z">
+<meta property="article:author" content="翡翠森林">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="操作系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img.wanghaojun.cn//other/20210329093238.png">
+
+<link rel="canonical" href="http://example.com/2021/04/07/%E6%8B%9B%E8%81%98/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2021%E6%98%A5%E6%8B%9B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>操作系统-2021春招 | 翡翠森林</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">翡翠森林</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/07/%E6%8B%9B%E8%81%98/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2021%E6%98%A5%E6%8B%9B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="翡翠森林">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翡翠森林">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统-2021春招
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-07 13:24:23" itemprop="dateCreated datePublished" datetime="2021-04-07T13:24:23+08:00">2021-04-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-25 15:39:00" itemprop="dateModified" datetime="2021-05-25T15:39:00+08:00">2021-05-25</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>主要内容：线程与进程 操作系统I/O、常用命令、</p>
+<span id="more"></span>
+<h4 id="进程与线程">进程与线程</h4>
+<h5 id="进程">进程</h5>
+<p>进程是一个具有一定独立功能的程序在一个数据集上的一次动态执行的过程，是操作系统进行资源分配和调度的一个独立单位，是应用程序运行的载体。进程是一种抽象的概念，从来没有统一的标准定义。进程一般由程序，数据集合和进程控制块三部分组成。程序用于描述进程要完成的功能，是控制进程执行的指令集；数据集合是程序在执行时所需要的数据和工作区；程序控制块包含进程的描述信息和控制信息，是进程存在的唯一标志</p>
+<p>进程具有的特征：</p>
+<p>动态性：进程是程序的一次执行过程，是临时的，有生命期的，是动态产生，动态消亡的；</p>
+<p>并发性：任何进程都可以同其他进行一起并发执行；</p>
+<p>独立性：进程是系统进行资源分配和调度的一个独立单位；</p>
+<p>结构性：进程由程序，数据和进程控制块三部分组成</p>
+<h5 id="线程">线程</h5>
+<p>在早期的操作系统中并没有线程的概念，进程是拥有资源和独立运行的最小单位，也是程序执行的最小单位。</p>
+<h5 id="进程与线程的区别">进程与线程的区别</h5>
+<ol type="1">
+<li><p>线程是程序执行的最小单位，而进程是操作系统分配资源的最小单位；</p></li>
+<li><p>一个进程由一个或多个线程组成，线程是一个进程中代码的不同执行路线</p></li>
+<li><p>进程之间相互独立，但同一进程下的各个线程之间共享程序的内存空间(包括代码段，数据集，堆等)及一些进程级的资源(如打开文件和信号等)，某进程内的线程在其他进程不可见；</p></li>
+<li><p>调度和切换：线程上下文切换比进程上下文切换要快得多</p></li>
+</ol>
+<h5 id="调度算法">调度算法</h5>
+<p><strong>先来先服务</strong>（First Come First Serve，FCFS）调度算法是一种非抢占式的算法,先进入就绪队列的进程,先分配处理机运行。</p>
+<p><strong>最短时间优先</strong>（Shortest Process Next，SPN）调度算法是从后备队列中选择一个或若干个估计运行时间最短的作业，将它们调入内存运行。</p>
+<p><strong>时间片轮转</strong>（Round Robin，RR）用于分时系统中的进程调度。每次调度时，总是选择就绪队列的队首进程，让其在CPU上运行一个系统预先设置好的时间片。一个时间片内没有完成运行的进程，返回到绪队列末尾重新排队，等待下一次调度。</p>
+<p><strong>高响应比优先</strong>（Highest Response Ratio Next，HRRN）在每次进行作业调度时，先计算后备作业队列中每个作业的响应比，从中选出响应比最高的作业投入运行。响应比=等待时间/要求服务时间+1</p>
+<p><strong>多级反馈队列调度算法</strong>设置多个就绪队列，并为各个队列赋予不同的优先级，第一级队列的优先级最高，第二级队列次之，其余队列优先级逐次降低。各个队列中进程执行时间片的大小也不同，在优先级越高的队列中，每个进程的运行时间片就越小。</p>
+<ul>
+<li>有多个Level，从上到下，优先级越来越低，分片时长越来越大。</li>
+<li>位于高优先级Level的任务可以抢占低优先级Level的任务。</li>
+<li>新任务首先位于高优先级Level，当一个时间片用完之后，若任务结束，则正常退出系统，若任务还没有结束，则下滑到低一等级的Level。若是因等待I/O而主动让出CPU处理，则停留在当前Level（或者提高一个Level）。</li>
+<li>同一Level的任务采用Round Robin算法。</li>
+<li>为避免系统中有太多的I/O任务而导致计算型任务迟迟得不到处理，MFQ算法会监控每个任务的处理耗时、确保其拥有公平的资源分配（按照最大最小公平算法）。在每个Level的所有任务，若有任务还没有用完分配给他的资源，则相应提高他的优先级，反之则降低其优先级。</li>
+</ul>
+<p><strong>公平型调度算法</strong>定义了一种新的模型，它给每一个进程安排一个虚拟时钟，vruntime。如果一个进程得以执行，随着时间的增长，其vruntime将不断增大。没有得到执行的进程vruntime不变，而调度器总是选择vruntime跑得最慢的那个进程来执行。</p>
+<h4 id="操作系统io">操作系统I/O</h4>
+<p>IO (Input/Output，输入/输出)即数据的读取（接收）或写入（发送）操作，通常用户进程中的一个完整IO分为两阶段：用户进程空间&lt;--&gt;内核空间、内核空间&lt;--&gt;设备空间（磁盘、网络等）。IO有内存IO、网络IO和磁盘IO三种，通常我们说的IO指的是后两者。</p>
+<p>LINUX中进程无法直接操作I/O设备，其必须通过系统调用请求kernel来协助完成I/O动作；内核会为每个I/O设备维护一个缓冲区。</p>
+<p>对于一个输入操作来说，进程IO系统调用后，内核会先看缓冲区中有没有相应的缓存数据，没有的话再到设备中读取，因为设备IO一般速度较慢，需要等待；内核缓冲区有数据则直接复制到进程空间。</p>
+<p>所以，对于一个网络输入操作通常包括两个不同阶段：</p>
+<p>（1）等待网络数据到达网卡→读取到内核缓冲区，数据准备好；</p>
+<p>（2）从内核缓冲区复制数据到进程空间。</p>
+<h5 id="阻塞io">阻塞I/O</h5>
+<p>进程发起IO系统调用后，进程被阻塞，转到内核空间处理，整个IO处理完毕后返回进程。操作成功则进程获取到数据。</p>
+<h5 id="非阻塞io">非阻塞I/O</h5>
+<p>进程发起IO系统调用后，如果内核缓冲区没有数据，需要到IO设备中读取，进程返回一个错误而不会被阻塞；进程发起IO系统调用后，如果内核缓冲区有数据，内核就会把数据返回进程。</p>
+<h5 id="复用io">复用I/O</h5>
+<p><img src="http://img.wanghaojun.cn//other/20210329093238.png" /></p>
+<p>多个的进程的IO可以注册到一个复用器（select）上，然后用一个进程调用该select， select会监听所有注册进来的IO；</p>
+<p>如果select没有监听的IO在内核缓冲区都没有可读数据，select调用进程会被阻塞；而当任一IO在内核缓冲区中有可数据时，select调用就会返回；</p>
+<p>而后select调用进程可以自己或通知另外的进程（注册进程）来再次发起读取IO，读取内核中准备好的数据。</p>
+<p>可以看到，<strong>多个进程注册IO后，只有另一个select调用进程被阻塞。</strong></p>
+<p>Linux中IO复用的实现方式主要有select、poll和epoll：</p>
+<ul>
+<li><p>Select：注册IO、阻塞扫描，监听的IO最大连接数不能多于FD_SIZE；</p></li>
+<li><p>Poll：原理和Select相似，没有数量限制，但IO数量大扫描线性性能下降；</p></li>
+<li><p>Epoll ：事件驱动不阻塞，mmap实现内核与用户空间的消息传递，数量很大，Linux2.6后内核支持；</p></li>
+</ul>
+<h5 id="信号驱动io">信号驱动IO</h5>
+<p>当进程发起一个IO操作，会向内核注册一个信号处理函数，然后进程返回不阻塞；当内核数据就绪时会发送一个信号给进程，进程便在信号处理函数中调用IO读取数据。</p>
+<h5 id="异步io">异步IO</h5>
+<p>当进程发起一个IO操作，进程返回（不阻塞），但也不能返回结果；内核把整个IO处理完后，会通知进程结果。<strong>如果IO操作成功则进程直接获取到数据</strong>。</p>
+<h4 id="linux常用命令">Linux常用命令</h4>
+<h5 id="top">top</h5>
+<p>top命令是Linux下常用的性能分析工具，能够实时显示系统中各个进程的资源占用状况，常用于服务端性能分析。</p>
+<p>在top命令中按f按可以查看显示的列信息，按对应字母来开启/关闭列，大写字母表示开启，小写字母表示关闭。带*号的是默认列。</p>
+<p><a target="_blank" rel="noopener" href="https://www.linuxcool.com/top">详情</a></p>
+<h5 id="grep">grep</h5>
+<p>grep是“global search regular expression and print out the line”的简称，意思是全面搜索正则表达式，并将其打印出来。这个命令可以结合正则表达式使用，它也是linux使用最为广泛的命令。</p>
+<p>grep命令的选项用于对搜索过程的补充，而其命令的模式十分灵活，可以是变量、字符串、正则表达式。需要注意的是：一当模式中包含了空格，务必要用双引号将其引起来。</p>
+<p>linux系统支持三种形式的grep命令，大儿子就是grep，标准，模仿的代表。二儿子兴趣爱好多-egrep，简称扩展grep命令，其实和grep -E等价，支持基本和扩展的正则表达式。小儿子跑的最快-fgrep，简称快速grep命令，其实和grep -F等价，不支持正则表达式，按照字符串表面意思进行匹配。</p>
+<p>常用参数</p>
+<table>
+<thead>
+<tr class="header">
+<th>-i</th>
+<th>搜索时，忽略大小写</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>-c</td>
+<td>只输出匹配行的数量</td>
+</tr>
+<tr class="even">
+<td>-l</td>
+<td>只列出符合匹配的文件名，不列出具体的匹配行</td>
+</tr>
+<tr class="odd">
+<td>-n</td>
+<td>列出所有的匹配行，显示行号</td>
+</tr>
+<tr class="even">
+<td>-h</td>
+<td>查询多文件时不显示文件名</td>
+</tr>
+<tr class="odd">
+<td>-s</td>
+<td>不显示不存在、没有匹配文本的错误信息</td>
+</tr>
+<tr class="even">
+<td>-v</td>
+<td>显示不包含匹配文本的所有行</td>
+</tr>
+<tr class="odd">
+<td>-w</td>
+<td>匹配整词</td>
+</tr>
+<tr class="even">
+<td>-x</td>
+<td>匹配整行</td>
+</tr>
+<tr class="odd">
+<td>-r</td>
+<td>递归搜索</td>
+</tr>
+<tr class="even">
+<td>-q</td>
+<td>禁止输出任何结果，已退出状态表示搜索是否成功</td>
+</tr>
+<tr class="odd">
+<td>-b</td>
+<td>打印匹配行距文件头部的偏移量，以字节为单位</td>
+</tr>
+<tr class="even">
+<td>-o</td>
+<td>与-b结合使用，打印匹配的词据文件头部的偏移量，以字节为单位</td>
+</tr>
+</tbody>
+</table>
+<h5 id="netstat">netstat</h5>
+<p>netstat 命令用于显示各种网络相关信息，如网络连接，路由表，接口状态 (Interface Statistics)，masquerade 连接，多播成员 (Multicast Memberships) 等等。</p>
+<p>从整体上看，netstat的输出结果可以分为两个部分：一个是Active Internet connections，称为有源TCP连接，其中”Recv-Q”和”Send-Q”指%0A的是接收队列和发送队列。这些数字一般都应该是0。如果不是则表示软件包正在队列中堆积。这种情况只能在非常少的情况见到；另一个是Active UNIX domain sockets，称为有源Unix域套接口(和网络套接字一样，但是只能用于本机通信，性能可以提高一倍)。</p>
+<table>
+<thead>
+<tr class="header">
+<th>-a</th>
+<th>显示所有连线中的Socket</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>-p</td>
+<td>显示正在使用Socket的程序识别码和程序名称</td>
+</tr>
+<tr class="even">
+<td>-u</td>
+<td>显示UDP传输协议的连线状况</td>
+</tr>
+<tr class="odd">
+<td>-i</td>
+<td>显示网络界面信息表单</td>
+</tr>
+<tr class="even">
+<td>-n</td>
+<td>直接使用IP地址，不通过域名服务器</td>
+</tr>
+</tbody>
+</table>
+<h5 id="tail">tail</h5>
+<p>tail用于显示文件尾部的内容，默认在屏幕上显示指定文件的末尾10行。如果给定的文件不止一个，则在显示的每个文件前面加一个文件名标题。如果没有指定文件或者文件名为“-”，则读取标准输入。</p>
+<p><a target="_blank" rel="noopener" href="https://www.linuxcool.com/tail">详情</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"># 操作系统</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/07/%E6%8B%9B%E8%81%98/%E7%BD%91%E7%BB%9C%E5%8E%9F%E7%90%86-2021%E6%98%A5%E6%8B%9B/" rel="prev" title="网络原理-2021春招">
+      <i class="fa fa-chevron-left"></i> 网络原理-2021春招
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/07/%E6%8B%9B%E8%81%98/java%E5%A4%9A%E7%BA%BF%E7%A8%8B-2021%E6%98%A5%E6%8B%9B/" rel="next" title="java多线程-2021春招">
+      java多线程-2021春招 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">进程与线程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">进程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">线程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.3.</span> <span class="nav-text">进程与线程的区别</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="nav-number">1.4.</span> <span class="nav-text">调度算法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9Fio"><span class="nav-number">2.</span> <span class="nav-text">操作系统I&#x2F;O</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%98%BB%E5%A1%9Eio"><span class="nav-number">2.1.</span> <span class="nav-text">阻塞I&#x2F;O</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9D%9E%E9%98%BB%E5%A1%9Eio"><span class="nav-number">2.2.</span> <span class="nav-text">非阻塞I&#x2F;O</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%8D%E7%94%A8io"><span class="nav-number">2.3.</span> <span class="nav-text">复用I&#x2F;O</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io"><span class="nav-number">2.4.</span> <span class="nav-text">信号驱动IO</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5io"><span class="nav-number">2.5.</span> <span class="nav-text">异步IO</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">Linux常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#top"><span class="nav-number">3.1.</span> <span class="nav-text">top</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#grep"><span class="nav-number">3.2.</span> <span class="nav-text">grep</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#netstat"><span class="nav-number">3.3.</span> <span class="nav-text">netstat</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#tail"><span class="nav-number">3.4.</span> <span class="nav-text">tail</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">翡翠森林</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">翡翠森林</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
